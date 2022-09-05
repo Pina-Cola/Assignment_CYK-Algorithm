@@ -51,7 +51,7 @@ public class Grammar {
     public int maxRuleLength(String[] inputString){
         int max = 0;
         for(String rules: inputString){
-            max += inputString.length;
+            max += rules.length();
         }
         return max;
     }
@@ -94,6 +94,29 @@ public class Grammar {
 
         addRules(NTerminalToInteger, inputString);
 }
+
+
+    //____________________________________________________________________________________________________
+
+    // show numbers assigned to NT symbols
+
+    //____________________________________________________________________________________________________
+
+
+    public void Int_NT_map (char[] NTerminalToInteger) {
+        
+        char[][] NT_int_map = new char[2][NTerminalToInteger.length];
+
+        for(int i = 0; i < NTerminalToInteger.length; i++){
+            char temp = (char)(i+'0');
+            NT_int_map[0][i] = temp;
+            NT_int_map[1][i]= NTerminalToInteger[i];
+        }
+
+        printMatrix(NT_int_map);
+
+    }
+
 
 
     //____________________________________________________________________________________________________
@@ -199,13 +222,21 @@ public class Grammar {
             String ruleWithInt = replace_NT_with_int(rule, NTerminalToInteger);
 
             addSingleRule(NTerminalToInteger, ruleWithInt, NT);
-        }             
+        }        
+        
+        System.out.println("");
+        System.out.println("Integers of NT symbols:");
+        Int_NT_map(NTerminalToInteger);
+        System.out.println("");
         System.out.println("Matrix all rules:");
         printMatrix(ruleset);
+        System.out.println("");
         System.out.println("Matrix T rules:");
         printMatrix(rulesetT);
+        System.out.println("");
         System.out.println("Matrix NT rules:");
         printMatrix(rulesetNT);
+        System.out.println("");
     }
 
 
