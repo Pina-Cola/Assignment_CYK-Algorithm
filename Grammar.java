@@ -18,9 +18,8 @@ public class Grammar {
     public char[][] rulesetT;     // T rules
 
     public Grammar(){
-        
+     
     }
-
 
 
 
@@ -92,15 +91,10 @@ public class Grammar {
                 NTerminalToInteger[amountOfNT] = NT;
                 amountOfNT += 1;
             }
-
-
         }
-
         System.out.println("NT-Symbols: " + Arrays.toString(NTerminalToInteger));
 
-
         addRules(NTerminalToInteger, inputString);
-
 }
 
 
@@ -144,9 +138,7 @@ public class Grammar {
                 break;
             }
         }
-
         return index;
-
     }
 
 
@@ -185,17 +177,13 @@ public class Grammar {
             }
 
             addSingleRule(NTerminalToInteger, rule, NT);
-
         }             
-
         System.out.println("Matrix all rules:");
         printMatrix(ruleset);
         System.out.println("Matrix T rules:");
         printMatrix(rulesetT);
         System.out.println("Matrix NT rules:");
         printMatrix(rulesetNT);
-
-
     }
 
 
@@ -251,7 +239,6 @@ public class Grammar {
                     break;
                 }
             }
-
         } else {
             for(int i = 0; i < rulesetT[index].length; i ++){
                 if(rulesetT[index][i] == 0)
@@ -262,12 +249,8 @@ public class Grammar {
                     }
                     break;
                 }
-
         } 
-
-
     }
-
 }
 
 
@@ -286,8 +269,6 @@ public class Grammar {
         for (char[] row : rules)
             System.out.println(Arrays.toString(row));
     }
-
-
 }
 
 
