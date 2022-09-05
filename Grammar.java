@@ -58,8 +58,6 @@ public class Grammar {
 
 
 
-
-
     //____________________________________________________________________________________________________
 
     // fills Array NTerminalToInteger with NT symbols (one symbol per index) 
@@ -142,7 +140,29 @@ public class Grammar {
     }
 
 
+    //____________________________________________________________________________________________________
 
+    // replayces NT symbols with integers (index)
+
+    //____________________________________________________________________________________________________
+
+
+    public String replace_NT_with_int (String rule, char[] NTerminalToInteger) {
+
+        char[] ruleChar = rule.toCharArray();
+
+        for(int i = 0; i < ruleChar.length; i++){
+            for(int j = 0; j < NTerminalToInteger.length-1; j++){
+                if(ruleChar[i] == NTerminalToInteger[j]){
+                    char index = (char)(j+'0');
+                    ruleChar[i] = index;
+                    break;
+                }
+            }
+        }
+        String ruleWithInt = String.valueOf(ruleChar);
+        return ruleWithInt;
+    }
 
 
 
@@ -176,7 +196,9 @@ public class Grammar {
                 rule = rule.substring(1);
             }
 
-            addSingleRule(NTerminalToInteger, rule, NT);
+            String ruleWithInt = replace_NT_with_int(rule, NTerminalToInteger);
+
+            addSingleRule(NTerminalToInteger, ruleWithInt, NT);
         }             
         System.out.println("Matrix all rules:");
         printMatrix(ruleset);
@@ -252,7 +274,6 @@ public class Grammar {
         } 
     }
 }
-
 
 
 
