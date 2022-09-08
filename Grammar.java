@@ -3,7 +3,7 @@ import java.util.Arrays;
 public class Grammar {
 
     // expected input for a rule: 
-    // for example rule S -> AB as "S A B"
+    // for example rule S -> AB as "SAB"
 
     public char[] NTerminalToInteger;
     
@@ -13,9 +13,9 @@ public class Grammar {
 
 
     // Rulesets 
-    public char[][] ruleset;      // all rules
-    public char[][] rulesetNT;    // NT rules
-    public char[][] rulesetT;     // T rules
+    public String[][] ruleset;      // all rules
+    public String[][] rulesetNT;    // NT rules
+    public String[][] rulesetT;     // T rules
 
     public Grammar(){
      
@@ -51,8 +51,9 @@ public class Grammar {
     public int maxRuleLength(String[] inputString){
         int max = 0;
         for(String rules: inputString){
-            max += rules.length();
+            max += 1;
         }
+        // max = 2;
         return max;
     }
 
@@ -104,10 +105,17 @@ public class Grammar {
 
 
     public void Int_NT_map (char[] NTerminalToInteger) {
-        
-        char[][] NT_int_map = new char[2][NTerminalToInteger.length];
 
+        int length = 0;
         for(int i = 0; i < NTerminalToInteger.length; i++){
+            if(NTerminalToInteger[i] != 0){
+                length += 1;
+            }
+        }
+        
+        char[][] NT_int_map = new char[2][length];
+
+        for(int i = 0; i < length; i++){
             char temp = (char)(i+'0');
             NT_int_map[0][i] = temp;
             NT_int_map[1][i]= NTerminalToInteger[i];
@@ -128,11 +136,13 @@ public class Grammar {
 
     public boolean is_NT_symbol (char NT, char[] NTerminalToInteger) {
         for(int i = 0; i <= NTerminalToInteger.length; i++){
-            if(NTerminalToInteger[i] == 0){
-                return false;
-            }
             if(NTerminalToInteger[i] == NT){
+                // System.out.println("NT detected: " + NT);
                 return true;
+            }
+            if(NTerminalToInteger[i] == 0){
+                // System.out.println("T detected: " + NT);
+                return false;
             }
         }
         return false;
@@ -203,10 +213,10 @@ public class Grammar {
 
         inputLength = NTerminalToInteger.length -1;
 
-        rulesetNT = new char[inputLength][rulesLength];
-        rulesetT = new char[inputLength][rulesLength];
+        rulesetNT = new String[inputLength][rulesLength];
+        rulesetT = new String[inputLength][rulesLength];
 
-        ruleset = new char[inputLength][rulesLength];
+        ruleset = new String[inputLength][rulesLength];
 
 
         for(String rule: inputStrings){
@@ -219,23 +229,28 @@ public class Grammar {
                 rule = rule.substring(1);
             }
 
-            String ruleWithInt = replace_NT_with_int(rule, NTerminalToInteger);
+            // String ruleWithInt = replace_NT_with_int(rule, NTerminalToInteger);
 
-            addSingleRule(NTerminalToInteger, ruleWithInt, NT);
-        }        
+            // addSingleRule(NTerminalToInteger, ruleWithInt, NT);
+            addSingleRule(NTerminalToInteger, rule, NT);
+        }     
+        
+        ruleset = beautifyStringMatrix(ruleset);
+        rulesetNT = beautifyStringMatrix(rulesetNT);
+        rulesetT = beautifyStringMatrix(rulesetT);
         
         System.out.println("");
         System.out.println("Integers of NT symbols:");
         Int_NT_map(NTerminalToInteger);
         System.out.println("");
         System.out.println("Matrix all rules:");
-        printMatrix(ruleset);
+        printStringMatrix(ruleset);
         System.out.println("");
         System.out.println("Matrix T rules:");
-        printMatrix(rulesetT);
+        printStringMatrix(rulesetT);
         System.out.println("");
         System.out.println("Matrix NT rules:");
-        printMatrix(rulesetNT);
+        printStringMatrix(rulesetNT);
         System.out.println("");
     }
 
@@ -250,61 +265,109 @@ public class Grammar {
 
     public void addSingleRule(char[] NTerminalToInteger, String rule, char NT){
 
-
-
         char[] ruleChar = rule.toCharArray();
-        String all_NT_symbols = NTerminalToInteger.toString();
-        boolean is_NT_rule = true;
-
-
-        for (char inputChar : ruleChar) {
-
-            String charToString = "" + inputChar;
-            if(!all_NT_symbols.contains(charToString)){
-                is_NT_rule = false;
-                break;
-            }
-
-        }
+        boolean is_NT_rule = is_NT_rule(ruleChar);
 
         int index = getIndexOfNT(NT, NTerminalToInteger);
 
-
         for(int i = 0; i < ruleset[index].length; i ++){
-            if(ruleset[index][i] == 0)
+            if(ruleset[index][i] == null)
             {
-                for(int j = 0; j < ruleChar.length; j++){
+                ruleset[index][i] = rule;
+                break;
+                /* for(int j = 0; j < ruleChar.length; j++){
                     ruleset[index][i] = ruleChar[j];
                     i++;
                 }
-                break;
+                break; */
             }
         }
 
         if(is_NT_rule){
             for(int i = 0; i < rulesetNT[index].length; i ++){
-                if(rulesetNT[index][i] == 0)
+                if(rulesetNT[index][i] == null)
                 {
-                    for(int j = 0; j < ruleChar.length; j++){
-                        rulesetNT[index][i] = ruleChar[j];
-                        i++;
-                    }
+                    rulesetNT[index][i] = rule;
                     break;
                 }
             }
         } else {
             for(int i = 0; i < rulesetT[index].length; i ++){
-                if(rulesetT[index][i] == 0)
+                if(rulesetT[index][i] == null)
                 {
-                    for(int j = 0; j < ruleChar.length; j++){
-                        rulesetT[index][i] = ruleChar[j];
-                        i++;
-                    }
+                    rulesetT[index][i] = rule;
                     break;
                 }
         } 
     }
 }
+
+
+    //____________________________________________________________________________________________________
+
+    // checks if rule is NT rule
+
+    //____________________________________________________________________________________________________
+
+
+
+    public boolean is_NT_rule(char[] rule){
+        for (char inputChar : rule) {
+            if(!is_NT_symbol(inputChar, NTerminalToInteger)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    //____________________________________________________________________________________________________
+
+    // make 2D array smaller and nicer
+
+    //____________________________________________________________________________________________________
+
+
+
+    public String[][] beautifyStringMatrix(String[][] matrix){
+        int first = 0;
+        int second = 0;
+        int tempfirst = 0;
+        int tempsecond = 0;
+
+        for(int i = 0; i < matrix.length; i++){
+            for(int j = 0; j < matrix[i].length; j++){
+                if(matrix[i][j] != null){
+                    tempfirst = i;
+                    tempsecond = j;
+                }
+            }
+            if(tempfirst >= first){
+                first = tempfirst;
+            }
+            if(tempsecond >= second){
+                second = tempsecond;
+            }
+        }
+
+        String[][] smallerMatrix = new String[first+1][second+1];
+        System.out.println(first + " und " + second);
+
+        for(int i = 0; i < smallerMatrix.length; i++){
+            for(int j = 0; j < smallerMatrix[i].length; j++){
+                System.out.println(i + " und " + j);
+                if(matrix[i][j] != null){
+                    smallerMatrix[i][j] = matrix[i][j];
+                }
+                else{
+                    smallerMatrix[i][j] = "";
+                }
+            }
+        }
+
+        return smallerMatrix;
+    }
+
 
 
 
@@ -319,6 +382,13 @@ public class Grammar {
 
     public void printMatrix(char[][] rules){
         for (char[] row : rules)
+            System.out.println(Arrays.toString(row));
+    }
+
+
+    
+    public void printStringMatrix(String[][] rules){
+        for (String[] row : rules)
             System.out.println(Arrays.toString(row));
     }
 }
