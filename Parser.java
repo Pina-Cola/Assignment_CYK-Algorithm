@@ -1,13 +1,36 @@
-import java.lang.reflect.Constructor;
+// import java.lang.reflect.Constructor;
 
 public class Parser extends Grammar {
 
-    public Parser(String[] input){
+    Grammar grammar = new Grammar();
+    public String[][] ruleset;      // all rules
+    public String[][] rulesetNT;    // NT rules
+    public String[][] rulesetT;     // T rules
 
-        Grammar grammar = new Grammar();
-        grammar.nts_to_int(input);
+    int counter = 0;
 
+    public Parser(String[] inputString){
+        ruleset = grammar.getRuleset(inputString);
+        rulesetNT = grammar.getRulesetNT(inputString);
+        rulesetT = grammar.getRulesetT(inputString);
     }
+
+    public boolean parseNaive(String wordString){
+        char[] word = wordString.toCharArray();
+
+        return true;
+    }
+
+    public boolean parseBU(String word){
+
+        return true;
+    }
+
+    public boolean parseTD(String word){
+
+        return true;
+    }
+
     
     
 }
