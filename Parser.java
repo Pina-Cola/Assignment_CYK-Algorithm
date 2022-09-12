@@ -19,9 +19,24 @@ public class Parser extends Grammar {
         rulesetNT = grammar.getRulesetNT(inputString);
         rulesetT = grammar.getRulesetT(inputString);
 
+        System.out.println("Input word: " + inputWord);
+
         this.inputWord = inputWord.toCharArray();
 
-        System.out.println("Naive: " + parseNaive());
+        System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counter);
+    }
+
+
+    //____________________________________________________________________________________________________
+
+    // returns counter
+
+    //____________________________________________________________________________________________________
+
+
+
+    public int getCounter(){
+        return counter;
     }
 
 
@@ -35,6 +50,7 @@ public class Parser extends Grammar {
 
 
     public boolean parseNaive(){
+        counter = 0;
         return parseNaive(0, 0, inputWord.length);
     }
 
@@ -59,15 +75,13 @@ public class Parser extends Grammar {
 
     public boolean parseNaive(int indexNT, int i, int j){
 
+        counter += 1;
+        int rulesetLength = ruleset[0].length;
 
-        if(i >= j){
-            System.out.println("Something went wrong here!");
-            return false;
-        }
         if(i == (j-1)){
-            for(int k = 0; k < ruleset[indexNT].length; k++){
+            for(int l = 0; l < rulesetLength; l++){
                 String symbol = String.valueOf(inputWord[i]);
-                if(ruleset[indexNT][k].equals(symbol)){
+                if(ruleset[indexNT][l].equals(symbol)){
                     return true;
                 }
             }
@@ -75,22 +89,20 @@ public class Parser extends Grammar {
         }
         else{
             for(int headIndex = indexNT; headIndex < ruleset.length; headIndex++){
-                System.out.println("schleife aussen: " + headIndex);
 
                 for(int bodyIndex = 0; bodyIndex < ruleset[headIndex].length; bodyIndex++){
-                    System.out.println("schleife innen: " + bodyIndex);
-                    
                     if(ruleset[headIndex][bodyIndex].length() >= 2){
-                        System.out.println("Rekursiver Aufruf: " + ruleset[headIndex][bodyIndex].charAt(0) + " und " + ruleset[headIndex][bodyIndex].charAt(1));
-                        System.out.println(" ");
-                        if(parseNaive(ruleset[headIndex][bodyIndex].charAt(0), i, j-1) && parseNaive(ruleset[headIndex][bodyIndex].charAt(1), i+1, j)
-                        || parseNaive(ruleset[headIndex][bodyIndex].charAt(0), i+1, j) && parseNaive(ruleset[headIndex][bodyIndex].charAt(1), i, j-1))
-                        {
+                    for(int k = i+1; k < j; k++){
+                        int first = Character.getNumericValue(ruleset[headIndex][bodyIndex].charAt(0));
+                        int second = Character.getNumericValue(ruleset[headIndex][bodyIndex].charAt(1));
+                        if(parseNaive(first,i,k) && parseNaive(second,k,j)){
                             return true;
                         }
                     }
                 }
+                }
             }
+
         } 
 
         return false;
