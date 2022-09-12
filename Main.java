@@ -1,8 +1,26 @@
+/*
+ *  Input example:  "SSS" "SLA" "SLR" "ASR" "L(" "R)" "(())"
+ *  first: rules without arrows (one rule as one String)
+ *  last argument: input word
+ */
+
+
 class Main {
     public static void main(String[] args) {
 
-        Parser parser = new Parser(args);
+        String[] inputString = new String[args.length-1];
+        String inputWord = new String();
+
+        for(int i = 0; i < args.length-1; i++){
+            inputString[i]=args[i];
+        }
+        inputWord = args[args.length-1];
+
+        Parser parser = new Parser(inputString, inputWord);
+
     }
+
+
 }
 
 /*

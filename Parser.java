@@ -7,24 +7,74 @@ public class Parser extends Grammar {
     public String[][] rulesetNT;    // NT rules
     public String[][] rulesetT;     // T rules
 
+    public char[] inputWord;
+
     int counter = 0;
 
-    public Parser(String[] inputString){
+    public Parser(String[] inputString, String inputWord){
         ruleset = grammar.getRuleset(inputString);
         rulesetNT = grammar.getRulesetNT(inputString);
         rulesetT = grammar.getRulesetT(inputString);
+
+        this.inputWord = inputWord.toCharArray();
+
+        System.out.println("Naive: " + parseNaive());
     }
 
-    public boolean parseNaive(String wordString){
-        char[] word = wordString.toCharArray();
+
+
+    //____________________________________________________________________________________________________
+
+    // for recursion
+
+    //____________________________________________________________________________________________________
+
+
+
+    public boolean parseNaive(){
+        return parseNaive(inputWord, 0, inputWord.length);
+    }
+
+
+
+    //____________________________________________________________________________________________________
+
+    // naive cyk algorithm
+
+    //____________________________________________________________________________________________________
+
+
+
+    public boolean parseNaive(char[] wordString, int i, int j){
+ 
 
         return true;
     }
+
+
+
+    //____________________________________________________________________________________________________
+
+    // bottom up
+
+    //____________________________________________________________________________________________________
+
+
 
     public boolean parseBU(String word){
 
         return true;
     }
+
+
+
+    //____________________________________________________________________________________________________
+
+    // top down
+
+    //____________________________________________________________________________________________________
+
+
 
     public boolean parseTD(String word){
 
