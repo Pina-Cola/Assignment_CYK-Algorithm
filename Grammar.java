@@ -213,26 +213,44 @@ public class Grammar {
 
     //____________________________________________________________________________________________________
 
-    // replayces NT symbols with integers (index)
+    // replaces NT symbols with integers (index)
 
     //____________________________________________________________________________________________________
 
 
-    public String replace_NT_with_int (String rule, char[] NTerminalToInteger) {
+    public String[][] replace_NT_with_int (String[][] ruleArray) {
 
-        char[] ruleChar = rule.toCharArray();
+        // loop over input ruleset:
+        for(int i = 0; i < ruleArray.length; i++){
+            for(int j = 0; j < ruleArray[i].length; j++){
+                
+                // loop over String in ruleset (body of the rule)
+                for(int singleSymbolIndex = 0; singleSymbolIndex < ruleArray[i][j].length(); singleSymbolIndex++){
 
-        for(int i = 0; i < ruleChar.length; i++){
-            for(int j = 0; j < NTerminalToInteger.length; j++){
-                if(ruleChar[i] == NTerminalToInteger[j]){
-                    char index = (char)(j+'0');
-                    ruleChar[i] = index;
-                    break;
+                    // loop over NT symbole
+                    for(int k = 0; k < NTerminalToInteger.length; k++){
+
+                        // replaces NT with int
+                        if(ruleArray[i][j].charAt(singleSymbolIndex) == NTerminalToInteger[k]){
+                            char oldEntry = ruleArray[i][j].charAt(singleSymbolIndex);
+                            char replacement = (char) (k+'0');
+                            ruleArray[i][j] = ruleArray[i][j].replace(oldEntry, replacement);
+                        }
+
+                    }
+
+
                 }
+
+                
             }
         }
-        String ruleWithInt = String.valueOf(ruleChar);
-        return ruleWithInt;
+
+
+
+        return ruleArray;
+        
+        
     }
 
 
@@ -276,6 +294,10 @@ public class Grammar {
         ruleset = beautifyStringMatrix(ruleset);
         rulesetNT = beautifyStringMatrix(rulesetNT);
         rulesetT = beautifyStringMatrix(rulesetT);
+
+        ruleset = replace_NT_with_int(ruleset);
+        rulesetNT = replace_NT_with_int(rulesetNT);
+        rulesetT = replace_NT_with_int(rulesetT);
         
         System.out.println("");
         System.out.println("Integers of NT symbols:");

@@ -21,7 +21,7 @@ public class Parser extends Grammar {
 
         this.inputWord = inputWord.toCharArray();
 
-        // System.out.println("Naive: " + parseNaive());
+        System.out.println("Naive: " + parseNaive());
     }
 
 
@@ -35,7 +35,7 @@ public class Parser extends Grammar {
 
 
     public boolean parseNaive(){
-        return parseNaive(inputWord, 0, inputWord.length);
+        return parseNaive(0, 0, inputWord.length);
     }
 
 
@@ -44,13 +44,42 @@ public class Parser extends Grammar {
 
     // naive cyk algorithm
 
+    /* 
+    It returns parse(S, 0, n), where S is the initial nonterminal of the grammar. 
+    The method parse performs a naive recursive test. 
+
+    When being invoked as parse(A, i, j) it does the following: if i = j −1 then it simply checks whether A → s[i] is a rule of the grammar 
+    and returns the resulting Boolean. 
+    Otherwise, it checks for all rules A → BC and for k = i+1, . . . , j −1 whether both parse(B, i, k) and parse(C, k, j) return true. 
+    If such a pair is found, it returns true, otherwise false. */
+
     //____________________________________________________________________________________________________
 
 
 
-    public boolean parseNaive(char[] wordString, int i, int j){
+    public boolean parseNaive(int indexNT, int i, int j){
 
-        return true;
+        /* if(i == (j-1)){
+            for(int k = 0; k < rulesetT[indexNT].length; k++){
+                String symbol = String.valueOf(inputWord[i]);
+                if(rulesetT[indexNT][k].equals(symbol)){
+                    return true;
+                }
+            }
+            return false;
+        }
+        else{
+            for(int headNT = 0; headNT < rulesetNT.length; headNT++){
+                for(String body : rulesetNT[headNT]){
+                    // for(int singleSymbolIndex = 0; singleSymbolIndex < body.length(); singleSymbolIndex++){}
+                    if(body.length() == 2){
+                        return (parseNaive(body.charAt(0), i, j) == parseNaive(body.charAt(1), i, j));
+                    }
+                }
+            }
+        } */
+
+        return false;
     }
 
 
