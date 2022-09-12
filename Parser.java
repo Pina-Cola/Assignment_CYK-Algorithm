@@ -105,9 +105,7 @@ public class Parser extends Grammar {
                 }
                 }
             }
-
         } 
-
         return false;
     }
 
@@ -164,37 +162,76 @@ public class Parser extends Grammar {
         grammar.printStringMatrix(DP);
         System.out.println("");
 
-        for(int l = 2; l < wordLength; l++){
-            for(int i = 0; i < wordLength-l - 1; i++){
-                for(int k = i; k < l - 1; k++){
-                    int j = l - k -1;
+        for(int l = 1; l < wordLength; l++){
+            for(int i = 0; i < wordLength - l +1; i++){
+                for(int k = 0 ; k < l; k++){
+                    int j = i + l -1; // or int j = i + l -1; ???
                     // for each rule:
                     for(int head = 0; head < ruleset.length; head++){
-                        for(int body = 0; body < ruleset.length; body++){
+                        for(int body = 0; body < ruleset[head].length; body++){
+                            if(ruleset[head][body].length() >= 2 && !ruleset[head][body].isEmpty()){
+                                System.out.println("String: " + ruleset[head][body]);
                                 String first = "" + ruleset[head][body].charAt(0);
                                 String second = "" + ruleset[head][body].charAt(1);
+                                first = first.toString();
+                                second = second.toString();
                                 System.out.println("first: " + first);
                                 System.out.println("second: " + second);
-                                System.out.println("DP[k][i] " + DP[i][k]);
+                                System.out.println("DP[i][k] " + DP[i][k]);
                                 System.out.println("DP[k+1][j] " + DP[k+1][j]);
+                                System.out.println("i: " + i + " j: " + j + " k : " + k);
+                                System.out.println("");
+
                                 if(DP[i][k].equals(first) && DP[k+1][j].equals(second)){
-                                    System.out.println("test");
                                     String temp = "" + head;
                                     DP[i][j] = DP[i][j] + temp;                                  
                                 }
+
+                                /* if(DP[i][k].equals("") && i > 0){
+                                    if(DP[i-1][k].equals(first) && DP[k+1][j].equals(second)){
+                                        String temp = "" + head;
+                                        DP[i][j] = DP[i][j] + temp;                                  
+                                    }
+                                }
+
+                                if(DP[k+1][j].equals("") && j > 0){
+                                    if(DP[i][k].equals(first) && DP[k+1][j-1].equals(second)){
+                                        String temp = "" + head;
+                                        DP[i-1][j] = DP[i][j] + temp;                                  
+                                    }
+                                } */
+
                                 else{
-                                    DP[i][j] = "ups";
-                                }                            
+                                    System.out.println("whats happening");
+                                    // DP[i][j] = DP[i][j] + " not filled ";
+                                }  
+                            }                          
                         }
                     }
 
                 }
             }
+        } 
+
+ /*        for (int l = 0; l <= word.length; l++){
+            for (int r = 0; r < word.length; r++){
+                for (int t = 0; t < word.length - l; t++){
+
+                    
+
+                }
+            }
         }
 
+        */ 
         grammar.printStringMatrix(DP);
 
-        return true;
+
+        if(DP[0][wordLength-1].equals("0")){
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -233,7 +270,6 @@ public class Parser extends Grammar {
                 }
             }
         }
-
         return false;
     }
 
@@ -259,12 +295,8 @@ public class Parser extends Grammar {
                 }
             }
         }
-
         return -100;
     }
-
-    
-    
 }
 
 /*
