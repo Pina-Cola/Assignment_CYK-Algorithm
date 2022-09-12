@@ -2,19 +2,21 @@
  *  Input example:  "SSS" "SLA" "SLR" "ASR" "L(" "R)" "(())"
  *  first: rules without arrows (one rule as one String)
  *  last argument: input word
+ *  first symbol is the start symbol (NT) (usually called S)
  */
 
 
 class Main {
     public static void main(String[] args) {
 
-        String[] inputString = new String[args.length-1];
+        int grammarLength = (args.length)-1;
+        String[] inputString = new String[grammarLength];
         String inputWord = new String();
 
-        for(int i = 0; i < args.length-1; i++){
+        for(int i = 0; i < grammarLength; i++){
             inputString[i]=args[i];
         }
-        inputWord = args[args.length-1];
+        inputWord = args[grammarLength];
 
         Parser parser = new Parser(inputString, inputWord);
 

@@ -18,6 +18,8 @@ public class Grammar {
     public String[][] rulesetT;     // T rules
 
     public Grammar(){
+
+        // nts_to_int(grammar);
      
     }
 
@@ -127,7 +129,7 @@ public class Grammar {
                 amountOfNT += 1;
             }
         }
-        System.out.println("NT-Symbols: " + Arrays.toString(NTerminalToInteger));
+        // System.out.println("NT-Symbols: " + Arrays.toString(NTerminalToInteger));
 
         addRules(NTerminalToInteger, inputString);
 }
@@ -171,7 +173,7 @@ public class Grammar {
 
 
     public boolean is_NT_symbol (char NT, char[] NTerminalToInteger) {
-        for(int i = 0; i <= NTerminalToInteger.length; i++){
+        for(int i = 0; i <= NTerminalToInteger.length-1; i++){
             if(NTerminalToInteger[i] == NT){
                 // System.out.println("NT detected: " + NT);
                 return true;
@@ -221,7 +223,7 @@ public class Grammar {
         char[] ruleChar = rule.toCharArray();
 
         for(int i = 0; i < ruleChar.length; i++){
-            for(int j = 0; j < NTerminalToInteger.length-1; j++){
+            for(int j = 0; j < NTerminalToInteger.length; j++){
                 if(ruleChar[i] == NTerminalToInteger[j]){
                     char index = (char)(j+'0');
                     ruleChar[i] = index;
@@ -247,7 +249,7 @@ public class Grammar {
 
     public void addRules(char[] NTerminalToInteger, String[] inputStrings){
 
-        inputLength = NTerminalToInteger.length -1;
+        inputLength = NTerminalToInteger.length;
 
         rulesetNT = new String[inputLength][rulesLength];
         rulesetT = new String[inputLength][rulesLength];
@@ -387,11 +389,9 @@ public class Grammar {
         }
 
         String[][] smallerMatrix = new String[first+1][second+1];
-        System.out.println(first + " und " + second);
 
         for(int i = 0; i < smallerMatrix.length; i++){
             for(int j = 0; j < smallerMatrix[i].length; j++){
-                System.out.println(i + " und " + j);
                 if(matrix[i][j] != null){
                     smallerMatrix[i][j] = matrix[i][j];
                 }

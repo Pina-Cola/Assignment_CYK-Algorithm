@@ -12,13 +12,16 @@ public class Parser extends Grammar {
     int counter = 0;
 
     public Parser(String[] inputString, String inputWord){
+
+        grammar.nts_to_int(inputString);
+
         ruleset = grammar.getRuleset(inputString);
         rulesetNT = grammar.getRulesetNT(inputString);
         rulesetT = grammar.getRulesetT(inputString);
 
         this.inputWord = inputWord.toCharArray();
 
-        System.out.println("Naive: " + parseNaive());
+        // System.out.println("Naive: " + parseNaive());
     }
 
 
@@ -46,7 +49,6 @@ public class Parser extends Grammar {
 
 
     public boolean parseNaive(char[] wordString, int i, int j){
- 
 
         return true;
     }
