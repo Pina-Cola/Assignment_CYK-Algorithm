@@ -20,10 +20,13 @@ public class Parser extends Grammar {
         rulesetT = grammar.getRulesetT(inputString);
 
         System.out.println("Input word: " + inputWord);
-
         this.inputWord = inputWord.toCharArray();
 
         System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counter);
+
+        System.out.println("");
+        counter = 0;
+        System.out.println("BottomUp: " + parseBU(this.inputWord) + "   Amount of calls: " + counter);
     }
 
 
@@ -118,7 +121,26 @@ public class Parser extends Grammar {
 
 
 
-    public boolean parseBU(String word){
+    public boolean parseBU(char[] word){
+
+        int wordLength = word.length;
+        String[][] DP = new String[wordLength][wordLength];
+
+        for (int i = 0; i < word.length; i++){
+            if(contained(rulesetT, word[i])){
+                String temp = String.valueOf(containedAt(rulesetT, word[i]));
+                if(DP[i][i] != null){
+                    DP[i][i] = DP[i][i] + temp;
+                }
+                else{
+                    DP[i][i] = temp; 
+                }
+            }
+        }
+        DP = grammar.beautifyStringMatrix(DP);
+        grammar.printStringMatrix(DP);
+
+        
 
         return true;
     }
@@ -136,6 +158,57 @@ public class Parser extends Grammar {
     public boolean parseTD(String word){
 
         return true;
+    }
+
+
+
+    //____________________________________________________________________________________________________
+
+    // returns true if symbol in ruleset
+
+    //____________________________________________________________________________________________________
+
+
+
+    public boolean contained(String[][] rules, char symbol){
+
+        String s = symbol + "";
+
+        for(int i = 0; i < rules.length; i++){
+            for(int j = 0; j < rules[i].length; j++){
+                if(rules[i][j].contains(s)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+
+
+    //____________________________________________________________________________________________________
+
+    // returns index (which stand for NT) if symbol in ruleset
+
+    //____________________________________________________________________________________________________
+
+
+
+    public int containedAt(String[][] rules, char symbol){
+
+        String s = symbol + "";
+
+        for(int i = 0; i < rules.length; i++){
+            for(int j = 0; j < rules[i].length; j++){
+                if(rules[i][j].contains(s)){
+                    return i;
+                }
+            }
+        }
+
+        return -100;
     }
 
     
