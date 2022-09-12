@@ -73,23 +73,25 @@ public class Parser extends Grammar {
             }
             return false;
         }
-        /* else{
-            for(int headIndex = 0; headIndex < ruleset.length; headIndex++){
+        else{
+            for(int headIndex = indexNT; headIndex < ruleset.length; headIndex++){
                 System.out.println("schleife aussen: " + headIndex);
-                if(headIndex != indexNT){
-                for(int bodyIndex = 0; bodyIndex < rulesetNT[headIndex].length; bodyIndex++){
-                    // if(ruleset[headNT][bodyIndex]){
+
+                for(int bodyIndex = 0; bodyIndex < ruleset[headIndex].length; bodyIndex++){
+                    System.out.println("schleife innen: " + bodyIndex);
+                    
+                    if(ruleset[headIndex][bodyIndex].length() >= 2){
                         System.out.println("Rekursiver Aufruf: " + ruleset[headIndex][bodyIndex].charAt(0) + " und " + ruleset[headIndex][bodyIndex].charAt(1));
                         System.out.println(" ");
-                        if(parseNaive(ruleset[headIndex][bodyIndex].charAt(0), i, j-1) && parseNaive(ruleset[headIndex][bodyIndex].charAt(1), i+1, j))
+                        if(parseNaive(ruleset[headIndex][bodyIndex].charAt(0), i, j-1) && parseNaive(ruleset[headIndex][bodyIndex].charAt(1), i+1, j)
+                        || parseNaive(ruleset[headIndex][bodyIndex].charAt(0), i+1, j) && parseNaive(ruleset[headIndex][bodyIndex].charAt(1), i, j-1))
                         {
                             return true;
                         }
-                    // }
-                }
+                    }
                 }
             }
-        } */
+        } 
 
         return false;
     }
