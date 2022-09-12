@@ -126,6 +126,28 @@ public class Parser extends Grammar {
         int wordLength = word.length;
         String[][] DP = new String[wordLength][wordLength];
 
+
+        /* for(int head = 0; head < rulesetT.length; head++){
+            for(int body = 0; body < rulesetT.length; body++){
+                for(int i = 0; i < word.length; i++){
+                    String symbol = "" + word[i];
+                    System.out.println("test: " + i);
+                    System.out.println("head: " + head + " body: " + body);
+                    System.out.println("Inhalt: " + rulesetT[head][body]);
+                    if(rulesetT[head][body].contains(symbol)){
+                        System.out.println("test2");
+                        if(DP[i][i] != null){
+                            DP[i][i] = DP[i][i] + "" + head;
+                        }
+                        else{
+                            DP[i][i] = "" + head; 
+                        }
+                    }
+                }
+
+            }
+        } */
+
         for (int i = 0; i < word.length; i++){
             if(contained(rulesetT, word[i])){
                 String temp = String.valueOf(containedAt(rulesetT, word[i]));
@@ -137,10 +159,40 @@ public class Parser extends Grammar {
                 }
             }
         }
+
         DP = grammar.beautifyStringMatrix(DP);
         grammar.printStringMatrix(DP);
+        System.out.println("");
 
-        
+        for(int l = 2; l < wordLength; l++){
+            for(int i = 0; i < wordLength-l - 1; i++){
+                for(int k = i; k < l - 1; k++){
+                    int j = l - k -1;
+                    // for each rule:
+                    for(int head = 0; head < ruleset.length; head++){
+                        for(int body = 0; body < ruleset.length; body++){
+                                String first = "" + ruleset[head][body].charAt(0);
+                                String second = "" + ruleset[head][body].charAt(1);
+                                System.out.println("first: " + first);
+                                System.out.println("second: " + second);
+                                System.out.println("DP[k][i] " + DP[i][k]);
+                                System.out.println("DP[k+1][j] " + DP[k+1][j]);
+                                if(DP[i][k].equals(first) && DP[k+1][j].equals(second)){
+                                    System.out.println("test");
+                                    String temp = "" + head;
+                                    DP[i][j] = DP[i][j] + temp;                                  
+                                }
+                                else{
+                                    DP[i][j] = "ups";
+                                }                            
+                        }
+                    }
+
+                }
+            }
+        }
+
+        grammar.printStringMatrix(DP);
 
         return true;
     }
