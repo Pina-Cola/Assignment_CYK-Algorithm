@@ -28,7 +28,7 @@ public class Parser extends Grammar {
 
     //____________________________________________________________________________________________________
 
-    // for recursion
+    // calls recursion
 
     //____________________________________________________________________________________________________
 
@@ -59,22 +59,34 @@ public class Parser extends Grammar {
 
     public boolean parseNaive(int indexNT, int i, int j){
 
-        /* if(i == (j-1)){
-            for(int k = 0; k < rulesetT[indexNT].length; k++){
+
+        if(i >= j){
+            System.out.println("Something went wrong here!");
+            return false;
+        }
+        if(i == (j-1)){
+            for(int k = 0; k < ruleset[indexNT].length; k++){
                 String symbol = String.valueOf(inputWord[i]);
-                if(rulesetT[indexNT][k].equals(symbol)){
+                if(ruleset[indexNT][k].equals(symbol)){
                     return true;
                 }
             }
             return false;
         }
-        else{
-            for(int headNT = 0; headNT < rulesetNT.length; headNT++){
-                for(String body : rulesetNT[headNT]){
-                    // for(int singleSymbolIndex = 0; singleSymbolIndex < body.length(); singleSymbolIndex++){}
-                    if(body.length() == 2){
-                        return (parseNaive(body.charAt(0), i, j) == parseNaive(body.charAt(1), i, j));
-                    }
+        /* else{
+            for(int headIndex = 0; headIndex < ruleset.length; headIndex++){
+                System.out.println("schleife aussen: " + headIndex);
+                if(headIndex != indexNT){
+                for(int bodyIndex = 0; bodyIndex < rulesetNT[headIndex].length; bodyIndex++){
+                    // if(ruleset[headNT][bodyIndex]){
+                        System.out.println("Rekursiver Aufruf: " + ruleset[headIndex][bodyIndex].charAt(0) + " und " + ruleset[headIndex][bodyIndex].charAt(1));
+                        System.out.println(" ");
+                        if(parseNaive(ruleset[headIndex][bodyIndex].charAt(0), i, j-1) && parseNaive(ruleset[headIndex][bodyIndex].charAt(1), i+1, j))
+                        {
+                            return true;
+                        }
+                    // }
+                }
                 }
             }
         } */

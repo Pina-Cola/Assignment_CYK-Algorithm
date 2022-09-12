@@ -295,6 +295,17 @@ public class Grammar {
         rulesetNT = beautifyStringMatrix(rulesetNT);
         rulesetT = beautifyStringMatrix(rulesetT);
 
+        System.out.println("");
+        System.out.println("Matrix all rules:");
+        printStringMatrix(ruleset);
+        System.out.println("");
+        System.out.println("Matrix T rules:");
+        printStringMatrix(rulesetT);
+        System.out.println("");
+        System.out.println("Matrix NT rules:");
+        printStringMatrix(rulesetNT);
+        System.out.println("");
+
         ruleset = replace_NT_with_int(ruleset);
         rulesetNT = replace_NT_with_int(rulesetNT);
         rulesetT = replace_NT_with_int(rulesetT);
