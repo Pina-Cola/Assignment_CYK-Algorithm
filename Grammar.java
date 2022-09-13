@@ -18,9 +18,7 @@ public class Grammar {
     public String[][] rulesetT;     // T rules
 
     public Grammar(){
-
-        // nts_to_int(grammar);
-     
+        
     }
 
 
@@ -77,8 +75,6 @@ public class Grammar {
 
 
 
-
-
     //____________________________________________________________________________________________________
 
     // returns upper bound for rules length (amount of chars of longest rule)
@@ -119,8 +115,7 @@ public class Grammar {
 
             // get NT symbol (first symbol of each rule)
             char NT = rule.charAt(0);
-            
-
+        
             boolean foundInMap = is_NT_symbol(NT, NTerminalToInteger);
 
             // add to array if not already existing
@@ -130,7 +125,6 @@ public class Grammar {
             }
         }
         // System.out.println("NT-Symbols: " + Arrays.toString(NTerminalToInteger));
-
         addRules(NTerminalToInteger, inputString);
 }
 
@@ -150,7 +144,6 @@ public class Grammar {
                 length += 1;
             }
         }
-        
         char[][] NT_int_map = new char[2][length];
 
         for(int i = 0; i < length; i++){
@@ -158,9 +151,7 @@ public class Grammar {
             NT_int_map[0][i] = temp;
             NT_int_map[1][i]= NTerminalToInteger[i];
         }
-
         printMatrix(NT_int_map);
-
     }
 
 
@@ -236,24 +227,12 @@ public class Grammar {
                             char replacement = (char) (k+'0');
                             ruleArray[i][j] = ruleArray[i][j].replace(oldEntry, replacement);
                         }
-
                     }
-
-
-                }
-
-                
+                } 
             }
         }
-
-
-
-        return ruleArray;
-        
-        
+        return ruleArray; 
     }
-
-
 
 
     //____________________________________________________________________________________________________
@@ -276,7 +255,6 @@ public class Grammar {
 
 
         for(String rule: inputStrings){
-
             char[] rulesChar = rule.toCharArray();
             char NT = rulesChar[0];
 
@@ -284,10 +262,6 @@ public class Grammar {
             if(rule.length() >= 1){
                 rule = rule.substring(1);
             }
-
-            // String ruleWithInt = replace_NT_with_int(rule, NTerminalToInteger);
-
-            // addSingleRule(NTerminalToInteger, ruleWithInt, NT);
             addSingleRule(NTerminalToInteger, rule, NT);
         }     
         
@@ -346,11 +320,6 @@ public class Grammar {
             {
                 ruleset[index][i] = rule;
                 break;
-                /* for(int j = 0; j < ruleChar.length; j++){
-                    ruleset[index][i] = ruleChar[j];
-                    i++;
-                }
-                break; */
             }
         }
 
@@ -433,11 +402,8 @@ public class Grammar {
                 }
             }
         }
-
         return smallerMatrix;
     }
-
-
 
 
 
@@ -454,7 +420,10 @@ public class Grammar {
             System.out.println(Arrays.toString(row));
     }
 
-
+    public void printMatrix(Boolean[][] rules){
+        for (Boolean[] row : rules)
+            System.out.println(Arrays.toString(row));
+    }
     
     public void printStringMatrix(String[][] rules){
         for (String[] row : rules)
@@ -462,25 +431,3 @@ public class Grammar {
     }
 }
 
-
-/*
-
-An abstract class Grammar that can be subclassed by specifying the rules of a context-free grammar in 
-Chomsky normal. 
-
-The class should allow efficient access to the rules, 
-where efficiency should be judged relative to the way in which the rules are accessed in the CYK algorithm. 
-
-In particular, it is probably a good idea to represent the terminal rules separately from the nonterminal ones.
-Nichtterminalsymbole: Grossbuchstaben
-Terminalsymbole: kleine Buchstaben 
-
-Moreover, I suggest to translate the nonterminals into integers while initializing the internal data structures. 
-
-In this way, one may for example represent a right-hand side as a pair of integers, 
-and can implement the set of nonterminal rules as an array of arrays of right-hand sides. 
-
-Then, if a given nonterminal i has n nonterminal rules, one can efficiently loop over their right-hand sides 
-as rule[i][j] for j = 0, . . . , n − 1 (and one can loop over all rules by additionally looping over i).
-
- */
