@@ -5,8 +5,18 @@
  *  first symbol is the start symbol (NT) (usually called S)
  */
 
+import java.awt.*;  
+import javax.swing.*;  
+import java.awt.geom.*;  
 
-class Main {
+
+class Main extends JPanel {
+
+    int wordLength;
+    Parser parser;
+
+
+
     public static void main(String[] args) {
 
         int grammarLength = (args.length)-1;
@@ -18,9 +28,20 @@ class Main {
         }
         inputWord = args[grammarLength];
 
+        int wordLength = inputWord.length();
+
         Parser parser = new Parser(inputString, inputWord);
 
     }
+
+    //____________________________________________________________________________________________________
+
+    // following is for the plotting
+
+    //____________________________________________________________________________________________________
+
+
+    
 
 
 }

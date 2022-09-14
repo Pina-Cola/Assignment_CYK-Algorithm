@@ -13,6 +13,10 @@ public class Parser extends Grammar {
     int counterTD;
     int counterBU;
 
+    long timeElapsedNaive;
+    long timeElapsedBU;
+    long timeElapsedTD;
+
     public Parser(String[] inputString, String inputWord){
 
         grammar.nts_to_int(inputString);
@@ -31,7 +35,7 @@ public class Parser extends Grammar {
         counterN = 0;
         System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counterN);
         long finishNaive = System.currentTimeMillis();
-        long timeElapsedNaive = finishNaive - startNaive;
+        timeElapsedNaive = finishNaive - startNaive;
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
 
         // BottomUp function call
@@ -40,7 +44,7 @@ public class Parser extends Grammar {
         counterBU = 0;
         System.out.println("BottomUp: " + parseBU(this.inputWord) + "   Amount of calls: " + counterBU);
         long finishBU = System.currentTimeMillis();
-        long timeElapsedBU = finishBU - startBU;
+        timeElapsedBU = finishBU - startBU;
         System.out.println("Naive runtime: " + timeElapsedBU + "ms");
 
         // TopDown function call
@@ -50,7 +54,7 @@ public class Parser extends Grammar {
         counterTD = 0;
         System.out.println("TopDown: " + parseTD() + "   Amount of calls: " + counterTD);
         long finishTD = System.currentTimeMillis();
-        long timeElapsedTD = finishTD - startTD;
+        timeElapsedTD = finishTD - startTD;
         System.out.println("Naive runtime: " + timeElapsedTD + "ms");
     }
 
@@ -63,8 +67,37 @@ public class Parser extends Grammar {
 
 
 
-    public int getCounter(int counter){
-        return counter;
+    public int getCounterN(){
+        return counterN;
+    }
+
+    public int getCounterBU(){
+        return counterBU;
+    }
+
+    public int getCounterTD(){
+        return counterTD;
+    }
+
+
+    //____________________________________________________________________________________________________
+
+    // returns time
+
+    //____________________________________________________________________________________________________
+
+
+
+    public long getTimeN(){
+        return timeElapsedNaive;
+    }
+
+    public long getTimeBU(){
+        return timeElapsedBU;
+    }
+
+    public long getTimeTD(){
+        return timeElapsedTD;
     }
 
 
