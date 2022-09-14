@@ -1,6 +1,7 @@
 public class Parser extends Grammar {
 
     Grammar grammar = new Grammar();
+    
     public String[][] ruleset;      // all rules
     public String[][] rulesetNT;    // NT rules
     public String[][] rulesetT;     // T rules
@@ -344,5 +345,9 @@ public class Parser extends Grammar {
         }
         return -100;
     }
+
+
+
+
 }
 
