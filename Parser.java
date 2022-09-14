@@ -9,7 +9,9 @@ public class Parser extends Grammar {
 
     Boolean [][][] table;
 
-    int counter = 0;
+    int counterN;
+    int counterTD;
+    int counterBU;
 
     public Parser(String[] inputString, String inputWord){
 
@@ -26,7 +28,8 @@ public class Parser extends Grammar {
         // Naive function call
         long startNaive = System.currentTimeMillis();
         System.out.println("");
-        System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counter);
+        counterN = 0;
+        System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counterN);
         long finishNaive = System.currentTimeMillis();
         long timeElapsedNaive = finishNaive - startNaive;
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
@@ -34,8 +37,8 @@ public class Parser extends Grammar {
         // BottomUp function call
         long startBU = System.currentTimeMillis();
         System.out.println("");
-        counter = 0;
-        System.out.println("BottomUp: " + parseBU(this.inputWord) + "   Amount of calls: " + counter);
+        counterBU = 0;
+        System.out.println("BottomUp: " + parseBU(this.inputWord) + "   Amount of calls: " + counterBU);
         long finishBU = System.currentTimeMillis();
         long timeElapsedBU = finishBU - startBU;
         System.out.println("Naive runtime: " + timeElapsedBU + "ms");
@@ -44,8 +47,8 @@ public class Parser extends Grammar {
         long startTD = System.currentTimeMillis();
         table = new Boolean[ruleset.length][inputWord.length()+1][inputWord.length()+1];
         System.out.println("");
-        counter = 0;
-        System.out.println("TopDown: " + parseTD() + "   Amount of calls: " + counter);
+        counterTD = 0;
+        System.out.println("TopDown: " + parseTD() + "   Amount of calls: " + counterTD);
         long finishTD = System.currentTimeMillis();
         long timeElapsedTD = finishTD - startTD;
         System.out.println("Naive runtime: " + timeElapsedTD + "ms");
@@ -60,7 +63,7 @@ public class Parser extends Grammar {
 
 
 
-    public int getCounter(){
+    public int getCounter(int counter){
         return counter;
     }
 
@@ -75,7 +78,7 @@ public class Parser extends Grammar {
 
 
     public boolean parseNaive(){
-        counter = 0;
+        counterN = 0;
         return parseNaive(0, 0, inputWord.length);
     }
 
@@ -91,11 +94,10 @@ public class Parser extends Grammar {
 
     public boolean parseNaive(int indexNT, int i, int j){
 
-        counter += 1;
-        int rulesetLength = ruleset[0].length;
+        counterN += 1;
 
         if(i == (j-1)){
-            for(int l = 0; l < rulesetLength; l++){
+            for(int l = 0; l < ruleset[0].length; l++){
                 String symbol = String.valueOf(inputWord[i]);
                 if(ruleset[indexNT][l].equals(symbol)){
                     return true;
@@ -104,13 +106,11 @@ public class Parser extends Grammar {
             return false;
         }
         else{
-            for(int headIndex = indexNT; headIndex < ruleset.length; headIndex++){
-
-                for(int bodyIndex = 0; bodyIndex < ruleset[headIndex].length; bodyIndex++){
-                    if(ruleset[headIndex][bodyIndex].length() >= 2){
+                for(int bodyIndex = 0; bodyIndex < ruleset[indexNT].length; bodyIndex++){
+                    if(ruleset[indexNT][bodyIndex].length() >= 2){
+                        int first = Character.getNumericValue(ruleset[indexNT][bodyIndex].charAt(0));
+                        int second = Character.getNumericValue(ruleset[indexNT][bodyIndex].charAt(1));
                     for(int k = i+1; k < j; k++){
-                        int first = Character.getNumericValue(ruleset[headIndex][bodyIndex].charAt(0));
-                        int second = Character.getNumericValue(ruleset[headIndex][bodyIndex].charAt(1));
                         if(parseNaive(first,i,k) && parseNaive(second,k,j)){
                             return true;
                         }
@@ -118,7 +118,6 @@ public class Parser extends Grammar {
                 }
                 }
             }
-        } 
         return false;
     }
 
@@ -156,12 +155,12 @@ public class Parser extends Grammar {
         for(int l = 1; l < wordLength; l++){
             for(int i = 0; i < wordLength - l + 1; i++){
                 int j = i + l - 1;
-                for(int k = 0; k < l + 1; k++){
+                for(int k = i; k < j; k++){
 
                     // for each rule:
                     for(int head = 0; head < ruleset.length; head++){
                         for(int body = 0; body < ruleset[head].length; body++){
-                            counter += 1;
+                            counterBU += 1;
                             if(ruleset[head][body].length() >= 2 && !ruleset[head][body].isEmpty()){
                                 // System.out.println("String: " + ruleset[head][body]);
                                 String first = "" + ruleset[head][body].charAt(0);
@@ -184,8 +183,9 @@ public class Parser extends Grammar {
                 }
             } 
         } 
-
+        System.out.println("CYK-Table (Bottom Up): ");
         grammar.printStringMatrix(DP);
+        System.out.println("");
 
         if(DP[0][wordLength-1].equals("0")){
             return true;
@@ -204,8 +204,7 @@ public class Parser extends Grammar {
 
 
     public boolean parseTD(){
-        counter = 0;
-        int wordLength = inputWord.length;
+        counterTD = 0;
         
         for(int i = 0; i < table.length; i++){
             for(int j = 0; j < table[i].length; j++)
@@ -229,7 +228,7 @@ public class Parser extends Grammar {
 
     public boolean parseTD(int indexNT, int i, int j){
 
-        counter += 1;
+        counterTD += 1;
 
         int rulesetLength = ruleset[0].length;
         // int wordLength = inputWord.length;
@@ -248,18 +247,16 @@ public class Parser extends Grammar {
             return false;
         }
         else{
-            for(int headIndex = indexNT; headIndex < ruleset.length; headIndex++){
-                for(int bodyIndex = 0; bodyIndex < ruleset[headIndex].length; bodyIndex++){
-                    if(ruleset[headIndex][bodyIndex].length() >= 2){
+                for(int bodyIndex = 0; bodyIndex < ruleset[indexNT].length; bodyIndex++){
+                    if(ruleset[indexNT][bodyIndex].length() >= 2){
                     for(int k = i+1; k < j; k++){
-                        int first = Character.getNumericValue(ruleset[headIndex][bodyIndex].charAt(0));
-                        int second = Character.getNumericValue(ruleset[headIndex][bodyIndex].charAt(1));
-                        table[headIndex][i][j] = (parseTD(first,i,k) && parseTD(second,k,j));
-                        if(table[headIndex][i][j] == true){
+                        int first = Character.getNumericValue(ruleset[indexNT][bodyIndex].charAt(0));
+                        int second = Character.getNumericValue(ruleset[indexNT][bodyIndex].charAt(1));
+                        table[indexNT][i][j] = (parseTD(first,i,k) && parseTD(second,k,j));
+                        if(table[indexNT][i][j] == true){
                             return true;
                         }
                     }
-                }
                 }
             }
         } 
