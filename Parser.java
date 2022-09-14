@@ -26,7 +26,6 @@ public class Parser extends Grammar {
         rulesetNT = grammar.getRulesetNT(inputString);
         rulesetT = grammar.getRulesetT(inputString);
 
-
         System.out.println("Input word: " + inputWord);
         this.inputWord = inputWord.toCharArray();
 
@@ -57,48 +56,6 @@ public class Parser extends Grammar {
         long finishTD = System.currentTimeMillis();
         timeElapsedTD = finishTD - startTD;
         System.out.println("Naive runtime: " + timeElapsedTD + "ms");
-    }
-
-
-    //____________________________________________________________________________________________________
-
-    // returns counter
-
-    //____________________________________________________________________________________________________
-
-
-
-    public int getCounterN(){
-        return counterN;
-    }
-
-    public int getCounterBU(){
-        return counterBU;
-    }
-
-    public int getCounterTD(){
-        return counterTD;
-    }
-
-
-    //____________________________________________________________________________________________________
-
-    // returns time
-
-    //____________________________________________________________________________________________________
-
-
-
-    public long getTimeN(){
-        return timeElapsedNaive;
-    }
-
-    public long getTimeBU(){
-        return timeElapsedBU;
-    }
-
-    public long getTimeTD(){
-        return timeElapsedTD;
     }
 
 
@@ -183,8 +140,6 @@ public class Parser extends Grammar {
         }
 
         DP = grammar.beautifyStringMatrix(DP);
-        // grammar.printStringMatrix(DP);
-        // System.out.println("");
 
         for(int l = 1; l < wordLength; l++){
             for(int i = 0; i < wordLength - l + 1; i++){
@@ -196,15 +151,10 @@ public class Parser extends Grammar {
                         for(int body = 0; body < ruleset[head].length; body++){
                             counterBU += 1;
                             if(ruleset[head][body].length() >= 2 && !ruleset[head][body].isEmpty()){
-                                // System.out.println("String: " + ruleset[head][body]);
                                 String first = "" + ruleset[head][body].charAt(0);
                                 String second = "" + ruleset[head][body].charAt(1);
                                 first = first.toString();
                                 second = second.toString();
-                                // System.out.println("first: " + first);
-                                // System.out.println("second: " + second);
-                                // System.out.println("i: " + i + " j: " + " k : " + k);
-                                // System.out.println("");
 
                                 if(DP[i][k].contains(first) && DP[k+1][j].contains(second)){
                                     String temp = "" + head;
@@ -246,7 +196,6 @@ public class Parser extends Grammar {
                     table[i][j][k] = null;
                 }
         }
-
         return parseTD(0, 0, inputWord.length);
     }
 
@@ -263,9 +212,7 @@ public class Parser extends Grammar {
     public boolean parseTD(int indexNT, int i, int j){
 
         counterTD += 1;
-
         int rulesetLength = ruleset[0].length;
-        // int wordLength = inputWord.length;
 
         if(table[indexNT][i][j] != null){
             return table[indexNT][i][j];
@@ -323,7 +270,6 @@ public class Parser extends Grammar {
 
 
 
-
     //____________________________________________________________________________________________________
 
     // returns index (which stand for NT) if symbol in ruleset
@@ -345,9 +291,5 @@ public class Parser extends Grammar {
         }
         return -100;
     }
-
-
-
-
 }
 

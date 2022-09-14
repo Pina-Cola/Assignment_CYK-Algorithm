@@ -7,21 +7,13 @@ public class Grammar {
 
     public char[] NTerminalToInteger;
     
-
     public int inputLength;
     public int rulesLength;
-
 
     // Rulesets 
     public String[][] ruleset;      // all rules
     public String[][] rulesetNT;    // NT rules
     public String[][] rulesetT;     // T rules
-
-    public Grammar(){
-        
-    }
-
-
 
 
     //____________________________________________________________________________________________________
@@ -87,7 +79,6 @@ public class Grammar {
         for(String rules: inputString){
             max += 1;
         }
-        // max = 2;
         return max;
     }
 
@@ -115,7 +106,7 @@ public class Grammar {
 
             // get NT symbol (first symbol of each rule)
             char NT = rule.charAt(0);
-        
+
             boolean foundInMap = is_NT_symbol(NT, NTerminalToInteger);
 
             // add to array if not already existing
@@ -124,7 +115,6 @@ public class Grammar {
                 amountOfNT += 1;
             }
         }
-        // System.out.println("NT-Symbols: " + Arrays.toString(NTerminalToInteger));
         addRules(NTerminalToInteger, inputString);
 }
 
@@ -166,18 +156,14 @@ public class Grammar {
     public boolean is_NT_symbol (char NT, char[] NTerminalToInteger) {
         for(int i = 0; i <= NTerminalToInteger.length-1; i++){
             if(NTerminalToInteger[i] == NT){
-                // System.out.println("NT detected: " + NT);
                 return true;
             }
             if(NTerminalToInteger[i] == 0){
-                // System.out.println("T detected: " + NT);
                 return false;
             }
         }
         return false;
     }
-
-
 
 
     //____________________________________________________________________________________________________
@@ -250,9 +236,7 @@ public class Grammar {
 
         rulesetNT = new String[inputLength][rulesLength];
         rulesetT = new String[inputLength][rulesLength];
-
         ruleset = new String[inputLength][rulesLength];
-
 
         for(String rule: inputStrings){
             char[] rulesChar = rule.toCharArray();
@@ -312,7 +296,6 @@ public class Grammar {
 
         char[] ruleChar = rule.toCharArray();
         boolean is_NT_rule = is_NT_rule(ruleChar);
-
         int index = getIndexOfNT(NT, NTerminalToInteger);
 
         for(int i = 0; i < ruleset[index].length; i ++){
