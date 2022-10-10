@@ -272,6 +272,7 @@ public class Grammar {
         System.out.println("");
         System.out.println("Integers of NT symbols:");
         Int_NT_map(NTerminalToInteger);
+        /*
         System.out.println("");
         System.out.println("Matrix all rules:");
         printStringMatrix(ruleset);
@@ -281,7 +282,7 @@ public class Grammar {
         System.out.println("");
         System.out.println("Matrix NT rules:");
         printStringMatrix(rulesetNT);
-        System.out.println("");
+        System.out.println(""); */
     }
 
 
@@ -342,6 +343,40 @@ public class Grammar {
             }
         }
         return true;
+    }
+
+
+
+    //____________________________________________________________________________________________________
+
+    // from String[][] to int[][][]
+
+    //____________________________________________________________________________________________________
+
+
+
+    public Integer[][][] changeIntoIntMatrix(String[][] rulesetString){
+
+        Integer[][][] rulesetInt = new Integer[rulesetString.length][rulesetString[0].length][2];
+
+        for(int i = 0; i < rulesetString.length; i++){
+            for(int j = 0; j < rulesetString[i].length; j++){
+                if(rulesetString[i][j] != null && rulesetString[i][j].length() >= 2){
+                int first = Character.getNumericValue(rulesetString[i][j].charAt(0));
+                int second = Character.getNumericValue(rulesetString[i][j].charAt(1));
+                rulesetInt[i][j][0] = first;
+                rulesetInt[i][j][1] = second;
+                }
+                /* if(rulesetString[i][j] != null && rulesetString[i][j].length() == 1){
+
+            } */
+        }
+    }
+
+        // printIntMatrix(rulesetInt);
+
+        return rulesetInt;
+        
     }
 
 
@@ -414,12 +449,14 @@ public class Grammar {
             System.out.println(Arrays.toString(row));
     }
 
-    public void printIntMatrix(int[][][] printMatrix){
+    public void printIntMatrix(Integer[][][] printMatrix){
         String[][] stringMatrix = new String[printMatrix.length][printMatrix[0].length];
         for(int i = 0; i < printMatrix.length; i++){
             for(int j = 0; j < printMatrix[i].length; j++){
+                if(printMatrix[i][j][0] != null){
                 String ruleTemp = String.valueOf(printMatrix[i][j][0]) + "" + String.valueOf(printMatrix[i][j][1]);
                 stringMatrix[i][j] = ruleTemp;
+            }
             }
         }
 

@@ -6,6 +6,10 @@ public class Parser {
     public String[][] rulesetNT;    // NT rules
     public String[][] rulesetT;     // T rules
 
+    public Integer[][][] ruleset_int;      // all rules
+    public Integer[][][] rulesetNT_int;    // NT rules
+    public Integer[][][] rulesetT_int;     // T rules
+
     public char[] inputWord;
 
     Boolean [][][] table;
@@ -25,6 +29,22 @@ public class Parser {
         ruleset = grammar.getRuleset(inputString);
         rulesetNT = grammar.getRulesetNT(inputString);
         rulesetT = grammar.getRulesetT(inputString);
+
+        ruleset_int = grammar.changeIntoIntMatrix(ruleset);
+        rulesetT_int = grammar.changeIntoIntMatrix(rulesetT);
+        rulesetNT_int = grammar.changeIntoIntMatrix(rulesetNT);
+
+        System.out.println("");
+        System.out.println("Matrix all rules:");
+        grammar.printIntMatrix(ruleset_int);
+        System.out.println("");
+        System.out.println("Matrix T rules:");
+        grammar.printIntMatrix(rulesetT_int);
+        System.out.println("");
+        System.out.println("Matrix NT rules:");
+        grammar.printIntMatrix(rulesetNT_int);
+        System.out.println("");
+
 
         System.out.println("Input word: " + inputWord);
         this.inputWord = inputWord.toCharArray();
