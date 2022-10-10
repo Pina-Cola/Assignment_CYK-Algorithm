@@ -1,4 +1,4 @@
-public class Parser extends Grammar {
+public class Parser {
 
     Grammar grammar = new Grammar();
     
@@ -10,9 +10,9 @@ public class Parser extends Grammar {
 
     Boolean [][][] table;
 
-    int counterN;
-    int counterTD;
-    int counterBU;
+    long counterN;
+    long counterTD;
+    long counterBU;
 
     long timeElapsedNaive;
     long timeElapsedBU;
@@ -20,7 +20,7 @@ public class Parser extends Grammar {
 
     public Parser(String[] inputString, String inputWord){
 
-        grammar.nts_to_int(inputString);
+        grammar.nts_to_array(inputString);
 
         ruleset = grammar.getRuleset(inputString);
         rulesetNT = grammar.getRulesetNT(inputString);
@@ -29,15 +29,6 @@ public class Parser extends Grammar {
         System.out.println("Input word: " + inputWord);
         this.inputWord = inputWord.toCharArray();
 
-        // Naive function call
-        long startNaive = System.currentTimeMillis();
-        System.out.println("");
-        counterN = 0;
-        System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counterN);
-        long finishNaive = System.currentTimeMillis();
-        timeElapsedNaive = finishNaive - startNaive;
-        System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
-
         // BottomUp function call
         long startBU = System.currentTimeMillis();
         System.out.println("");
@@ -45,7 +36,7 @@ public class Parser extends Grammar {
         System.out.println("BottomUp: " + parseBU(this.inputWord) + "   Amount of calls: " + counterBU);
         long finishBU = System.currentTimeMillis();
         timeElapsedBU = finishBU - startBU;
-        System.out.println("Naive runtime: " + timeElapsedBU + "ms");
+        System.out.println("BottomUp runtime: " + timeElapsedBU + "ms");
 
         // TopDown function call
         long startTD = System.currentTimeMillis();
@@ -55,7 +46,17 @@ public class Parser extends Grammar {
         System.out.println("TopDown: " + parseTD() + "   Amount of calls: " + counterTD);
         long finishTD = System.currentTimeMillis();
         timeElapsedTD = finishTD - startTD;
-        System.out.println("Naive runtime: " + timeElapsedTD + "ms");
+        System.out.println("TopDown runtime: " + timeElapsedTD + "ms");
+
+
+        // Naive function call
+        long startNaive = System.currentTimeMillis();
+        System.out.println("");
+        counterN = 0;
+        System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counterN);
+        long finishNaive = System.currentTimeMillis();
+        timeElapsedNaive = finishNaive - startNaive;
+        System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
     }
 
 
@@ -142,9 +143,9 @@ public class Parser extends Grammar {
         DP = grammar.beautifyStringMatrix(DP);
 
         for(int l = 1; l < wordLength; l++){
-            for(int i = 0; i < wordLength - l + 1; i++){
-                int j = i + l - 1;
-                for(int k = i; k < j; k++){
+            for(int i = 0; i < wordLength - l ; i++){
+                int j = i + l;
+                for(int k = 0; k < j; k++){
 
                     // for each rule:
                     for(int head = 0; head < ruleset.length; head++){
@@ -158,7 +159,6 @@ public class Parser extends Grammar {
 
                                 if(DP[i][k].contains(first) && DP[k+1][j].contains(second)){
                                     String temp = "" + head;
-                                    // System.out.println(temp);
                                     DP[i][j] = DP[i][j] + temp;                               
                                 }
                             }                          
@@ -167,11 +167,10 @@ public class Parser extends Grammar {
                 }
             } 
         } 
-        System.out.println("CYK-Table (Bottom Up): ");
-        grammar.printStringMatrix(DP);
-        System.out.println("");
 
-        if(DP[0][wordLength-1].equals("0")){
+        // grammar.printStringMatrix(DP);
+
+        if(DP[0][wordLength-1].contains("0")){
             return true;
         }
 

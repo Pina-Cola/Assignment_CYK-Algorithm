@@ -91,7 +91,7 @@ public class Grammar {
     //____________________________________________________________________________________________________
 
 
-    public void nts_to_int(String[] inputString){
+    public void nts_to_array(String[] inputString){
 
         // assuming that each NT-symbol has ONE char as a name
 
