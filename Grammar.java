@@ -4,6 +4,7 @@ public class Grammar {
 
     // expected input for a rule: 
     // for example rule S -> AB as "SAB"
+    // java Main "SSS" "SLA" "SLR" "ASR" "L(" "R)" "(())"
 
     public char[] NTerminalToInteger;
     
@@ -411,6 +412,18 @@ public class Grammar {
     public void printStringMatrix(String[][] rules){
         for (String[] row : rules)
             System.out.println(Arrays.toString(row));
+    }
+
+    public void printIntMatrix(int[][][] printMatrix){
+        String[][] stringMatrix = new String[printMatrix.length][printMatrix[0].length];
+        for(int i = 0; i < printMatrix.length; i++){
+            for(int j = 0; j < printMatrix[i].length; j++){
+                String ruleTemp = String.valueOf(printMatrix[i][j][0]) + "" + String.valueOf(printMatrix[i][j][1]);
+                stringMatrix[i][j] = ruleTemp;
+            }
+        }
+
+        printStringMatrix(stringMatrix);
     }
 }
 
