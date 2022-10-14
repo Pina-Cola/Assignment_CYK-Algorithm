@@ -12,7 +12,7 @@ public class Parser {
 
     public char[] inputWord;
 
-    public int[] inputAsInt;
+    public Integer[] inputAsInt;
 
     Boolean [][][] table;
 

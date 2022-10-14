@@ -574,12 +574,16 @@ public class Grammar {
 
 
 
-    public int[] inputStringToInt(String inputString){
+    public Integer[] inputStringToInt(String inputString){
         
-        int[] inputAsInt = new int[inputString.length()];
+        Integer[] inputAsInt = new Integer[inputString.length()];
 
         for(int i = 0; i < inputString.length(); i++){
-            inputAsInt[i] = Int_ArrayList.indexOf(inputString.charAt(i));
+            char singleCharacter = inputString.charAt(i);
+            System.out.println(singleCharacter);
+            int intOfCharacter = Int_ArrayList.indexOf(singleCharacter);
+            System.out.println(intOfCharacter);
+            inputAsInt[i] = Int_ArrayList.indexOf(singleCharacter);
         }
 
         return inputAsInt;
