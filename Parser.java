@@ -12,6 +12,8 @@ public class Parser {
 
     public char[] inputWord;
 
+    public int[] inputAsInt;
+
     Boolean [][][] table;
 
     long counterN;
@@ -34,6 +36,8 @@ public class Parser {
         rulesetT_int = grammar.changeIntoIntMatrix(rulesetT);
         rulesetNT_int = grammar.changeIntoIntMatrix(rulesetNT);
 
+        inputAsInt = grammar.inputStringToInt(inputWord);
+
         System.out.println("");
         System.out.println("Matrix all rules:");
         grammar.printIntMatrix(ruleset_int);
@@ -46,14 +50,14 @@ public class Parser {
         System.out.println("");
 
 
-        System.out.println("Input word: " + inputWord);
+        System.out.println("Input word: " + inputAsInt.toString());
         this.inputWord = inputWord.toCharArray();
 
         // BottomUp function call
         long startBU = System.currentTimeMillis();
         System.out.println("");
         counterBU = 0;
-        System.out.println("BottomUp: " + parseBU(this.inputWord) + "   Amount of calls: " + counterBU);
+        // System.out.println("BottomUp: " + parseBU(this.inputWord) + "   Amount of calls: " + counterBU);
         long finishBU = System.currentTimeMillis();
         timeElapsedBU = finishBU - startBU;
         System.out.println("BottomUp runtime: " + timeElapsedBU + "ms");
@@ -63,7 +67,7 @@ public class Parser {
         table = new Boolean[ruleset.length][inputWord.length()+1][inputWord.length()+1];
         System.out.println("");
         counterTD = 0;
-        System.out.println("TopDown: " + parseTD() + "   Amount of calls: " + counterTD);
+        // System.out.println("TopDown: " + parseTD() + "   Amount of calls: " + counterTD);
         long finishTD = System.currentTimeMillis();
         timeElapsedTD = finishTD - startTD;
         System.out.println("TopDown runtime: " + timeElapsedTD + "ms");
@@ -73,7 +77,7 @@ public class Parser {
         long startNaive = System.currentTimeMillis();
         System.out.println("");
         counterN = 0;
-        System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counterN);
+        // System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counterN);
         long finishNaive = System.currentTimeMillis();
         timeElapsedNaive = finishNaive - startNaive;
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
