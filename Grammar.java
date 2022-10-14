@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Grammar {
@@ -7,6 +8,10 @@ public class Grammar {
     // java Main "SSS" "SLA" "SLR" "ASR" "L(" "R)" "(())"
 
     public char[] NTerminalToInteger;
+    public ArrayList<Character> Int_ArrayList = new ArrayList<Character>();
+    // public char[] EverythingToInt;
+
+    public int[] inputWord;
     
     public int inputLength;
     public int rulesLength;
@@ -15,6 +20,7 @@ public class Grammar {
     public String[][] ruleset;      // all rules
     public String[][] rulesetNT;    // NT rules
     public String[][] rulesetT;     // T rules
+
 
 
     //____________________________________________________________________________________________________
@@ -105,6 +111,7 @@ public class Grammar {
         // loop through all rules
         for(String rule: inputString){
 
+            
             // get NT symbol (first symbol of each rule)
             char NT = rule.charAt(0);
 
@@ -117,7 +124,7 @@ public class Grammar {
             }
         }
         addRules(NTerminalToInteger, inputString);
-}
+    }
 
 
     //____________________________________________________________________________________________________
@@ -135,14 +142,14 @@ public class Grammar {
                 length += 1;
             }
         }
-        char[][] NT_int_map = new char[2][length];
+        char[][] int_map = new char[2][length];
 
         for(int i = 0; i < length; i++){
             char temp = (char)(i+'0');
-            NT_int_map[0][i] = temp;
-            NT_int_map[1][i]= NTerminalToInteger[i];
+            int_map[0][i] = temp;
+            int_map[1][i]= NTerminalToInteger[i];
         }
-        printMatrix(NT_int_map);
+        printMatrix(int_map);
     }
 
 
@@ -220,6 +227,8 @@ public class Grammar {
         }
         return ruleArray; 
     }
+
+
 
 
     //____________________________________________________________________________________________________
@@ -357,6 +366,11 @@ public class Grammar {
 
     public Integer[][][] changeIntoIntMatrix(String[][] rulesetString){
 
+        rulesetString = replace_T_symbols(rulesetString);
+
+        printStringMatrix(rulesetString);
+        System.out.println("");
+
         Integer[][][] rulesetInt = new Integer[rulesetString.length][rulesetString[0].length][2];
 
         for(int i = 0; i < rulesetString.length; i++){
@@ -373,6 +387,7 @@ public class Grammar {
         }
     }
 
+    replace_T_symbols(rulesetString);
         // printIntMatrix(rulesetInt);
 
         return rulesetInt;
@@ -456,11 +471,93 @@ public class Grammar {
                 if(printMatrix[i][j][0] != null){
                 String ruleTemp = String.valueOf(printMatrix[i][j][0]) + "" + String.valueOf(printMatrix[i][j][1]);
                 stringMatrix[i][j] = ruleTemp;
-            }
+                }
+                else{
+                    stringMatrix[i][j] = "";
+                }
             }
         }
 
         printStringMatrix(stringMatrix);
     }
+
+
+
+
+    //____________________________________________________________________________________________________
+
+    // replace T symbols with Integers
+
+    //____________________________________________________________________________________________________
+
+
+
+    public String[][] replace_T_symbols(String[][] R){
+
+        for(int i = 0; i < NTerminalToInteger.length; i++){
+            Int_ArrayList.add(NTerminalToInteger[i]);
+        }
+
+        String alreadyInt = "";
+
+        int startInt = checkNTAmount(NTerminalToInteger);
+        System.out.println("StartInt: " + startInt);
+        String intString = "0123456789";
+
+        for(int i = 0; i < R.length; i++){
+            for(int j = 0; j < R[i].length; j++){
+
+                for(int k = 0; k <  R[i][j].length(); k++){
+                    char temp = R[i][j].charAt(k);
+                    System.out.println("Char: " + temp);
+                    if(intString.indexOf(temp) == -1 && !alreadyInt.contains(R[i][j])){
+                        System.out.println("it happens");
+                        System.out.println("");
+                        String index = String.valueOf(startInt);
+                        String originalSymbol = String.valueOf(temp);
+                        R[i][j] = R[i][j].replace(originalSymbol, index);
+                        System.out.println("Replace " + originalSymbol + " with " + index);
+                        Int_ArrayList.add(temp);
+                        // System.out.println("Index: " + index);
+                        System.out.println("String: " + R[i][j]);
+                        alreadyInt += originalSymbol;
+                        startInt++;
+                    }
+                    if(intString.indexOf(temp) == -1 && alreadyInt.contains(R[i][j])){
+                        int indexFromArrayList = Int_ArrayList.indexOf(temp);
+                        char index = (char)(indexFromArrayList+'0');
+                        R[i][j].replace(temp, index);
+                    }
+                }
+                
+
+            }
+        }
+
+
+        return ruleset;
+        
+    }
+
+    //____________________________________________________________________________________________________
+
+    // checks amount of NT Symbols (which have integers and are not null)
+
+    //____________________________________________________________________________________________________
+
+
+
+    public int checkNTAmount(char[] array){
+        int counter = 0;
+
+        for(int i = 0; i < array.length; i++){
+            if(array[i] != '\0'){
+                counter++;
+            }
+        }
+
+        return counter;
+    }
+
 }
 
