@@ -49,9 +49,10 @@ public class Parser {
         grammar.printIntMatrix(rulesetNT_int);
         System.out.println("");
 
-
-        System.out.println("Input word: " + inputAsInt.toString());
-        this.inputWord = inputWord.toCharArray();
+        System.out.println("Inputword as Integers:");
+        grammar.printIntegerArray(inputAsInt);
+        System.out.println("");
+        // this.inputWord = inputWord.toCharArray();
 
         // BottomUp function call
         long startBU = System.currentTimeMillis();

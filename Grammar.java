@@ -134,20 +134,21 @@ public class Grammar {
     //____________________________________________________________________________________________________
 
 
-    public void Int_NT_map (char[] NTerminalToInteger) {
+    public void Int_NT_map (ArrayList<Character> ArrayList) {
 
-        int length = 0;
-        for(int i = 0; i < NTerminalToInteger.length; i++){
+        /* int length = 0;
+        for(int i = 0; i < ArrayList.size(); i++){
             if(NTerminalToInteger[i] != 0){
                 length += 1;
             }
-        }
-        char[][] int_map = new char[2][length];
+        } */
 
-        for(int i = 0; i < length; i++){
+        Character[][] int_map = new Character[2][ArrayList.size()];
+
+        for(int i = 0; i < ArrayList.size(); i++){
             char temp = (char)(i+'0');
             int_map[0][i] = temp;
-            int_map[1][i]= NTerminalToInteger[i];
+            int_map[1][i] = ArrayList.get(i);
         }
         printMatrix(int_map);
     }
@@ -278,9 +279,6 @@ public class Grammar {
         rulesetNT = replace_NT_with_int(rulesetNT);
         rulesetT = replace_NT_with_int(rulesetT);
         
-        System.out.println("");
-        System.out.println("Integers of NT symbols:");
-        Int_NT_map(NTerminalToInteger);
         /*
         System.out.println("");
         System.out.println("Matrix all rules:");
@@ -368,8 +366,11 @@ public class Grammar {
 
         rulesetString = replace_T_symbols(rulesetString);
 
-        // printStringMatrix(rulesetString);
         System.out.println("");
+        System.out.println("Integers of input symbols:");
+        Int_NT_map(Int_ArrayList);
+        // printStringMatrix(rulesetString);
+        // System.out.println("");
 
         Integer[][][] rulesetInt = new Integer[rulesetString.length][rulesetString[0].length][2];
 
@@ -449,9 +450,14 @@ public class Grammar {
     //____________________________________________________________________________________________________
 
 
+    public void printIntegerArray(Integer[] array){
+        for(int i = 0; i < array.length; i++){
+            System.out.print(array[i] + " ");
+        }
+    }
 
-    public void printMatrix(char[][] rules){
-        for (char[] row : rules)
+    public void printMatrix(Character[][] rules){
+        for (Character[] row : rules)
             System.out.println(Arrays.toString(row));
     }
 
@@ -580,10 +586,8 @@ public class Grammar {
 
         for(int i = 0; i < inputString.length(); i++){
             char singleCharacter = inputString.charAt(i);
-            System.out.println(singleCharacter);
             int intOfCharacter = Int_ArrayList.indexOf(singleCharacter);
-            System.out.println(intOfCharacter);
-            inputAsInt[i] = Int_ArrayList.indexOf(singleCharacter);
+            inputAsInt[i] = intOfCharacter;
         }
 
         return inputAsInt;
