@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Parser {
 
     Grammar grammar = new Grammar();
@@ -13,6 +15,7 @@ public class Parser {
     public char[] inputWord;
 
     public Integer[] inputAsInt;
+    public ArrayList<Character> Int_ArrayList = new ArrayList<Character>();
 
     Boolean [][][] table;
 
@@ -35,6 +38,11 @@ public class Parser {
         ruleset_int = grammar.changeIntoIntMatrix(ruleset);
         rulesetT_int = grammar.changeIntoIntMatrix(rulesetT);
         rulesetNT_int = grammar.changeIntoIntMatrix(rulesetNT);
+
+        System.out.println("");
+        System.out.println("Symbols as Integers:");
+        Int_ArrayList = grammar.Int_ArrayList;
+        grammar.Int_NT_map(Int_ArrayList);
 
         inputAsInt = grammar.inputStringToInt(inputWord);
 
