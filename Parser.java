@@ -31,6 +31,9 @@ public class Parser {
 
     public Parser(String[] inputString, String inputWord) {
 
+        System.out.println("");
+        System.out.println("Grammar in CNF? " + grammar.isCNF(inputString));
+
         grammar.nts_to_array(inputString);
 
         ruleset = grammar.getRuleset(inputString);
@@ -74,7 +77,7 @@ public class Parser {
 
         // TopDown function call
         long startTD = System.currentTimeMillis();
-        table = new Boolean[ruleset.length][inputWord.length() + 1][inputWord.length() + 1];
+        table = new Boolean[ruleset_int.length][inputWord.length() + 1][inputWord.length() + 1];
         System.out.println("");
         counterTD = 0;
         System.out.println("TopDown: " + parseTD() + " Amount of calls: " + counterTD);
@@ -224,7 +227,7 @@ public class Parser {
                 }
             }
         }
-        return -1;
+        return DP.length-1;
     }
 
     // ____________________________________________________________________________________________________

@@ -645,5 +645,127 @@ public class Grammar {
     }
 
 
+    //____________________________________________________________________________________________________
+
+    // tests if grammar is in CNF
+
+    //____________________________________________________________________________________________________
+
+
+
+    public boolean isCNF(String[] inputRules){
+
+        for(String rule : inputRules){
+            if(rule.length() == 3){
+                char firstSymbol = rule.charAt(1);
+                char secondSymbol = rule.charAt(2);
+                if(!Character.isUpperCase(firstSymbol) || !Character.isUpperCase(secondSymbol)){
+                    return false;
+                }
+            }
+        }        
+        
+        return true;
+
+    }
+
+    //____________________________________________________________________________________________________
+
+    // tests if grammar is in CNF
+
+    //____________________________________________________________________________________________________
+
+
+
+    public String[] changeIntoCNF(String[] inputRules){
+
+        String usedNTsymbol = getNTsymbols(inputRules);
+        String[] CNFrules = new String[inputRules.length * 3];  
+        int index = 0;  
+
+        for(String rule : inputRules){
+
+            if(rule.length() == 3){
+                char head = rule.charAt(0);
+                char firstSymbol = rule.charAt(1);
+                char secondSymbol = rule.charAt(2);
+
+                // both symbols are NT symbols
+                if(Character.isUpperCase(firstSymbol) && Character.isUpperCase(secondSymbol)){
+                    CNFrules[index] = rule;
+                    index = index++;
+                    usedNTsymbol = usedNTsymbol + rule;
+                }
+
+                // first NT then T symbol
+                if(Character.isUpperCase(firstSymbol) && !Character.isUpperCase(secondSymbol)){
+                    usedNTsymbol = findNewNTsymbol(usedNTsymbol);
+                    String newNT = "" + usedNTsymbol.charAt(usedNTsymbol.length());
+                    CNFrules[index] = "" + head + firstSymbol + newNT;
+                    index = index++;
+                    CNFrules[index] = "" + newNT  + secondSymbol;
+                    
+                }
+
+                // first T then NT symbol
+                if(!Character.isUpperCase(firstSymbol) && Character.isUpperCase(secondSymbol)){
+                    usedNTsymbol = findNewNTsymbol(usedNTsymbol);
+
+                }
+
+
+            }
+        }  
+
+        return CNFrules;
+
+    }
+
+
+    //____________________________________________________________________________________________________
+
+    // puts NT symbols into string
+
+    //____________________________________________________________________________________________________
+
+
+
+    public String getNTsymbols(String[] inputRules){
+
+        String NTsymbols = "";
+
+        for(String rule : inputRules){
+                NTsymbols = NTsymbols + rule.charAt(0);
+        }  
+
+        return NTsymbols;
+
+    }
+
+
+
+    //____________________________________________________________________________________________________
+
+    // finds not used NT symbol
+
+    //____________________________________________________________________________________________________
+
+
+
+    public String findNewNTsymbol(String usedSymbols){
+
+        for(char symbol = 'Z'; symbol >= 'A'; symbol--){
+            String symbolAsString = "" + symbol;
+            if (!usedSymbols.contains(symbolAsString)){
+                usedSymbols = usedSymbols + symbolAsString;
+                return usedSymbols;
+            }
+        }
+
+        return usedSymbols;
+
+    }
+
+
 }
 
