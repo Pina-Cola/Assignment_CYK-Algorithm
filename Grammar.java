@@ -6,6 +6,7 @@ public class Grammar {
     // expected input for a rule: 
     // for example rule S -> AB as "SAB"
     // java Main "SSS" "SLA" "SLR" "ASR" "L(" "R)" "(())"
+    // java Main "SAc" "Sb" "AaS" "AaB" "BbS" "abc"
 
     public char[] NTerminalToInteger;
     public ArrayList<Character> Int_ArrayList = new ArrayList<Character>();
@@ -434,7 +435,7 @@ public class Grammar {
 
         for(int i = 0; i < matrix.length; i++){
             if(matrix[i] != null){
-                counter = counter ++;
+                counter += 1;
             }
         }
 
@@ -526,7 +527,7 @@ public class Grammar {
         for(int i = 0; i < printMatrix.length; i++){
             for(int j = 0; j < printMatrix[i].length; j++){
                 if(printMatrix[i][j][0] != null && printMatrix[i][j][1] != null){
-                String ruleTemp = String.valueOf(printMatrix[i][j][0]) + "" + String.valueOf(printMatrix[i][j][1]);
+                String ruleTemp = String.valueOf(printMatrix[i][j][0]) + " " + String.valueOf(printMatrix[i][j][1]);
                 stringMatrix[i][j] = ruleTemp;
                 }
                 else if(printMatrix[i][j][0] != null && printMatrix[i][j][1] == null){
@@ -715,6 +716,9 @@ public class Grammar {
         String[] CNFrules = new String[inputRules.length * 3];  
         int index = 0;  
 
+        String[][] newNTsymbols = new String[inputRules.length][2];
+        int indexForNewSymbols = 0; 
+
         for(String rule : inputRules){
 
             if(rule.length() == 3){
@@ -722,37 +726,70 @@ public class Grammar {
                 char firstSymbol = rule.charAt(1);
                 char secondSymbol = rule.charAt(2);
 
-                System.out.println("Symbole als char: " + head + firstSymbol + secondSymbol);
-
                 // both symbols are NT symbols
                 if(Character.isUpperCase(firstSymbol) && Character.isUpperCase(secondSymbol)){
                     CNFrules[index] = rule;
-                    index = index++;
+                    index = index+1;
                     usedNTsymbol = usedNTsymbol + rule;
                 }
 
                 // first NT then T symbol
                 if(Character.isUpperCase(firstSymbol) && !Character.isUpperCase(secondSymbol)){
+
+                    String newNT = "";
+
+                    if(isAlreadyContained(secondSymbol, newNTsymbols)){
+                        newNT = isAlreadyContainedAt(secondSymbol, newNTsymbols);
+                        CNFrules[index] = "" + head + firstSymbol + newNT;
+                        index = index+1;
+                    }
+                    else{
                     usedNTsymbol = findNewNTsymbol(usedNTsymbol);
-                    String newNT = "" + usedNTsymbol.charAt(usedNTsymbol.length()-1);
+                    newNT = "" + usedNTsymbol.charAt(usedNTsymbol.length()-1);
                     CNFrules[index] = "" + head + firstSymbol + newNT;
-                    index = index++;
+                    index = index+1;
                     CNFrules[index] = "" + newNT  + secondSymbol;
-                    index = index++;
+                    index = index+1;
+                    newNTsymbols[indexForNewSymbols][0] = "" + secondSymbol;
+                    newNTsymbols[indexForNewSymbols][1] = newNT;
+                    indexForNewSymbols += 1;
+                    }
+
+
                     
+
                 }
 
                 // first T then NT symbol
                 if(!Character.isUpperCase(firstSymbol) && Character.isUpperCase(secondSymbol)){
+                    String newNT = "";
+
+                    if(isAlreadyContained(firstSymbol, newNTsymbols)){
+                        newNT = isAlreadyContainedAt(firstSymbol, newNTsymbols);
+                        CNFrules[index] = "" + head  + newNT + secondSymbol;
+                        index = index+1;
+                    }
+                    else{
                     usedNTsymbol = findNewNTsymbol(usedNTsymbol);
-                    String newNT = "" + usedNTsymbol.charAt(usedNTsymbol.length()-1);
+                    newNT = "" + usedNTsymbol.charAt(usedNTsymbol.length()-1);
+                    CNFrules[index] = "" + head  + newNT + secondSymbol;
+                    index = index+1;
                     CNFrules[index] = "" + newNT + firstSymbol;
-                    index = index++;
-                    CNFrules[index] = "" + head +  firstSymbol + newNT;
-                    index = index++;
+                    index = index+1;
+                    newNTsymbols[indexForNewSymbols][0] = "" + firstSymbol;
+                    newNTsymbols[indexForNewSymbols][1] = newNT;
+                    indexForNewSymbols += 1;
+                    }
+
                 }
             }
-        }  
+
+            if(rule.length() == 2){
+                CNFrules[index] = rule;
+                index = index+1;
+                usedNTsymbol = usedNTsymbol + rule;
+            }
+        } 
 
         CNFrules = beautify1DStringArray(CNFrules);
 
@@ -802,6 +839,52 @@ public class Grammar {
         }
 
         return usedSymbols;
+
+    }
+
+
+    //____________________________________________________________________________________________________
+
+    // checks if T symbol already has a replacement NT symbol
+
+    //____________________________________________________________________________________________________
+
+
+
+    public boolean isAlreadyContained(char symbol, String[][] newSymbols){
+
+        String s = "" + symbol;
+
+        for(int i = 0; i < newSymbols.length; i++){
+            if(newSymbols[i][0] != null && newSymbols[i][0].contains(s)){
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+
+    //____________________________________________________________________________________________________
+
+    // returns replacement NT symbol of T symbol
+
+    //____________________________________________________________________________________________________
+
+
+
+    public String isAlreadyContainedAt(char symbol, String[][] newSymbols){
+
+        String s = "" + symbol;
+
+        for(int i = 0; i < newSymbols.length; i++){
+            if(newSymbols[i][0] != null && newSymbols[i][0].contains(s)){
+                return newSymbols[i][1];
+            }
+        }
+
+        return "";
 
     }
 

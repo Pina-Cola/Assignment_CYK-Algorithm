@@ -40,17 +40,6 @@ public class Parser {
             inputString = grammar.changeIntoCNF(inputString);
         }
 
-        //////////////////////////////////////////////////////////////////////////////
-        System.out.println("Das passiert");
-
-        if(inputString == null){
-            System.out.println("empty");
-        }
-
-        for(int i = 0; i < inputString.length; i++){
-            System.out.println(inputString[i]);
-        }  ////////////////////////////////////////////////////////////////////////
-
         grammar.nts_to_array(inputString);
 
         ruleset = grammar.getRuleset(inputString);
