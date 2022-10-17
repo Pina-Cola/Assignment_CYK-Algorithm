@@ -1,3 +1,5 @@
+import javax.xml.stream.FactoryConfigurationError;
+
 /*
  *  Input example:  "SSS" "SLA" "SLR" "ASR" "L(" "R)" "(())"
  *  first: rules without arrows (one rule as one String)
@@ -18,6 +20,7 @@ class Main {
             inputString[i]=args[i];
         }
         inputWord = args[grammarLength];
+
         Parser parser = new Parser(inputString, inputWord);
     }
 }

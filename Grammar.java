@@ -102,6 +102,10 @@ public class Grammar {
 
     public void nts_to_array(String[] inputString){
 
+        /* for(int i = 0; i < inputString.length; i++){
+            System.out.println(inputString[i]);
+        } */
+
         // assuming that each NT-symbol has ONE char as a name
 
         inputLength = inputLength(inputString);
@@ -378,7 +382,7 @@ public class Grammar {
 
     //____________________________________________________________________________________________________
 
-    // make 2D array smaller and nicer
+    // make arrays smaller and nicer
 
     //____________________________________________________________________________________________________
 
@@ -419,6 +423,34 @@ public class Grammar {
         }
         return smallerMatrix;
     }
+
+     //____________________________________________________________________________________________________
+
+
+
+    public String[] beautify1DStringArray(String[] matrix){
+
+        int counter = 0;
+
+        for(int i = 0; i < matrix.length; i++){
+            if(matrix[i] != null){
+                counter = counter ++;
+            }
+        }
+
+        String[] smallerArray = new String[counter];
+
+        for(int i = 0; i < counter; i++){
+            smallerArray[i] = matrix[i];
+        }
+
+        return smallerArray;
+        
+    }
+
+
+    //____________________________________________________________________________________________________
+
 
 
     public Integer[][][] beautifyIntegerMatrix(Integer[][][] matrix){
@@ -690,6 +722,8 @@ public class Grammar {
                 char firstSymbol = rule.charAt(1);
                 char secondSymbol = rule.charAt(2);
 
+                System.out.println("Symbole als char: " + head + firstSymbol + secondSymbol);
+
                 // both symbols are NT symbols
                 if(Character.isUpperCase(firstSymbol) && Character.isUpperCase(secondSymbol)){
                     CNFrules[index] = rule;
@@ -700,22 +734,27 @@ public class Grammar {
                 // first NT then T symbol
                 if(Character.isUpperCase(firstSymbol) && !Character.isUpperCase(secondSymbol)){
                     usedNTsymbol = findNewNTsymbol(usedNTsymbol);
-                    String newNT = "" + usedNTsymbol.charAt(usedNTsymbol.length());
+                    String newNT = "" + usedNTsymbol.charAt(usedNTsymbol.length()-1);
                     CNFrules[index] = "" + head + firstSymbol + newNT;
                     index = index++;
                     CNFrules[index] = "" + newNT  + secondSymbol;
+                    index = index++;
                     
                 }
 
                 // first T then NT symbol
                 if(!Character.isUpperCase(firstSymbol) && Character.isUpperCase(secondSymbol)){
                     usedNTsymbol = findNewNTsymbol(usedNTsymbol);
-
+                    String newNT = "" + usedNTsymbol.charAt(usedNTsymbol.length()-1);
+                    CNFrules[index] = "" + newNT + firstSymbol;
+                    index = index++;
+                    CNFrules[index] = "" + head +  firstSymbol + newNT;
+                    index = index++;
                 }
-
-
             }
         }  
+
+        CNFrules = beautify1DStringArray(CNFrules);
 
         return CNFrules;
 
@@ -754,12 +793,12 @@ public class Grammar {
 
     public String findNewNTsymbol(String usedSymbols){
 
-        for(char symbol = 'Z'; symbol >= 'A'; symbol--){
-            String symbolAsString = "" + symbol;
-            if (!usedSymbols.contains(symbolAsString)){
-                usedSymbols = usedSymbols + symbolAsString;
-                return usedSymbols;
-            }
+        for(char c = 'A'; c <= 'Z'; ++c){
+          String symbolAsString = "" + c;
+          if (!usedSymbols.contains(symbolAsString)){
+            usedSymbols = usedSymbols + symbolAsString;
+            return usedSymbols;
+           }
         }
 
         return usedSymbols;
