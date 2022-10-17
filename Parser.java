@@ -48,12 +48,12 @@ public class Parser {
         System.out.println("Integer-Matrix all rules:");
         grammar.printIntMatrix(ruleset_int);
         System.out.println("");
-        System.out.println("Matrix T rules:");
+        /* System.out.println("Matrix T rules:");
         grammar.printIntMatrix(rulesetT_int);
         System.out.println("");
         System.out.println("Matrix NT rules:");
         grammar.printIntMatrix(rulesetNT_int);
-        System.out.println("");
+        System.out.println(""); */
 
         System.out.println("Inputword as Integers:");
         inputAsInt = grammar.inputStringToInt(inputWord);
@@ -149,7 +149,7 @@ public class Parser {
         int wordLength = word.length;
         Integer[][][] DP = new Integer[wordLength][wordLength][wordLength];
 
-        for (int i = 0; i < word.length; i++) {
+        for (int i = 0; i < wordLength; i++) {
             if (contained(ruleset_int, word[i])) {
                 int temp = containedAt(ruleset_int, word[i]);
                 for(int j = 0; j < wordLength; j++){
@@ -192,7 +192,7 @@ public class Parser {
             }
         }
 
-        // grammar.printStringMatrix(DP);
+        grammar.printIntMatrix(DP);
 
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
