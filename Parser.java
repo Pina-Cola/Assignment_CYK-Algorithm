@@ -27,6 +27,8 @@ public class Parser {
     long timeElapsedBU;
     long timeElapsedTD;
 
+    int errorCounter;
+
     public Parser(String[] inputString, String inputWord) {
 
         grammar.nts_to_array(inputString);
@@ -65,7 +67,7 @@ public class Parser {
         long startBU = System.currentTimeMillis();
         System.out.println("");
         counterBU = 0;
-        System.out.println("BottomUp: " + parseBU(this.inputAsInt) + " Amount of calls: " + counterBU);
+        System.out.println("BottomUp: " + parseBU(this.inputAsInt) + " Amount of calls: " + counterBU + " Amount of errors: " + errorCounter);
         long finishBU = System.currentTimeMillis();
         timeElapsedBU = finishBU - startBU;
         System.out.println("BottomUp runtime: " + timeElapsedBU + "ms");
@@ -193,6 +195,7 @@ public class Parser {
         }
 
         grammar.printIntMatrix(DP);
+        errorCounter = errorCounter(DP);
 
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
@@ -200,6 +203,28 @@ public class Parser {
         }
 
         return false;
+    }
+
+
+    // ____________________________________________________________________________________________________
+
+    // calls recursion
+
+    // ____________________________________________________________________________________________________
+
+    public int errorCounter(Integer[][][] DP) {
+
+        for(int i = 0; i < DP.length; i++){
+            for(int j = DP[i].length -1 ; j >= 0; j--){
+                for(int k = 0; k < DP[i][j].length; k++){
+                    if(DP[i][j][k] != null && DP[i][j][k] == 0){
+                        int invertJ = DP[i].length - 1 - j;
+                        return Math.max(i, invertJ);
+                    }
+                }
+            }
+        }
+        return -1;
     }
 
     // ____________________________________________________________________________________________________
