@@ -117,7 +117,7 @@ public class Parser {
                 if (ruleset_int[indexNT][l][0] != null && ruleset_int[indexNT][l][0] == symbol) {
                     return true;
                 }
-                if (ruleset_int[indexNT][l][1] != null || ruleset_int[indexNT][l][1] == symbol) {
+                if (ruleset_int[indexNT][l][1] != null && ruleset_int[indexNT][l][1] == symbol) {
                     return true;
                 }
             }
