@@ -1,23 +1,23 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Parser {
 
     Grammar grammar = new Grammar();
-    
-    public String[][] ruleset;      // all rules
-    public String[][] rulesetNT;    // NT rules
-    public String[][] rulesetT;     // T rules
 
-    public Integer[][][] ruleset_int;      // all rules
-    public Integer[][][] rulesetNT_int;    // NT rules
-    public Integer[][][] rulesetT_int;     // T rules
+    public String[][] ruleset; // all rules
+    public String[][] rulesetNT; // NT rules
+    public String[][] rulesetT; // T rules
 
-    public char[] inputWord;
+    public Integer[][][] ruleset_int; // all rules
+    public Integer[][][] rulesetNT_int; // NT rules
+    public Integer[][][] rulesetT_int; // T rules
 
     public Integer[] inputAsInt;
     public ArrayList<Character> Int_ArrayList = new ArrayList<Character>();
 
-    Boolean [][][] table;
+    Boolean[][][] table;
 
     long counterN;
     long counterTD;
@@ -27,7 +27,7 @@ public class Parser {
     long timeElapsedBU;
     long timeElapsedTD;
 
-    public Parser(String[] inputString, String inputWord){
+    public Parser(String[] inputString, String inputWord) {
 
         grammar.nts_to_array(inputString);
 
@@ -44,10 +44,8 @@ public class Parser {
         Int_ArrayList = grammar.Int_ArrayList;
         grammar.Int_NT_map(Int_ArrayList);
 
-        inputAsInt = grammar.inputStringToInt(inputWord);
-
         System.out.println("");
-        System.out.println("Matrix all rules:");
+        System.out.println("Integer-Matrix all rules:");
         grammar.printIntMatrix(ruleset_int);
         System.out.println("");
         System.out.println("Matrix T rules:");
@@ -58,6 +56,7 @@ public class Parser {
         System.out.println("");
 
         System.out.println("Inputword as Integers:");
+        inputAsInt = grammar.inputStringToInt(inputWord);
         grammar.printIntegerArray(inputAsInt);
         System.out.println("");
         // this.inputWord = inputWord.toCharArray();
@@ -66,233 +65,218 @@ public class Parser {
         long startBU = System.currentTimeMillis();
         System.out.println("");
         counterBU = 0;
-        // System.out.println("BottomUp: " + parseBU(this.inputWord) + "   Amount of calls: " + counterBU);
+        System.out.println("BottomUp: " + parseBU(this.inputAsInt) + " Amount of calls: " + counterBU);
         long finishBU = System.currentTimeMillis();
         timeElapsedBU = finishBU - startBU;
         System.out.println("BottomUp runtime: " + timeElapsedBU + "ms");
 
         // TopDown function call
         long startTD = System.currentTimeMillis();
-        table = new Boolean[ruleset.length][inputWord.length()+1][inputWord.length()+1];
+        table = new Boolean[ruleset.length][inputWord.length() + 1][inputWord.length() + 1];
         System.out.println("");
         counterTD = 0;
-        // System.out.println("TopDown: " + parseTD() + "   Amount of calls: " + counterTD);
+        System.out.println("TopDown: " + parseTD() + " Amount of calls: " + counterTD);
         long finishTD = System.currentTimeMillis();
         timeElapsedTD = finishTD - startTD;
         System.out.println("TopDown runtime: " + timeElapsedTD + "ms");
-
 
         // Naive function call
         long startNaive = System.currentTimeMillis();
         System.out.println("");
         counterN = 0;
-        // System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counterN);
+        System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counterN);
         long finishNaive = System.currentTimeMillis();
         timeElapsedNaive = finishNaive - startNaive;
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
     }
 
-
-
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
     // calls recursion
 
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
-
-
-    public boolean parseNaive(){
+    public boolean parseNaive() {
         counterN = 0;
-        return parseNaive(0, 0, inputWord.length);
+        return parseNaive(0, 0, inputAsInt.length);
     }
 
-
-
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
     // naive cyk algorithm
 
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
-
-
-    public boolean parseNaive(int indexNT, int i, int j){
+    public boolean parseNaive(int indexNT, int i, int j) {
 
         counterN += 1;
 
-        if(i == (j-1)){
-            for(int l = 0; l < ruleset[0].length; l++){
-                String symbol = String.valueOf(inputWord[i]);
-                if(ruleset[indexNT][l].equals(symbol)){
+        if (i == (j - 1)) {
+            for (int l = 0; l < ruleset_int[indexNT].length; l++) {
+                int symbol = inputAsInt[i];
+                if (ruleset_int[indexNT][l][0] != null && ruleset_int[indexNT][l][0] == symbol) {
+                    return true;
+                }
+                if (ruleset_int[indexNT][l][1] != null || ruleset_int[indexNT][l][1] == symbol) {
                     return true;
                 }
             }
             return false;
-        }
-        else{
-                for(int bodyIndex = 0; bodyIndex < ruleset[indexNT].length; bodyIndex++){
-                    if(ruleset[indexNT][bodyIndex].length() >= 2){
-                        int first = Character.getNumericValue(ruleset[indexNT][bodyIndex].charAt(0));
-                        int second = Character.getNumericValue(ruleset[indexNT][bodyIndex].charAt(1));
-                    for(int k = i+1; k < j; k++){
-                        if(parseNaive(first,i,k) && parseNaive(second,k,j)){
+        } else {
+            for (int bodyIndex = 0; bodyIndex < ruleset_int[indexNT].length; bodyIndex++) {
+                if (ruleset_int[indexNT][bodyIndex][0] != null && ruleset_int[indexNT][bodyIndex][1] != null) {
+                    int first = ruleset_int[indexNT][bodyIndex][0];
+                    int second = ruleset_int[indexNT][bodyIndex][1];
+                    for (int k = i + 1; k < j; k++) {
+                        if (parseNaive(first, i, k) && parseNaive(second, k, j)) {
                             return true;
                         }
                     }
                 }
-                }
             }
+        }
         return false;
     }
 
-
-
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
     // bottom up
 
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
-
-
-    public boolean parseBU(char[] word){
+    public boolean parseBU(Integer[] word) {
 
         int wordLength = word.length;
-        String[][] DP = new String[wordLength][wordLength];
+        Integer[][][] DP = new Integer[wordLength][wordLength][wordLength];
 
-        for (int i = 0; i < word.length; i++){
-            if(contained(rulesetT, word[i])){
-                String temp = String.valueOf(containedAt(rulesetT, word[i]));
-                if(DP[i][i] != null){
-                    DP[i][i] = DP[i][i] + temp;
-                }
-                else{
-                    DP[i][i] = temp; 
+        for (int i = 0; i < word.length; i++) {
+            if (contained(ruleset_int, word[i])) {
+                int temp = containedAt(ruleset_int, word[i]);
+                for(int j = 0; j < wordLength; j++){
+                    if(DP[i][i][j] == null){
+                        DP[i][i][j] = temp;
+                        break;
+                    }
                 }
             }
         }
 
-        DP = grammar.beautifyStringMatrix(DP);
+        DP = grammar.beautifyIntegerMatrix(DP);
 
-        for(int l = 1; l < wordLength; l++){
-            for(int i = 0; i < wordLength - l ; i++){
+        for (int l = 1; l < wordLength; l++) {
+            for (int i = 0; i < wordLength - l; i++) {
                 int j = i + l;
-                for(int k = 0; k < j; k++){
+                for (int k = 0; k < j; k++) {
 
                     // for each rule:
-                    for(int head = 0; head < ruleset.length; head++){
-                        for(int body = 0; body < ruleset[head].length; body++){
+                    for (int head = 0; head < ruleset_int.length; head++) {
+                        for (int body = 0; body < ruleset_int[head].length; body++) {
                             counterBU += 1;
-                            if(ruleset[head][body].length() >= 2 && !ruleset[head][body].isEmpty()){
-                                String first = "" + ruleset[head][body].charAt(0);
-                                String second = "" + ruleset[head][body].charAt(1);
-                                first = first.toString();
-                                second = second.toString();
-
-                                if(DP[i][k].contains(first) && DP[k+1][j].contains(second)){
-                                    String temp = "" + head;
-                                    DP[i][j] = DP[i][j] + temp;                               
+                            if (ruleset_int[head][body][0] != null && ruleset_int[head][body][1] != null) {
+                                int first = ruleset_int[head][body][0];
+                                int second = ruleset_int[head][body][1];
+                                List<Integer> intListFirst = new ArrayList<>(Arrays.asList(DP[i][k]));
+                                List<Integer> intListSecond = new ArrayList<>(Arrays.asList(DP[k + 1][j]));
+                                if (intListFirst.contains(first) && intListSecond.contains(second)) {
+                                    for(int c = 0; c < wordLength; c++){
+                                        if(DP[i][j][c] == null){
+                                            DP[i][j][c] = head;
+                                            break;
+                                        }
+                                    }
                                 }
-                            }                          
+                            }
                         }
                     }
                 }
-            } 
-        } 
+            }
+        }
 
         // grammar.printStringMatrix(DP);
 
-        if(DP[0][wordLength-1].contains("0")){
+        List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
+        if (finalField.contains(0)) {
             return true;
         }
 
         return false;
     }
 
-
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
     // calls recursion
 
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
-
-
-    public boolean parseTD(){
+    public boolean parseTD() {
         counterTD = 0;
-        
-        for(int i = 0; i < table.length; i++){
-            for(int j = 0; j < table[i].length; j++)
-                for(int k = 0; k < table[i][j].length; k++){
+
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++)
+                for (int k = 0; k < table[i][j].length; k++) {
                     table[i][j][k] = null;
                 }
         }
-        return parseTD(0, 0, inputWord.length);
+        return parseTD(0, 0, inputAsInt.length);
     }
 
-
-
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
     // top down
 
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
-
-
-    public boolean parseTD(int indexNT, int i, int j){
+    public boolean parseTD(int indexNT, int i, int j) {
 
         counterTD += 1;
-        int rulesetLength = ruleset[0].length;
+        int rulesetLength = ruleset_int[0].length;
 
-        if(table[indexNT][i][j] != null){
+        if (table[indexNT][i][j] != null) {
             return table[indexNT][i][j];
         }
 
-        if(i == (j-1)){
-            for(int l = 0; l < rulesetLength; l++){
-                String symbol = String.valueOf(inputWord[i]);
-                if(ruleset[indexNT][l].equals(symbol)){
+        if (i == (j - 1)) {
+            for (int l = 0; l < rulesetLength; l++) {
+                int symbol = inputAsInt[i];
+                if ( ruleset_int[indexNT][l][0] != null && ruleset_int[indexNT][l][0] == symbol ) {
+                    return true;
+                }
+                if ( ruleset_int[indexNT][l][1] != null && ruleset_int[indexNT][l][1] == symbol ) {
                     return true;
                 }
             }
             return false;
-        }
-        else{
-                for(int bodyIndex = 0; bodyIndex < ruleset[indexNT].length; bodyIndex++){
-                    if(ruleset[indexNT][bodyIndex].length() >= 2){
-                    for(int k = i+1; k < j; k++){
-                        int first = Character.getNumericValue(ruleset[indexNT][bodyIndex].charAt(0));
-                        int second = Character.getNumericValue(ruleset[indexNT][bodyIndex].charAt(1));
-                        table[indexNT][i][j] = (parseTD(first,i,k) && parseTD(second,k,j));
-                        if(table[indexNT][i][j] == true){
+        } else {
+            for (int bodyIndex = 0; bodyIndex < ruleset_int[indexNT].length; bodyIndex++) {
+                if (ruleset_int[indexNT][bodyIndex][0] != null && ruleset_int[indexNT][bodyIndex][1] != null) {
+                    for (int k = i + 1; k < j; k++) {
+                        int first = ruleset_int[indexNT][bodyIndex][0];
+                        int second = ruleset_int[indexNT][bodyIndex][1];
+                        table[indexNT][i][j] = (parseTD(first, i, k) && parseTD(second, k, j));
+                        if (table[indexNT][i][j] == true) {
                             return true;
                         }
                     }
                 }
             }
-        } 
+        }
         return false;
     }
 
-
-
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
     // returns true if symbol in ruleset
 
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
+    public boolean contained(Integer[][][] rules, int symbol) {
 
-
-    public boolean contained(String[][] rules, char symbol){
-
-        String s = symbol + "";
-
-        for(int i = 0; i < rules.length; i++){
-            for(int j = 0; j < rules[i].length; j++){
-                if(rules[i][j].contains(s)){
+        for (int i = 0; i < rules.length; i++) {
+            for (int j = 0; j < rules[i].length; j++) {
+                if (rules[i][j][0] != null && rules[i][j][0] == symbol) {
+                    return true;
+                }
+                if (rules[i][j][1] != null && rules[i][j][1] == symbol) {
                     return true;
                 }
             }
@@ -300,23 +284,20 @@ public class Parser {
         return false;
     }
 
-
-
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
     // returns index (which stand for NT) if symbol in ruleset
 
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
+    public int containedAt(Integer[][][] rules, int symbol) {
 
-
-    public int containedAt(String[][] rules, char symbol){
-
-        String s = symbol + "";
-
-        for(int i = 0; i < rules.length; i++){
-            for(int j = 0; j < rules[i].length; j++){
-                if(rules[i][j].contains(s)){
+        for (int i = 0; i < rules.length; i++) {
+            for (int j = 0; j < rules[i].length; j++) {
+                if (rules[i][j][0] != null && rules[i][j][0] == symbol) {
+                    return i;
+                }
+                if (rules[i][j][1] != null && rules[i][j][1] == symbol) {
                     return i;
                 }
             }
@@ -324,4 +305,3 @@ public class Parser {
         return -100;
     }
 }
-

@@ -11,7 +11,7 @@ public class Grammar {
     public ArrayList<Character> Int_ArrayList = new ArrayList<Character>();
     // public char[] EverythingToInt;
 
-    public int[] inputWord;
+    public Integer[] inputWord;
     
     public int inputLength;
     public int rulesLength;
@@ -432,6 +432,45 @@ public class Grammar {
     }
 
 
+    public Integer[][][] beautifyIntegerMatrix(Integer[][][] matrix){
+        int first = 0;
+        int second = 0;
+        int tempfirst = 0;
+        int tempsecond = 0;
+
+        for(int i = 0; i < matrix.length; i++){
+            for(int j = 0; j < matrix[i].length; j++){
+                if(matrix[i][j] != null){
+                    tempfirst = i;
+                    tempsecond = j;
+                }
+            }
+            if(tempfirst >= first){
+                first = tempfirst;
+            }
+            if(tempsecond >= second){
+                second = tempsecond;
+            }
+        }
+
+        Integer[][][] smallerMatrix = new Integer[first+1][second+1][2];
+
+        for(int i = 0; i < smallerMatrix.length; i++){
+            for(int j = 0; j < smallerMatrix[i].length; j++){
+                if(matrix[i][j] != null){
+                    smallerMatrix[i][j][0] = matrix[i][j][0];
+                    smallerMatrix[i][j][1] = matrix[i][j][1];
+                }
+                else{
+                    smallerMatrix[i][j][0] = null;
+                    smallerMatrix[i][j][1] = null;
+                }
+            }
+        }
+        return smallerMatrix;
+    }
+
+
 
     //____________________________________________________________________________________________________
 
@@ -504,10 +543,7 @@ public class Grammar {
                 alreadyInt = alreadyInt + symbol;
             }    
         }
-
-        
-
-        
+       
         int startInt = checkNTAmount(NTerminalToInteger);
         // System.out.println("StartInt: " + startInt);
         String intString = "0123456789";
