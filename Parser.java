@@ -114,7 +114,8 @@ public class Parser {
 
 
 
-        // CYKtableDeletion(DP, 0);
+        CYKtableDeletion(DP, 0);
+        parseBU_newSymbol(DP, 2);
 
 
 
@@ -368,18 +369,15 @@ public class Parser {
 
     public Integer[][][] CYKtableDeletion(Integer[][][] CYK, int index) {
 
-        // replace symbol with -1
-        for(int i = 0; i < CYK[index][index].length; i++){
-            CYK[index][index][i] = -1;
-        }
+        grammar.beautifyIntegerMatrix(CYK);
+        System.out.println("CYK table format: " + CYK.length);
 
-        // replace resulting entries with -1
+
+        // replace symbol and resulting entries with -1
         for(int i = 0; i < CYK.length; i++){
             for(int j = 0; j < CYK.length; j++){
                 if( i <= index && j >= index){
-                    for(int k = 0; k < CYK[index][index].length; k++){
-                        CYK[i][j][k] = -1;
-                    } 
+                        CYK[i][j][0] = -1;
                 }
             }
         }
@@ -388,7 +386,7 @@ public class Parser {
         return CYK;
         
     }
-    
+
 
     // ____________________________________________________________________________________________________
 
@@ -396,28 +394,21 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
-    public boolean parseBU_newSymbol(Integer[] word, String newSymbol) {
+    public boolean parseBU_newSymbol(Integer[][][] DP, int newSymbol) {
 
-        int wordLength = word.length;
+        int wordLength = DP.length;
         
-
         for (int i = 0; i < wordLength; i++) {
-            if (contained(ruleset_int, word[i])) {
-                int temp = containedAt(ruleset_int, word[i]);
-                for(int j = 0; j < wordLength; j++){
-                    if(DP[i][i][j] == null){
-                        DP[i][i][j] = temp;
-                        break;
-                    }
-                }
+            if (DP[i][i][0] == -1) {
+                DP[i][i][0] = newSymbol;
             }
         }
-
-        DP = grammar.beautifyIntegerMatrix(DP);
 
         for (int l = 1; l < wordLength; l++) {
             for (int i = 0; i < wordLength - l; i++) {
                 int j = i + l;
+                if(DP[i][j][0] != null && DP[i][j][0] == -1)
+                {
                 for (int k = 0; k < j; k++) {
 
                     // for each rule:
@@ -441,11 +432,15 @@ public class Parser {
                         }
                     }
                 }
+                }
             }
         }
 
+        System.out.println("Grammar with exchanged symbol: ");
+        DP = CYKtableCleanUp(DP);
         grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
+        System.out.println("Error counter: " + errorCounter);
 
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
@@ -453,6 +448,33 @@ public class Parser {
         }
 
         return false;
+    }
+
+
+    // ____________________________________________________________________________________________________
+
+    // deletes -1 in CYK table
+
+    // ____________________________________________________________________________________________________
+
+    public Integer[][][] CYKtableCleanUp(Integer[][][] CYK) {
+
+        for(int i = 0; i < CYK.length; i++){
+            for(int j = 0; j < CYK.length; j++){
+                if(CYK[i][j][0] != null && CYK[i][j][0] == -1){
+                    CYK[i][j][0] = null;
+                    for(int k = 1; k < CYK[i][j].length; k++){
+                        if(CYK[i][j][k] != null){
+                            CYK[i][j][k-1] = CYK[i][j][k];
+                        }
+                    }
+                }
+            }
+        }
+
+
+        return CYK;
+        
     }
 
 
