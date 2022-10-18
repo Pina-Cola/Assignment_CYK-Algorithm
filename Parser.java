@@ -112,7 +112,7 @@ public class Parser {
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
 
         // Error correction
-        errorCorrection(DP);
+        errorCorrection(DP, 0, 2);
     }
 
     // ____________________________________________________________________________________________________
@@ -432,17 +432,10 @@ public class Parser {
             }
         }
 
-        System.out.println("Grammar with exchanged symbol " + newSymbol + ":" );
-        DP = CYKtableCleanUp(DP);
-        grammar.printIntMatrix(DP);
-        errorCounter = errorCounter(DP);
-        System.out.println("Error counter: " + errorCounter);
-
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
             return true;
         }
-
         return false;
     }
 
@@ -475,18 +468,24 @@ public class Parser {
     }
 
 
-        // ____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
     // deletes -1 in CYK table
 
     // ____________________________________________________________________________________________________
 
-    public void errorCorrection(Integer[][][] DP) {
+    public void errorCorrection(Integer[][][] DP, int index, int newSymbol) {
 
         System.out.println(" ");
         System.out.println("Error Correction: ");
-        CYKtableDeletion(DP, 0);
-        parseBU_newSymbol(DP, 2);
+        CYKtableDeletion(DP, index);
+        parseBU_newSymbol(DP, newSymbol);
+
+        System.out.println("Grammar with exchanged symbol " + newSymbol + ":" );
+        DP = CYKtableCleanUp(DP);
+        grammar.printIntMatrix(DP);
+        errorCounter = errorCounter(DP);
+        System.out.println("Error counter: " + errorCounter);
         
     }
 
