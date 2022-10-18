@@ -10,6 +10,10 @@ public class Parser {
     public String[][] rulesetNT; // NT rules
     public String[][] rulesetT; // T rules
 
+    public String[][][] ruleset_numbers; // all rules
+    public String[][][] rulesetNT_numbers; // NT rules
+    public String[][][] rulesetT_numbers; // T rules
+
     public Integer[][][] ruleset_int; // all rules
     public Integer[][][] rulesetNT_int; // NT rules
     public Integer[][][] rulesetT_int; // T rules
@@ -42,13 +46,17 @@ public class Parser {
 
         grammar.nts_to_array(inputString);
 
-        ruleset = grammar.getRuleset(inputString);
-        rulesetNT = grammar.getRulesetNT(inputString);
-        rulesetT = grammar.getRulesetT(inputString);
+        ruleset = grammar.getRuleset();
+        rulesetNT = grammar.getRulesetNT();
+        rulesetT = grammar.getRulesetT();
 
-        ruleset_int = grammar.changeIntoIntMatrix(ruleset);
-        rulesetT_int = grammar.changeIntoIntMatrix(rulesetT);
-        rulesetNT_int = grammar.changeIntoIntMatrix(rulesetNT);
+        ruleset_numbers = grammar.getRuleset_numbers();
+        rulesetNT_numbers = grammar.getRulesetNT_numbers();
+        rulesetT_numbers = grammar.getRulesetT_numbers();
+
+        ruleset_int = grammar.changeIntoIntMatrix(ruleset_numbers);
+        rulesetT_int = grammar.changeIntoIntMatrix(rulesetT_numbers);
+        rulesetNT_int = grammar.changeIntoIntMatrix(rulesetNT_numbers);
 
         System.out.println("");
         System.out.println("Symbols as Integers:");
@@ -76,7 +84,7 @@ public class Parser {
         long startBU = System.currentTimeMillis();
         System.out.println("");
         counterBU = 0;
-        System.out.println("BottomUp: " + parseBU(this.inputAsInt) + " Amount of calls: " + counterBU + " Amount of errors: " + errorCounter);
+        System.out.println("BottomUp: " + parseBU(this.inputAsInt) + "   Amount of calls: " + counterBU + "    Amount of errors: " + errorCounter);
         long finishBU = System.currentTimeMillis();
         timeElapsedBU = finishBU - startBU;
         System.out.println("BottomUp runtime: " + timeElapsedBU + "ms");
@@ -86,7 +94,7 @@ public class Parser {
         table = new Boolean[ruleset_int.length][inputWord.length() + 1][inputWord.length() + 1];
         System.out.println("");
         counterTD = 0;
-        System.out.println("TopDown: " + parseTD() + " Amount of calls: " + counterTD);
+        System.out.println("TopDown: " + parseTD() + "   Amount of calls: " + counterTD);
         long finishTD = System.currentTimeMillis();
         timeElapsedTD = finishTD - startTD;
         System.out.println("TopDown runtime: " + timeElapsedTD + "ms");

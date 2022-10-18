@@ -24,6 +24,11 @@ public class Grammar {
     public String[][] rulesetNT;    // NT rules
     public String[][] rulesetT;     // T rules
 
+    // Rulesets with number replacements
+    public String[][][] ruleset_numbers;      // all rules
+    public String[][][] rulesetNT_numbers;    // NT rules
+    public String[][][] rulesetT_numbers;     // T rules
+
 
 
     //____________________________________________________________________________________________________
@@ -46,7 +51,7 @@ public class Grammar {
     //____________________________________________________________________________________________________
 
 
-    public String[][] getRuleset(String[] inputString){
+    public String[][] getRuleset(){
         return ruleset;
     }
 
@@ -58,7 +63,7 @@ public class Grammar {
     //____________________________________________________________________________________________________
 
 
-    public String[][] getRulesetT(String[] inputString){
+    public String[][] getRulesetT(){
         return rulesetT;
     }
 
@@ -70,11 +75,35 @@ public class Grammar {
     //____________________________________________________________________________________________________
 
 
-    public String[][] getRulesetNT(String[] inputString){
+    public String[][] getRulesetNT(){
         return rulesetNT;
     }
 
 
+    //____________________________________________________________________________________________________
+
+    // returns ruleset with numbers
+
+    //____________________________________________________________________________________________________
+
+
+    public String[][][] getRulesetNT_numbers(){
+        System.out.println("Ruleset NT number: ");
+        print3DStringMatrix(rulesetNT_numbers);
+        return rulesetNT_numbers;
+    }
+
+    public String[][][] getRulesetT_numbers(){
+        System.out.println("Ruleset T number: ");
+        print3DStringMatrix(rulesetT_numbers);
+        return rulesetT_numbers;
+    }
+
+    public String[][][] getRuleset_numbers(){
+        System.out.println("Ruleset number: ");
+        print3DStringMatrix(ruleset_numbers);
+        return ruleset_numbers;
+    }
 
 
     //____________________________________________________________________________________________________
@@ -144,14 +173,15 @@ public class Grammar {
     public void Int_NT_map (ArrayList<Character> ArrayList) {
 
 
-        Character[][] int_map = new Character[2][ArrayList.size()];
+        String[][] int_map = new String[2][ArrayList.size()];
 
         for(int i = 0; i < ArrayList.size(); i++){
-            char temp = (char)(i+'0');
+            // char temp = (char)(i+'0');
+            String temp = String.valueOf(i);
             int_map[0][i] = temp;
-            int_map[1][i] = ArrayList.get(i);
+            int_map[1][i] = "" + ArrayList.get(i);
         }
-        printMatrix(int_map);
+        printTable(int_map);
     }
 
 
@@ -205,8 +235,9 @@ public class Grammar {
     //____________________________________________________________________________________________________
 
 
-    public String[][] replace_NT_with_int (String[][] ruleArray) {
+    public String[][][] replace_NT_with_int (String[][] ruleArray) {
 
+        String[][][] stringRuleArrayWithInteger = new String[ruleArray.length][ruleArray[0].length][2];
         // loop over input ruleset:
         for(int i = 0; i < ruleArray.length; i++){
             for(int j = 0; j < ruleArray[i].length; j++){
@@ -219,15 +250,21 @@ public class Grammar {
 
                         // replaces NT with int
                         if(ruleArray[i][j].charAt(singleSymbolIndex) == NTerminalToInteger[k]){
-                            char oldEntry = ruleArray[i][j].charAt(singleSymbolIndex);
-                            char replacement = (char) (k+'0');
-                            ruleArray[i][j] = ruleArray[i][j].replace(oldEntry, replacement);
+                            // char oldEntry = ruleArray[i][j].charAt(singleSymbolIndex);
+                            String replacement = "" + k;
+                            for(int l = 0; l < stringRuleArrayWithInteger[i][j].length; l++){
+                                if(stringRuleArrayWithInteger[i][j][l] == null){
+                                stringRuleArrayWithInteger[i][j][l] = replacement;
+                                break;
+                                }
+                            }
+                            
                         }
                     }
                 } 
             }
         }
-        return ruleArray; 
+        return stringRuleArrayWithInteger; 
     }
 
 
@@ -276,9 +313,9 @@ public class Grammar {
         printStringMatrix(rulesetNT);
         System.out.println(""); */
 
-        ruleset = replace_NT_with_int(ruleset);
-        rulesetNT = replace_NT_with_int(rulesetNT);
-        rulesetT = replace_NT_with_int(rulesetT);
+        ruleset_numbers = replace_NT_with_int(ruleset);
+        rulesetNT_numbers = replace_NT_with_int(rulesetNT);
+        rulesetT_numbers = replace_NT_with_int(rulesetT);
         
     }
 
@@ -352,7 +389,7 @@ public class Grammar {
 
 
 
-    public Integer[][][] changeIntoIntMatrix(String[][] rulesetString){
+    public Integer[][][] changeIntoIntMatrix(String[][][] rulesetString){
 
         rulesetString = replace_T_symbols(rulesetString);
 
@@ -360,16 +397,19 @@ public class Grammar {
 
         for(int i = 0; i < rulesetString.length; i++){
             for(int j = 0; j < rulesetString[i].length; j++){
-                if(rulesetString[i][j] != null && rulesetString[i][j].length() >= 2){
-                    int first = Character.getNumericValue(rulesetString[i][j].charAt(0));
-                    int second = Character.getNumericValue(rulesetString[i][j].charAt(1));
-                    rulesetInt[i][j][0] = first;
-                    rulesetInt[i][j][1] = second;
-                }
-                if(rulesetString[i][j] != null && rulesetString[i][j].length() == 1){
-                    int first = Character.getNumericValue(rulesetString[i][j].charAt(0));
-                    rulesetInt[i][j][0] = first;
-                }
+                    if(rulesetString[i][j][0] != null){
+                        if(rulesetString[i][j][1] != null){
+                            int first = Integer.parseInt(rulesetString[i][j][0]);
+                            int second = Integer.parseInt(rulesetString[i][j][1]);
+                            rulesetInt[i][j][0] = first;
+                            rulesetInt[i][j][1] = second;
+                        }
+                        else{
+                            int first = Integer.parseInt(rulesetString[i][j][0]);
+                            rulesetInt[i][j][0] = first;
+                        }
+
+                    }
             }
         }
 
@@ -544,6 +584,54 @@ public class Grammar {
     }
 
 
+    public void print3DStringMatrix(String[][][] printMatrix){
+        String[][] stringMatrix = new String[printMatrix.length][printMatrix[0].length];
+        for(int i = 0; i < printMatrix.length; i++){
+            for(int j = 0; j < printMatrix[i].length; j++){
+                String temp = "";
+                for(int k = 0; k < printMatrix[i][j].length; k++){
+                    if(printMatrix[i][j][k] != null){
+                    temp = temp + printMatrix[i][j][k];
+                    }
+                }
+                stringMatrix[i][j] = temp;
+            }
+        }
+
+        printStringMatrix(stringMatrix);
+    }
+
+    public static void printTable(String[][] table) {
+        // Find out what the maximum number of columns is in any row
+        int maxColumns = 0;
+        for (int i = 0; i < table.length; i++) {
+          maxColumns = Math.max(table[i].length, maxColumns);
+        }
+      
+        // Find the maximum length of a string in each column
+        int[] lengths = new int[maxColumns];
+        for (int i = 0; i < table.length; i++) {
+          for (int j = 0; j < table[i].length; j++) {
+            lengths[j] = Math.max(table[i][j].length(), lengths[j]);
+          }
+        }
+      
+        // Generate a format string for each column
+        String[] formats = new String[lengths.length];
+        for (int i = 0; i < lengths.length; i++) {
+         formats[i] = "%1$" + lengths[i] + "s" 
+             + (i + 1 == lengths.length ? "\n" : " ");
+       }
+      
+        // Print 'em out
+        for (int i = 0; i < table.length; i++) {
+          for (int j = 0; j < table[i].length; j++) {
+            System.out.printf(formats[j], table[i][j]);
+          }
+        }
+      }
+
+
 
 
     //____________________________________________________________________________________________________
@@ -554,7 +642,12 @@ public class Grammar {
 
 
 
-    public String[][] replace_T_symbols(String[][] R){
+    public String[][][] replace_T_symbols(String[][][] R){
+
+        System.out.println("Method replace_T_symbols gets called!");
+
+        print3DStringMatrix(R);
+        
 
         NTerminalToInteger = cleanCharArray(NTerminalToInteger);
 
@@ -574,29 +667,26 @@ public class Grammar {
 
         for(int i = 0; i < R.length; i++){
             for(int j = 0; j < R[i].length; j++){
+                for(int k = 0; k <  R[i][j].length; k++){
+                    if(R[i][j][k] != null){
+                    String originalSymbol = R[i][j][k];
 
-                for(int k = 0; k <  R[i][j].length(); k++){
-                    char temp = R[i][j].charAt(k);
-                    // System.out.println("Char: " + temp);
-                    // Int_NT_map(Int_ArrayList);
-                    if(intString.indexOf(temp) == -1 && !alreadyInt.contains(R[i][j])){
-                        // System.out.println("it happens");
-                        // System.out.println("");
+                    if(intString.indexOf(originalSymbol) == -1 && !alreadyInt.contains(R[i][j][k])){
+                      
                         String index = String.valueOf(startInt);
-                        String originalSymbol = String.valueOf(temp);
-                        R[i][j] = R[i][j].replace(originalSymbol, index);
-                        // System.out.println("Replace " + originalSymbol + " with " + index);
-                        Int_ArrayList.add(temp);
-                        // System.out.println("Index: " + index);
-                        // System.out.println("String: " + R[i][j]);
+                        R[i][j][k] = index;
+                        
+                        Int_ArrayList.add(originalSymbol.charAt(0));
+                       
                         alreadyInt += originalSymbol;
                         startInt++;
                     }
-                    if(intString.indexOf(temp) == -1 && alreadyInt.contains(R[i][j])){
-                        int indexFromArrayList = Int_ArrayList.indexOf(temp);
+                    if(intString.indexOf(originalSymbol) == -1 && alreadyInt.contains(originalSymbol)){
+                        int indexFromArrayList = Int_ArrayList.indexOf(originalSymbol);
                         String index = String.valueOf(indexFromArrayList);
-                        String originalSymbol = String.valueOf(temp);
-                        R[i][j].replace(originalSymbol, index);
+                        // String originalSymbol = String.valueOf(temp);
+                        R[i][j][k] = index;
+                    }
                     }
                 }
                 
@@ -605,7 +695,7 @@ public class Grammar {
         }
 
 
-        return ruleset;
+        return R;  
         
     }
 
@@ -626,7 +716,7 @@ public class Grammar {
             }
         }
 
-        return counter;
+        return counter -1;
     }
 
 
