@@ -5,8 +5,11 @@ public class Grammar {
 
     // expected input for a rule: 
     // for example rule S -> AB as "SAB"
+
+    // Some tests:
     // java Main "SSS" "SLA" "SLR" "ASR" "L(" "R)" "(())"
     // java Main "SAc" "Sb" "AaS" "AaB" "BbS" "abc"
+    // java Main "SAL" "Aa" "Bb" "Cc" "Dd" "Ee" "Ff" "Gg" "Hh" "Ii" "Jj" "Kk" "Ll" "Mm" "al"
 
     public char[] NTerminalToInteger;
     public ArrayList<Character> Int_ArrayList = new ArrayList<Character>();
