@@ -360,7 +360,7 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
-    public Integer[][][] CYKtableDeletion(Integer[][][] CYK, int index) {
+    public Integer[][][] CYKtableRemoveSymbol(Integer[][][] CYK, int index) {
 
         grammar.beautifyIntegerMatrix(CYK);
         // System.out.println("CYK table format: " + CYK.length);
@@ -478,7 +478,7 @@ public class Parser {
 
         System.out.println(" ");
         System.out.println("Error Correction: ");
-        CYKtableDeletion(DP, index);
+        CYKtableRemoveSymbol(DP, index);
         parseBU_newSymbol(DP, newSymbol);
 
         System.out.println("Grammar with exchanged symbol " + newSymbol + ":" );
@@ -486,9 +486,48 @@ public class Parser {
         grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
         System.out.println("Error counter: " + errorCounter);
+
+        CYKtableRemoveSymbol(DP, index);
+        CYKtableDeletion(DP);
         
     }
 
 
+    // ____________________________________________________________________________________________________
 
+    // deletes row in CYK table (sets up new table)
+
+    // ____________________________________________________________________________________________________
+
+    public void CYKtableDeletion(Integer[][][] DP) {
+
+        int indexDeletedRow = 0;
+        int newSize = DP.length -1;
+
+        Integer[][][] smallerDP = new Integer[newSize][newSize][newSize];
+
+        for(int i = 0; i < DP.length; i++){
+            if(DP[i][i][0] != null && DP[i][i][0] == -1){
+                indexDeletedRow = i;
+            }
+        }
+
+        for(int i = 0; i < newSize; i++){
+            for(int j = 0; j < newSize; j++){
+                if(!(i == indexDeletedRow || j == indexDeletedRow)){
+                    for(int k = 0; k < newSize; k++){
+                        if(DP[i][j][k] != null){
+                            smallerDP[i][j][k] = DP[i][j][k];
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println("kleinere MAtrix: ");
+        grammar.printIntMatrix(smallerDP);
+
+        
+        
+    }
 }
