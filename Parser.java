@@ -33,6 +33,8 @@ public class Parser {
 
     int errorCounter;
 
+    Integer[][][] DP;
+
     public Parser(String[] inputString, String inputWord) {
 
         boolean isCNF = grammar.isCNF(inputString);
@@ -81,6 +83,7 @@ public class Parser {
         // this.inputWord = inputWord.toCharArray();
 
         // BottomUp function call
+        DP = new Integer[inputAsInt.length][inputAsInt.length][inputAsInt.length];
         long startBU = System.currentTimeMillis();
         System.out.println("");
         counterBU = 0;
@@ -107,6 +110,15 @@ public class Parser {
         long finishNaive = System.currentTimeMillis();
         timeElapsedNaive = finishNaive - startNaive;
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
+
+
+
+
+        // CYKtableDeletion(DP, 0);
+
+
+
+
     }
 
     // ____________________________________________________________________________________________________
@@ -166,7 +178,7 @@ public class Parser {
     public boolean parseBU(Integer[] word) {
 
         int wordLength = word.length;
-        Integer[][][] DP = new Integer[wordLength][wordLength][wordLength];
+        
 
         for (int i = 0; i < wordLength; i++) {
             if (contained(ruleset_int, word[i])) {
@@ -345,5 +357,41 @@ public class Parser {
             }
         }
         return -100;
+    }
+
+
+    // ____________________________________________________________________________________________________
+
+    // deletes entry from CYK for deletion (symbol on "int index" and resulting entries are deleted)
+
+    // ____________________________________________________________________________________________________
+
+    public Integer[][][] CYKtableDeletion(Integer[][][] CYK, int index) {
+
+        // replace symbol with -1
+
+        for(int i = 0; i < CYK[index][index].length; i++){
+            CYK[index][index][i] = -1;
+        }
+
+
+
+        // replace resulting entries with -1
+
+
+        for(int i = 0; i < CYK.length; i++){
+            for(int j = 0; j < CYK.length; j++){
+                if( i <= index && j >= index){
+                    for(int k = 0; k < CYK[index][index].length; k++){
+                        CYK[i][j][k] = -1;
+                    } 
+                }
+            }
+        }
+
+        grammar.printIntMatrix(CYK);
+
+        return CYK;
+        
     }
 }
