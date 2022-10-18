@@ -111,15 +111,8 @@ public class Parser {
         timeElapsedNaive = finishNaive - startNaive;
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
 
-
-
-
-        CYKtableDeletion(DP, 0);
-        parseBU_newSymbol(DP, 2);
-
-
-
-
+        // Error correction
+        errorCorrection(DP);
     }
 
     // ____________________________________________________________________________________________________
@@ -370,8 +363,7 @@ public class Parser {
     public Integer[][][] CYKtableDeletion(Integer[][][] CYK, int index) {
 
         grammar.beautifyIntegerMatrix(CYK);
-        System.out.println("CYK table format: " + CYK.length);
-
+        // System.out.println("CYK table format: " + CYK.length);
 
         // replace symbol and resulting entries with -1
         for(int i = 0; i < CYK.length; i++){
@@ -381,7 +373,7 @@ public class Parser {
                 }
             }
         }
-        grammar.printIntMatrix(CYK);
+        // grammar.printIntMatrix(CYK);
 
         return CYK;
         
@@ -422,6 +414,10 @@ public class Parser {
                                 List<Integer> intListSecond = new ArrayList<>(Arrays.asList(DP[k + 1][j]));
                                 if (intListFirst.contains(first) && intListSecond.contains(second)) {
                                     for(int c = 0; c < wordLength; c++){
+                                        if(DP[i][j][c] != null && DP[i][j][c] == head){
+                                            System.out.println(head);
+                                            break;
+                                        }
                                         if(DP[i][j][c] == null){
                                             DP[i][j][c] = head;
                                             break;
@@ -436,7 +432,7 @@ public class Parser {
             }
         }
 
-        System.out.println("Grammar with exchanged symbol: ");
+        System.out.println("Grammar with exchanged symbol " + newSymbol + ":" );
         DP = CYKtableCleanUp(DP);
         grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
@@ -466,6 +462,7 @@ public class Parser {
                     for(int k = 1; k < CYK[i][j].length; k++){
                         if(CYK[i][j][k] != null){
                             CYK[i][j][k-1] = CYK[i][j][k];
+                            CYK[i][j][k] = null;
                         }
                     }
                 }
@@ -474,6 +471,22 @@ public class Parser {
 
 
         return CYK;
+        
+    }
+
+
+        // ____________________________________________________________________________________________________
+
+    // deletes -1 in CYK table
+
+    // ____________________________________________________________________________________________________
+
+    public void errorCorrection(Integer[][][] DP) {
+
+        System.out.println(" ");
+        System.out.println("Error Correction: ");
+        CYKtableDeletion(DP, 0);
+        parseBU_newSymbol(DP, 2);
         
     }
 
