@@ -369,16 +369,11 @@ public class Parser {
     public Integer[][][] CYKtableDeletion(Integer[][][] CYK, int index) {
 
         // replace symbol with -1
-
         for(int i = 0; i < CYK[index][index].length; i++){
             CYK[index][index][i] = -1;
         }
 
-
-
         // replace resulting entries with -1
-
-
         for(int i = 0; i < CYK.length; i++){
             for(int j = 0; j < CYK.length; j++){
                 if( i <= index && j >= index){
@@ -388,10 +383,78 @@ public class Parser {
                 }
             }
         }
-
         grammar.printIntMatrix(CYK);
 
         return CYK;
         
     }
+    
+
+    // ____________________________________________________________________________________________________
+
+    // bottom up for an replaced symbol
+
+    // ____________________________________________________________________________________________________
+
+    public boolean parseBU_newSymbol(Integer[] word, String newSymbol) {
+
+        int wordLength = word.length;
+        
+
+        for (int i = 0; i < wordLength; i++) {
+            if (contained(ruleset_int, word[i])) {
+                int temp = containedAt(ruleset_int, word[i]);
+                for(int j = 0; j < wordLength; j++){
+                    if(DP[i][i][j] == null){
+                        DP[i][i][j] = temp;
+                        break;
+                    }
+                }
+            }
+        }
+
+        DP = grammar.beautifyIntegerMatrix(DP);
+
+        for (int l = 1; l < wordLength; l++) {
+            for (int i = 0; i < wordLength - l; i++) {
+                int j = i + l;
+                for (int k = 0; k < j; k++) {
+
+                    // for each rule:
+                    for (int head = 0; head < ruleset_int.length; head++) {
+                        for (int body = 0; body < ruleset_int[head].length; body++) {
+                            counterBU += 1;
+                            if (ruleset_int[head][body][0] != null && ruleset_int[head][body][1] != null) {
+                                int first = ruleset_int[head][body][0];
+                                int second = ruleset_int[head][body][1];
+                                List<Integer> intListFirst = new ArrayList<>(Arrays.asList(DP[i][k]));
+                                List<Integer> intListSecond = new ArrayList<>(Arrays.asList(DP[k + 1][j]));
+                                if (intListFirst.contains(first) && intListSecond.contains(second)) {
+                                    for(int c = 0; c < wordLength; c++){
+                                        if(DP[i][j][c] == null){
+                                            DP[i][j][c] = head;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        grammar.printIntMatrix(DP);
+        errorCounter = errorCounter(DP);
+
+        List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
+        if (finalField.contains(0)) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+
 }
