@@ -374,9 +374,7 @@ public class Parser {
             }
         }
         // grammar.printIntMatrix(CYK);
-
-        return CYK;
-        
+        return CYK; 
     }
 
 
@@ -395,7 +393,6 @@ public class Parser {
                 DP[i][i][0] = newSymbol;
             }
         }
-
         for (int l = 1; l < wordLength; l++) {
             for (int i = 0; i < wordLength - l; i++) {
                 int j = i + l;
@@ -431,7 +428,6 @@ public class Parser {
                 }
             }
         }
-
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
             return true;
@@ -461,10 +457,7 @@ public class Parser {
                 }
             }
         }
-
-
         return CYK;
-        
     }
 
 
@@ -497,6 +490,8 @@ public class Parser {
         grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
         System.out.println("Error counter: " + errorCounter);
+
+        solveErrorWithDeletion(DP, errorCounter);
         
     }
 
@@ -520,7 +515,6 @@ public class Parser {
                 break;
             }
         }
-
         for(int i = 0; i < DP.length; i++){
             for(int j = 0; j < DP[i].length; j++){
                 if((i != indexDeletedRow && j != indexDeletedRow)){
@@ -556,4 +550,52 @@ public class Parser {
         // grammar.printIntMatrix(smallerDP);
         return smallerDP;       
     }
+
+
+    // ____________________________________________________________________________________________________
+
+    // solve error with deletion
+
+    // ____________________________________________________________________________________________________
+
+    public Integer[] solveErrorWithDeletion(Integer[][][] CYK, int amountOfErrors) {
+
+        int i = 0;
+        int j = 0;
+
+        for(int index = 0; index < CYK.length; index++){
+            for(int entries = 0; entries < CYK.length; entries++){
+                if(CYK[amountOfErrors][index][entries] != null && CYK[amountOfErrors][index][entries] == 0){
+                    i = amountOfErrors;
+                    j = index;
+                }
+                if(CYK[index][amountOfErrors][entries] != null && CYK[amountOfErrors][index][entries] == 0){
+                    i = index;
+                    j = amountOfErrors;
+                }
+            }
+        }
+
+        int from = Math.min(i, j);
+        int to = Math.max(i, j);
+
+        // System.out.println(i + " " + j);
+
+        Integer[] acceptedWord = new Integer[to - from];
+
+        for(int k = 0; k < to - from; k++){
+            if(inputAsInt[k + from -1] != null){
+            System.out.println("k " + k + "   to " + to + "  from " + from);
+            acceptedWord[k] = inputAsInt[k + from -1];
+            System.out.println(acceptedWord[k]);
+            }
+        }
+
+        grammar.printIntegerArray(acceptedWord);
+
+        return acceptedWord;
+
+    }
+
+
 }
