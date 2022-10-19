@@ -482,7 +482,6 @@ public class Parser {
 
         CYKtableRemoveSymbol(DP, index);
         parseBU_newSymbol(DP, newSymbol);
-        System.out.println(" " );
         System.out.println("Grammar with exchanged symbol " + newSymbol + " on index " + index + ":" );
         DP = CYKtableCleanUp(DP);
         grammar.printIntMatrix(DP);
