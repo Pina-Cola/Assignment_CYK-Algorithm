@@ -112,7 +112,7 @@ public class Parser {
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
 
         // Error correction
-        errorCorrection(DP, 0, 2);
+        errorCorrection(DP, 2, 3);
     }
 
     // ____________________________________________________________________________________________________
@@ -478,17 +478,26 @@ public class Parser {
 
         System.out.println(" ");
         System.out.println("Error Correction: ");
+        System.out.println(" " );
+
         CYKtableRemoveSymbol(DP, index);
         parseBU_newSymbol(DP, newSymbol);
-
-        System.out.println("Grammar with exchanged symbol " + newSymbol + ":" );
+        System.out.println(" " );
+        System.out.println("Grammar with exchanged symbol " + newSymbol + " on index " + index + ":" );
         DP = CYKtableCleanUp(DP);
         grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
         System.out.println("Error counter: " + errorCounter);
 
-        CYKtableRemoveSymbol(DP, index);
-        CYKtableDeletion(DP);
+        System.out.println(" " );
+        System.out.println("Grammar with deleted symbol " + newSymbol + " on index " + index + ":" );
+        DP = CYKtableRemoveSymbol(DP, index);
+        DP = CYKtableDeletion(DP);
+        parseBU_newSymbol(DP, newSymbol);
+        DP = CYKtableCleanUp(DP);
+        grammar.printIntMatrix(DP);
+        errorCounter = errorCounter(DP);
+        System.out.println("Error counter: " + errorCounter);
         
     }
 
@@ -499,7 +508,7 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
-    public void CYKtableDeletion(Integer[][][] DP) {
+    public Integer[][][] CYKtableDeletion(Integer[][][] DP) {
 
         int indexDeletedRow = 0;
         int newSize = DP.length -1;
@@ -509,25 +518,43 @@ public class Parser {
         for(int i = 0; i < DP.length; i++){
             if(DP[i][i][0] != null && DP[i][i][0] == -1){
                 indexDeletedRow = i;
+                break;
             }
         }
 
-        for(int i = 0; i < newSize; i++){
-            for(int j = 0; j < newSize; j++){
-                if(!(i == indexDeletedRow || j == indexDeletedRow)){
+        for(int i = 0; i < DP.length; i++){
+            for(int j = 0; j < DP[i].length; j++){
+                if((i != indexDeletedRow && j != indexDeletedRow)){
+                    int index_i = i;
+                    int index_j = j;
+                    if(i < indexDeletedRow && j < indexDeletedRow){
+                        index_i = i;
+                        index_j = j;
+                    }
+                    if(i < indexDeletedRow && j > indexDeletedRow){
+                        index_i = i;
+                        index_j = j-1;
+                    }
+                    if(i > indexDeletedRow && j < indexDeletedRow){
+                        index_i = i-1;
+                        index_j = j;
+                    }
+                    if(i > indexDeletedRow && j > indexDeletedRow){
+                        index_i = i-1;
+                        index_j = j-1;
+                    }
                     for(int k = 0; k < newSize; k++){
                         if(DP[i][j][k] != null){
-                            smallerDP[i][j][k] = DP[i][j][k];
+                            smallerDP[index_i][index_j][k] = DP[i][j][k];
+                        }
+                        else{
+                            break;
                         }
                     }
                 }
             }
         }
-
-        System.out.println("kleinere MAtrix: ");
-        grammar.printIntMatrix(smallerDP);
-
-        
-        
+        // grammar.printIntMatrix(smallerDP);
+        return smallerDP;       
     }
 }
