@@ -13,9 +13,6 @@ public class Grammar {
 
     public char[] NTerminalToInteger;
     public ArrayList<Character> Int_ArrayList = new ArrayList<Character>();
-    // public char[] EverythingToInt;
-
-    public Integer[] inputWord;
     
     public int inputLength;
     public int rulesLength;
@@ -764,11 +761,13 @@ public class Grammar {
         
         Integer[] inputAsInt = new Integer[inputString.length()];
 
+
         for(int i = 0; i < inputString.length(); i++){
             char singleCharacter = inputString.charAt(i);
             int intOfCharacter = Int_ArrayList.indexOf(singleCharacter);
             inputAsInt[i] = intOfCharacter;
         }
+        // printIntegerArray(inputAsInt);
 
         return inputAsInt;
 

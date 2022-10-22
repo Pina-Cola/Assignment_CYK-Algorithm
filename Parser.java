@@ -576,22 +576,36 @@ public class Parser {
             }
         }
 
+
         int from = Math.min(i, j);
         int to = Math.max(i, j);
 
-        // System.out.println(i + " " + j);
+        Integer[] acceptedWord = new Integer[to - from + 1];
 
-        Integer[] acceptedWord = new Integer[to - from];
+        System.out.println("i: " + i + "  j: " + j + " to: " + to + " from: " + from);
 
-        for(int k = 0; k < to - from; k++){
-            if(inputAsInt[k + from -1] != null){
-            System.out.println("k " + k + "   to " + to + "  from " + from);
-            acceptedWord[k] = inputAsInt[k + from -1];
-            System.out.println(acceptedWord[k]);
+        if(from==to){
+            // grammar.printIntegerArray(inputAsInt);
+            for(int k = 0; k < inputAsInt.length; k++){
+                if(inputAsInt[k] != null && inputAsInt[k] == 0){
+                acceptedWord[k] = inputAsInt[k];
+                break;
+                }
+            }
+            grammar.printIntegerArray(acceptedWord);
+            return acceptedWord;
+        }
+
+
+
+        for(int k = 0; k <= to - from; k++){
+            if(inputAsInt[k + from] != null){
+            acceptedWord[k] = inputAsInt[k + from];
             }
         }
 
         grammar.printIntegerArray(acceptedWord);
+
 
         return acceptedWord;
 
