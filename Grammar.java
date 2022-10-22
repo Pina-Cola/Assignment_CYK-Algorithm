@@ -122,6 +122,21 @@ public class Grammar {
     }
 
 
+    //____________________________________________________________________________________________________
+
+    // translates integer back to T-symbol
+
+    //____________________________________________________________________________________________________
+
+
+    public char intToTsymbol(Integer inputSymbol){
+        if(Int_ArrayList.get(inputSymbol) !=  null){
+            return Int_ArrayList.get(inputSymbol);  
+        }
+        return 'x';
+    }
+
+
 
     //____________________________________________________________________________________________________
 
@@ -555,6 +570,12 @@ public class Grammar {
         }
     }
 
+    public void printCharArray(char[] array){
+        for(int i = 0; i < array.length; i++){
+            System.out.print(array[i] + " ");
+        }
+    }
+
     public void printMatrix(Character[][] rules){
         for (Character[] row : rules)
             System.out.println(Arrays.toString(row));
@@ -610,13 +631,11 @@ public class Grammar {
     }
 
     public static void printTable(String[][] table) {
-        // Find out what the maximum number of columns is in any row
         int maxColumns = 0;
         for (int i = 0; i < table.length; i++) {
           maxColumns = Math.max(table[i].length, maxColumns);
         }
       
-        // Find the maximum length of a string in each column
         int[] lengths = new int[maxColumns];
         for (int i = 0; i < table.length; i++) {
           for (int j = 0; j < table[i].length; j++) {
@@ -624,14 +643,12 @@ public class Grammar {
           }
         }
       
-        // Generate a format string for each column
         String[] formats = new String[lengths.length];
         for (int i = 0; i < lengths.length; i++) {
          formats[i] = "%1$" + lengths[i] + "s" 
              + (i + 1 == lengths.length ? "\n" : " ");
        }
       
-        // Print 'em out
         for (int i = 0; i < table.length; i++) {
           for (int j = 0; j < table[i].length; j++) {
             System.out.printf(formats[j], table[i][j]);

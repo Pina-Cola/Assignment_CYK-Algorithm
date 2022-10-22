@@ -467,31 +467,35 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
-    public void errorCorrection(Integer[][][] DP, int index, int newSymbol) {
+    public void errorCorrection(Integer[][][] DP, int index, int deleteSymbol) {
 
         System.out.println(" ");
         System.out.println("Error Correction: ");
         System.out.println(" " );
 
-        CYKtableRemoveSymbol(DP, index);
-        parseBU_newSymbol(DP, newSymbol);
-        System.out.println("Grammar with exchanged symbol " + newSymbol + " on index " + index + ":" );
-        DP = CYKtableCleanUp(DP);
+        // CYKtableRemoveSymbol(DP, index);
+        // parseBU_newSymbol(DP, newSymbol);
+        System.out.println("Grammar with exchanged symbol " + deleteSymbol + " on index " + index + ":" );
+        // DP = CYKtableCleanUp(DP);
         grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
         System.out.println("Error counter: " + errorCounter);
 
         System.out.println(" " );
-        System.out.println("Grammar with deleted symbol " + newSymbol + " on index " + index + ":" );
-        DP = CYKtableRemoveSymbol(DP, index);
-        DP = CYKtableDeletion(DP);
-        parseBU_newSymbol(DP, newSymbol);
-        DP = CYKtableCleanUp(DP);
+        System.out.println("Grammar with deleted symbol " + deleteSymbol + " on index " + index + ":" );
+        // DP = CYKtableRemoveSymbol(DP, index);
+        // DP = CYKtableDeletion(DP);
+        // parseBU_newSymbol(DP, newSymbol);
+        // DP = CYKtableCleanUp(DP);
         grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
         System.out.println("Error counter: " + errorCounter);
 
-        solveErrorWithDeletion(DP, errorCounter);
+        System.out.println(" " );
+        System.out.println("Delete symbol automatically:" );
+        Integer[] acceptedWord = solveErrorWithDeletion(DP, errorCounter);
+        printResultOfErrorCorrection(acceptedWord);
+        // grammar.printIntMatrix(DP);
         
     }
 
@@ -547,7 +551,7 @@ public class Parser {
                 }
             }
         }
-        // grammar.printIntMatrix(smallerDP);
+        grammar.printIntMatrix(smallerDP);
         return smallerDP;       
     }
 
@@ -560,11 +564,11 @@ public class Parser {
 
     public Integer[] solveErrorWithDeletion(Integer[][][] CYK, int amountOfErrors) {
 
-        int i = 0;
-        int j = 0;
+        int i = -1;
+        int j = -1;
 
         for(int index = 0; index < CYK.length; index++){
-            for(int entries = 0; entries < CYK.length; entries++){
+            for(int entries = 0; entries < CYK[amountOfErrors][index].length; entries++){
                 if(CYK[amountOfErrors][index][entries] != null && CYK[amountOfErrors][index][entries] == 0){
                     i = amountOfErrors;
                     j = index;
@@ -576,13 +580,19 @@ public class Parser {
             }
         }
 
+        if(i == -1){
+            Integer[] noAcceptedWord = new Integer[1];
+            noAcceptedWord[0] = -1;
+            return noAcceptedWord;
+        }
+
 
         int from = Math.min(i, j);
         int to = Math.max(i, j);
 
         Integer[] acceptedWord = new Integer[to - from + 1];
 
-        System.out.println("i: " + i + "  j: " + j + " to: " + to + " from: " + from);
+        // System.out.println("i: " + i + "  j: " + j + " to: " + to + " from: " + from);
 
         if(from==to){
             // grammar.printIntegerArray(inputAsInt);
@@ -604,11 +614,39 @@ public class Parser {
             }
         }
 
-        grammar.printIntegerArray(acceptedWord);
+        // grammar.printIntegerArray(acceptedWord);
 
 
         return acceptedWord;
 
+    }
+
+
+    // ____________________________________________________________________________________________________
+
+    // print result of error correction
+
+    // ____________________________________________________________________________________________________
+
+    public void printResultOfErrorCorrection(Integer[] acceptedWord) {
+
+        if(acceptedWord[0] != null && acceptedWord[0] == -1){
+            System.out.println("No error correction found");
+        }
+        else{
+                System.out.println("Accepted word: ");
+                // grammar.printIntegerArray(acceptedWord);
+
+                char[] wordAsTSymbols = new char[acceptedWord.length];
+
+                for(int i = 0; i < wordAsTSymbols.length; i++){
+                    wordAsTSymbols[i] = grammar.intToTsymbol(acceptedWord[i]);
+                }
+
+                grammar.printCharArray(wordAsTSymbols);
+        }
+        
+        
     }
 
 
