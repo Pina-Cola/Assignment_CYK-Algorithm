@@ -464,7 +464,7 @@ public class Parser {
         }
 
         CYKtableCleanUp(DP);
-        grammar.printIntMatrix(DP);
+        // grammar.printIntMatrix(DP);
 
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
@@ -509,23 +509,27 @@ public class Parser {
     public void errorCorrection(Integer[][][] DP) {
 
         System.out.println("_____________________________________________");
-        System.out.println("Error Correction");
+        System.out.println("Error correction");
+        System.out.println(" " );
 
 
         System.out.println("Error correction with exchange:");
-        callSolveErrorWithExchange();
+        Integer[] acceptedWord = callSolveErrorWithExchange();
+        System.out.println("1 symbol was exchanged.");
+        printResultOfErrorCorrection(acceptedWord);
+        
+        
         // printResultOfErrorCorrection(acceptedWordAfterExchange);
 
 
-
+        System.out.println(" " );
         System.out.println(" " );
         errorCounter = errorCounter(DP);
-        System.out.println("Error counter: " + errorCounter);
+        System.out.println("Error counter for deletion: " + errorCounter);
 
-        System.out.println(" " );
-        System.out.println("Deletion" );
-        // Integer[] acceptedWordAfterDeletion = solveErrorWithDeletion(DP, errorCounter);
-        // printResultOfErrorCorrection(acceptedWordAfterDeletion);
+        System.out.println("Error correction with deletion" );
+        Integer[] acceptedWordAfterDeletion = solveErrorWithDeletion(DP, errorCounter);
+        printResultOfErrorCorrection(acceptedWordAfterDeletion);
         // grammar.printIntMatrix(DP);
         
     }
@@ -714,24 +718,24 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
-    public Integer[] solveErrorWithExchange(Integer[][][] local_DP, int index, int symbol) {
+    public boolean solveErrorWithExchange(Integer[][][] local_DP, int index, int symbol) {
 
         // Integer[][][] local_DP_changed = local_DP;
 
             
-                System.out.println("Call for index " + index + " and symbol " + TerminalSymbols[symbol]);
+                // System.out.println("Call for index " + index + " and symbol " + TerminalSymbols[symbol]);
                 if (contained(ruleset_int, TerminalSymbols[symbol])) {
                     int temp = containedAt(ruleset_int, TerminalSymbols[symbol]);
-                    System.out.println("Temp: " + temp);
+                    // System.out.println("Temp: " + temp);
                     // local_DP_changed = local_DP;
                     if(parseBU_newSymbol(local_DP, temp) == true){
                         inputAsInt[index] = TerminalSymbols[symbol];
-                        return inputAsInt;
+                        return true;
                     }
                 }
     
 
-        return inputAsInt;
+        return false;
 
 
         // CYKtableRemoveSymbol(DP, index);
@@ -746,21 +750,35 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
-    public void callSolveErrorWithExchange() {
+    public Integer[] callSolveErrorWithExchange() {
 
-        
+        Integer[] acceptedWord = new Integer[inputAsInt.length];
 
         for(int index = 0; index < inputAsInt.length; index++){
             for(int symbol = 0; symbol < TerminalSymbols.length; symbol++){
-                System.out.println("____________");
-                System.out.println("Original DP: ");
-                grammar.printIntMatrix(DP_ofOriginalInput);
+                // System.out.println("____________");
+                // System.out.println("Original DP: ");
+                // grammar.printIntMatrix(DP_ofOriginalInput);
                 Integer[][][] local_DP = copyArray(DP_ofOriginalInput);
-                System.out.println("____________");
+                // System.out.println("____________");
                 DP = CYKtableRemoveSymbol(local_DP, index);
-                Integer[] newInputWord = solveErrorWithExchange(local_DP, index, symbol);
+                boolean newWordFound = solveErrorWithExchange(local_DP, index, symbol);
+
+                if(newWordFound == true){
+                    for(int i = 0; i < inputAsInt.length; i++){
+                        if(i == index){
+                            acceptedWord[i] = TerminalSymbols[symbol];
+                        }
+                        else{
+                            acceptedWord[i] = inputAsInt[i];
+                        }
+                    }
+                    return acceptedWord;
+                }
             }
         }
+
+        return acceptedWord;
         
 
     }
