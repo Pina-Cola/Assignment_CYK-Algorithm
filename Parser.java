@@ -223,7 +223,10 @@ public class Parser {
 
         grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
-        DP_ofOriginalInput = DP;
+
+        // System.arraycopy(DP, 0, DP_ofOriginalInput, 0, DP.length);
+        DP_ofOriginalInput = copyArray(DP);
+        // DP_ofOriginalInput = DP;
 
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
@@ -253,6 +256,32 @@ public class Parser {
             }
         }
         return DP.length-1;
+    }
+
+
+    // ____________________________________________________________________________________________________
+
+    // copy 3D array
+
+    // ____________________________________________________________________________________________________
+
+    public Integer[][][] copyArray(Integer[][][] array) {
+
+        Integer[][][] newArray = new Integer[array.length][array[0].length][array[0][0].length];
+
+        for(int i = 0; i < array.length; i++){
+            for(int j = array[i].length -1 ; j >= 0; j--){
+                for(int k = 0; k < array[i][j].length; k++){
+                    if(DP[i][j][k] != null) {
+                        newArray[i][j][k] = array[i][j][k];
+                    }
+                    else{
+                        newArray[i][j][k] = null;
+                    }
+                }
+            }
+        }
+        return newArray;
     }
 
     // ____________________________________________________________________________________________________
@@ -719,15 +748,17 @@ public class Parser {
 
     public void callSolveErrorWithExchange() {
 
+        
+
         for(int index = 0; index < inputAsInt.length; index++){
-            DP = DP_ofOriginalInput;
-            System.out.println("____________");
-            System.out.println("Original DP: ");
-            grammar.printIntMatrix(DP_ofOriginalInput);
-            System.out.println("____________");
             for(int symbol = 0; symbol < TerminalSymbols.length; symbol++){
-            DP = CYKtableRemoveSymbol(DP, index);
-            Integer[] newInputWord = solveErrorWithExchange(DP, index, symbol);
+                System.out.println("____________");
+                System.out.println("Original DP: ");
+                grammar.printIntMatrix(DP_ofOriginalInput);
+                Integer[][][] local_DP = copyArray(DP_ofOriginalInput);
+                System.out.println("____________");
+                DP = CYKtableRemoveSymbol(local_DP, index);
+                Integer[] newInputWord = solveErrorWithExchange(local_DP, index, symbol);
             }
         }
         
