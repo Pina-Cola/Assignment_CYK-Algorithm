@@ -20,6 +20,7 @@ public class Parser {
 
     public Integer[] inputAsInt;
     public ArrayList<Character> Int_ArrayList = new ArrayList<Character>();
+    public Integer[] TerminalSymbols;
 
     Boolean[][][] table;
 
@@ -76,10 +77,12 @@ public class Parser {
         grammar.printIntMatrix(rulesetNT_int);
         System.out.println(""); */
 
+        TerminalSymbols = getTsymbols();
         System.out.println("Inputword as Integers:");
         inputAsInt = grammar.inputStringToInt(inputWord);
         grammar.printIntegerArray(inputAsInt);
         System.out.println("");
+        System.out.println("_____________________________________________");
         // this.inputWord = inputWord.toCharArray();
 
         // BottomUp function call
@@ -112,7 +115,7 @@ public class Parser {
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
 
         // Error correction
-        errorCorrection(DP, 2, 3);
+        errorCorrection(DP);
     }
 
     // ____________________________________________________________________________________________________
@@ -428,10 +431,15 @@ public class Parser {
                 }
             }
         }
+
+        CYKtableCleanUp(DP);
+        grammar.printIntMatrix(DP);
+
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
             return true;
         }
+        
         return false;
     }
 
@@ -467,34 +475,26 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
-    public void errorCorrection(Integer[][][] DP, int index, int deleteSymbol) {
+    public void errorCorrection(Integer[][][] DP) {
 
-        System.out.println(" ");
-        System.out.println("Error Correction: ");
+        System.out.println("_____________________________________________");
+        System.out.println("Error Correction");
+
+
+        System.out.println("Error correction with exchange:");
+        Integer[] acceptedWordAfterExchange = solveErrorWithExchange();
+        printResultOfErrorCorrection(acceptedWordAfterExchange);
+
+
+
         System.out.println(" " );
-
-        // CYKtableRemoveSymbol(DP, index);
-        // parseBU_newSymbol(DP, newSymbol);
-        System.out.println("Grammar with exchanged symbol " + deleteSymbol + " on index " + index + ":" );
-        // DP = CYKtableCleanUp(DP);
-        grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
         System.out.println("Error counter: " + errorCounter);
 
         System.out.println(" " );
-        System.out.println("Grammar with deleted symbol " + deleteSymbol + " on index " + index + ":" );
-        // DP = CYKtableRemoveSymbol(DP, index);
-        // DP = CYKtableDeletion(DP);
-        // parseBU_newSymbol(DP, newSymbol);
-        // DP = CYKtableCleanUp(DP);
-        grammar.printIntMatrix(DP);
-        errorCounter = errorCounter(DP);
-        System.out.println("Error counter: " + errorCounter);
-
-        System.out.println(" " );
-        System.out.println("Delete symbol automatically:" );
-        Integer[] acceptedWord = solveErrorWithDeletion(DP, errorCounter);
-        printResultOfErrorCorrection(acceptedWord);
+        System.out.println("Deletion" );
+        // Integer[] acceptedWordAfterDeletion = solveErrorWithDeletion(DP, errorCounter);
+        // printResultOfErrorCorrection(acceptedWordAfterDeletion);
         // grammar.printIntMatrix(DP);
         
     }
@@ -640,13 +640,72 @@ public class Parser {
                 char[] wordAsTSymbols = new char[acceptedWord.length];
 
                 for(int i = 0; i < wordAsTSymbols.length; i++){
-                    wordAsTSymbols[i] = grammar.intToTsymbol(acceptedWord[i]);
+                    wordAsTSymbols[i] = grammar.intToSymbol(acceptedWord[i]);
                 }
 
                 grammar.printCharArray(wordAsTSymbols);
         }
         
         
+    }
+
+
+    // ____________________________________________________________________________________________________
+
+    // get all the t symbols
+
+    // ____________________________________________________________________________________________________
+
+    public Integer[] getTsymbols() {
+
+        int length = Int_ArrayList.size();
+        Integer[] tSymbols = new Integer[length];
+        int index = 0;
+
+        for(int i = 0; i < rulesetT_int.length; i++){
+            for(int j = 0; j < rulesetT_int[i].length; j++){
+                for(int entries = 0; entries < rulesetT_int[i][j].length; entries++){
+                    if(rulesetT_int[i][j][entries] != null){
+                        tSymbols[index] = rulesetT_int[i][j][entries];
+                        index += 1;
+                    }
+                }
+            }
+        }
+        tSymbols = grammar.cleanIntArray(tSymbols);
+        return tSymbols;  
+    }
+
+
+    // ____________________________________________________________________________________________________
+
+    // find symbol to exchange (for one exchange!)
+
+    // ____________________________________________________________________________________________________
+
+    public Integer[] solveErrorWithExchange() {
+
+        // inputAsInt
+        // TerminalSymbols
+
+        for(int index = 0; index < inputAsInt.length; index++){
+            CYKtableRemoveSymbol(DP, index);
+            for(int symbol = 0; symbol < TerminalSymbols.length; symbol++){
+                if(parseBU_newSymbol(DP, inputAsInt[symbol]) == true){
+                    inputAsInt[index] = TerminalSymbols[symbol];
+                    return inputAsInt;
+                }
+            }
+        }
+
+        return inputAsInt;
+
+
+        // CYKtableRemoveSymbol(DP, index);
+        // parseBU_newSymbol(DP, newSymbol);
+
+
+
     }
 
 

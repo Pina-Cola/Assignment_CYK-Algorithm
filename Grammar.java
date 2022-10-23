@@ -129,7 +129,7 @@ public class Grammar {
     //____________________________________________________________________________________________________
 
 
-    public char intToTsymbol(Integer inputSymbol){
+    public char intToSymbol(Integer inputSymbol){
         if(Int_ArrayList.get(inputSymbol) !=  null){
             return Int_ArrayList.get(inputSymbol);  
         }
@@ -763,6 +763,27 @@ public class Grammar {
         }
 
         return arrayWithoutEmptyEntries;
+    }
+
+
+    public Integer[] cleanIntArray(Integer[] array){
+
+        int size = 0;
+        for(int i = 0; i < array.length; i++){
+            if(array[i] != null)
+            {
+                size += 1;
+            }
+        }
+        Integer[] newArray = new Integer[size];
+        for(int i = 0; i < size; i++){
+            if(array[i] != null)
+            {
+                newArray[i] = array[i];
+            }
+        }
+
+        return newArray;
     }
 
 
