@@ -35,6 +35,7 @@ public class Parser {
     int errorCounter;
 
     Integer[][][] DP;
+    Integer[][][] DP_ofOriginalInput;
 
     public Parser(String[] inputString, String inputWord) {
 
@@ -222,6 +223,7 @@ public class Parser {
 
         grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
+        DP_ofOriginalInput = DP;
 
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
@@ -482,8 +484,8 @@ public class Parser {
 
 
         System.out.println("Error correction with exchange:");
-        Integer[] acceptedWordAfterExchange = solveErrorWithExchange();
-        printResultOfErrorCorrection(acceptedWordAfterExchange);
+        callSolveErrorWithExchange();
+        // printResultOfErrorCorrection(acceptedWordAfterExchange);
 
 
 
@@ -679,24 +681,26 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
-    // find symbol to exchange (for one exchange!)
+    // find symbol to exchange (only for one exchange!)
 
     // ____________________________________________________________________________________________________
 
-    public Integer[] solveErrorWithExchange() {
+    public Integer[] solveErrorWithExchange(Integer[][][] local_DP, int index, int symbol) {
 
-        // inputAsInt
-        // TerminalSymbols
+        // Integer[][][] local_DP_changed = local_DP;
 
-        for(int index = 0; index < inputAsInt.length; index++){
-            CYKtableRemoveSymbol(DP, index);
-            for(int symbol = 0; symbol < TerminalSymbols.length; symbol++){
-                if(parseBU_newSymbol(DP, inputAsInt[symbol]) == true){
-                    inputAsInt[index] = TerminalSymbols[symbol];
-                    return inputAsInt;
+            
+                System.out.println("Call for index " + index + " and symbol " + TerminalSymbols[symbol]);
+                if (contained(ruleset_int, TerminalSymbols[symbol])) {
+                    int temp = containedAt(ruleset_int, TerminalSymbols[symbol]);
+                    System.out.println("Temp: " + temp);
+                    // local_DP_changed = local_DP;
+                    if(parseBU_newSymbol(local_DP, temp) == true){
+                        inputAsInt[index] = TerminalSymbols[symbol];
+                        return inputAsInt;
+                    }
                 }
-            }
-        }
+    
 
         return inputAsInt;
 
@@ -704,7 +708,29 @@ public class Parser {
         // CYKtableRemoveSymbol(DP, index);
         // parseBU_newSymbol(DP, newSymbol);
 
+    }
 
+
+    // ____________________________________________________________________________________________________
+
+    // call function to find symbol to exchange (only for one exchange!)
+
+    // ____________________________________________________________________________________________________
+
+    public void callSolveErrorWithExchange() {
+
+        for(int index = 0; index < inputAsInt.length; index++){
+            DP = DP_ofOriginalInput;
+            System.out.println("____________");
+            System.out.println("Original DP: ");
+            grammar.printIntMatrix(DP_ofOriginalInput);
+            System.out.println("____________");
+            for(int symbol = 0; symbol < TerminalSymbols.length; symbol++){
+            DP = CYKtableRemoveSymbol(DP, index);
+            Integer[] newInputWord = solveErrorWithExchange(DP, index, symbol);
+            }
+        }
+        
 
     }
 
