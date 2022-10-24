@@ -949,6 +949,9 @@ public class Grammar {
         } 
 
         CNFrules = beautify1DStringArray(CNFrules);
+        for(int i = 0; i < CNFrules.length; i++){
+            System.out.println(CNFrules[i]);
+        }
 
         return CNFrules;
 

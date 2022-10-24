@@ -190,11 +190,16 @@ public class Parser {
 
         for (int i = 0; i < wordLength; i++) {
             if (contained(ruleset_int, word[i])) {
-                int temp = containedAt(ruleset_int, word[i]);
+                Integer[] tempArr = containedAtMultipleIndeces(ruleset_int, word[i]);
+                int index = 0;
                 for(int j = 0; j < wordLength; j++){
-                    if(DP[i][i][j] == null){
-                        DP[i][i][j] = temp;
+                    if(tempArr[index] == null){
                         break;
+                    }
+                    if(DP[i][i][j] == null){
+                        DP[i][i][j] = tempArr[index];
+                        index += 1;
+                        // break;
                     }
                 }
             }
@@ -406,7 +411,7 @@ public class Parser {
                         if(grammar.is_T_rule(first)){
                             tableLinear[indexNT][i][j] = (parseTD(first, i, k));
                         }
-                        else{
+                        else if(grammar.is_T_rule(second)){
                             tableLinear[indexNT][i][j] = (parseTD(second, k, j));
                         } 
                         if (tableLinear[indexNT][i][j] == true) {
@@ -468,6 +473,34 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
+    // returns index (which stand for NT) if symbol in ruleset
+
+    // ____________________________________________________________________________________________________
+
+    public Integer[] containedAtMultipleIndeces(Integer[][][] rules, int symbol) {
+
+        Integer[] indeces = new Integer[rules.length];
+        int c = 0;
+
+        for (int i = 0; i < rules.length; i++) {
+            for (int j = 0; j < rules[i].length; j++) {
+                if (rules[i][j][0] != null && rules[i][j][0] == symbol) {
+                    indeces[c] = i;
+                    c += 1;
+                }
+                if (rules[i][j][1] != null && rules[i][j][1] == symbol) {
+                    indeces[c] = i;
+                    c+=1;
+                }
+            }
+        }
+
+        return indeces;
+    }
+
+
+    // ____________________________________________________________________________________________________
+
     // deletes entry from CYK for deletion (symbol on "int index" and resulting entries are deleted)
 
     // ____________________________________________________________________________________________________
@@ -498,7 +531,7 @@ public class Parser {
         int wordLength = DP.length;
         
         for (int i = 0; i < wordLength; i++) {
-            if (DP[i][i][0] == -1) {
+            if (DP[i][i][0] != null && DP[i][i][0] == -1) {
                 DP[i][i][0] = newSymbol;
             }
         }
@@ -519,7 +552,7 @@ public class Parser {
                                 List<Integer> intListFirst = new ArrayList<>(Arrays.asList(DP[i][k]));
                                 List<Integer> intListSecond = new ArrayList<>(Arrays.asList(DP[k + 1][j]));
                                 if (intListFirst.contains(first) && intListSecond.contains(second)) {
-                                    for(int c = 0; c < wordLength; c++){
+                                    for(int c = 0; c < DP[i][j].length; c++){
                                         if(DP[i][j][c] != null && DP[i][j][c] == head){
                                             System.out.println(head);
                                             break;
