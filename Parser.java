@@ -23,14 +23,17 @@ public class Parser {
     public Integer[] TerminalSymbols;
 
     Boolean[][][] table;
+    Boolean[][][] tableLinear;
 
     long counterN;
     long counterTD;
     long counterBU;
+    long counterLinearTD;
 
     long timeElapsedNaive;
     long timeElapsedBU;
     long timeElapsedTD;
+    long timeElapsedLinearTD;
 
     int errorCounter;
 
@@ -109,6 +112,18 @@ public class Parser {
         long finishNaive = System.currentTimeMillis();
         timeElapsedNaive = finishNaive - startNaive;
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
+
+        // LinearTopDown function call
+        if(grammar.isCNF != true){
+            long startLinearTD = System.currentTimeMillis();
+            tableLinear = new Boolean[ruleset_int.length][inputWord.length() + 1][inputWord.length() + 1];
+            System.out.println("");
+            counterLinearTD = 0;
+            System.out.println("LinearTopDown: " + parseLinearTD() + "   Amount of calls: " + counterLinearTD);
+            long finishLinearTD = System.currentTimeMillis();
+            timeElapsedLinearTD = finishLinearTD - startLinearTD;
+            System.out.println("LinearTopDown runtime: " + timeElapsedLinearTD + "ms");
+        }
 
         // Error correction
         errorCorrection(DP);
@@ -340,6 +355,76 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
+    // calls recursion for linear top down
+
+    // ____________________________________________________________________________________________________
+
+    public boolean parseLinearTD() {
+        counterLinearTD = 0;
+
+        for (int i = 0; i < tableLinear.length; i++) {
+            for (int j = 0; j < tableLinear[i].length; j++)
+                for (int k = 0; k < tableLinear[i][j].length; k++) {
+                    tableLinear[i][j][k] = null;
+                }
+        }
+        return parseLinearTD(0, 0, inputAsInt.length);
+    }
+
+    // ____________________________________________________________________________________________________
+
+    // top down for linear grammars
+
+    // ____________________________________________________________________________________________________
+
+    public boolean parseLinearTD(int indexNT, int i, int j) {
+
+        counterLinearTD += 1;
+        int rulesetLength = ruleset_int[0].length;
+
+        if (tableLinear[indexNT][i][j] != null) {
+            return tableLinear[indexNT][i][j];
+        }
+
+        if (i == (j - 1)) {
+            for (int l = 0; l < rulesetLength; l++) {
+                int symbol = inputAsInt[i];
+                if ( ruleset_int[indexNT][l][0] != null && ruleset_int[indexNT][l][0] == symbol ) {
+                    return true;
+                }
+                if ( ruleset_int[indexNT][l][1] != null && ruleset_int[indexNT][l][1] == symbol ) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            for (int bodyIndex = 0; bodyIndex < ruleset_int[indexNT].length; bodyIndex++) {
+                if (ruleset_int[indexNT][bodyIndex][0] != null && ruleset_int[indexNT][bodyIndex][1] != null) {
+                    for (int k = i + 1; k < j; k++) {
+                        int first = ruleset_int[indexNT][bodyIndex][0];
+                        int second = ruleset_int[indexNT][bodyIndex][1];
+                        if(grammar.is_T_rule(first)){
+                            tableLinear[indexNT][i][j] = (parseTD(first, i, k));
+                        }
+                        else{
+                            tableLinear[indexNT][i][j] = (parseTD(second, k, j));
+                        } 
+                        if (tableLinear[indexNT][i][j] == true) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+
+
+
+    // ____________________________________________________________________________________________________
+
     // returns true if symbol in ruleset
 
     // ____________________________________________________________________________________________________
@@ -404,7 +489,7 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
-    // bottom up for an replaced symbol
+    // bottom up for a replaced symbol
 
     // ____________________________________________________________________________________________________
 
@@ -504,12 +589,12 @@ public class Parser {
 
         System.out.println("Error correction with exchange:");
         Integer[] acceptedWord = callSolveErrorWithExchange();
-        if(acceptedWord[0] != null){
+        if(acceptedWord[0] != null && (Arrays.equals(acceptedWord, inputAsInt))){
             System.out.println("1 symbol was exchanged.");
             printResultOfErrorCorrection(acceptedWord);
         }
         else{
-            System.out.println("No exchange option for 1 symbol found.");  
+            System.out.println("No exchange option for 1 symbol found/necessary");  
         }
         
         System.out.println(" " );

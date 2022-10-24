@@ -19,6 +19,8 @@ public class Grammar {
 
     public String alreadyInt = "";
 
+    public boolean isCNF;
+
     // Rulesets 
     public String[][] ruleset;      // all rules
     public String[][] rulesetNT;    // NT rules
@@ -77,6 +79,23 @@ public class Grammar {
 
     public String[][] getRulesetNT(){
         return rulesetNT;
+    }
+
+
+    //____________________________________________________________________________________________________
+
+    // checks if the nonterminal leads to a terminal symbol
+
+    //____________________________________________________________________________________________________
+
+
+    public boolean is_T_rule(int symbol){
+        if(rulesetT_numbers[symbol] != null){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 
@@ -146,10 +165,6 @@ public class Grammar {
 
 
     public void nts_to_array(String[] inputString){
-
-        /* for(int i = 0; i < inputString.length; i++){
-            System.out.println(inputString[i]);
-        } */
 
         // assuming that each NT-symbol has ONE char as a name
 
@@ -827,11 +842,13 @@ public class Grammar {
                 char firstSymbol = rule.charAt(1);
                 char secondSymbol = rule.charAt(2);
                 if(!Character.isUpperCase(firstSymbol) || !Character.isUpperCase(secondSymbol)){
+                    isCNF = false;
                     return false;
                 }
             }
         }        
         
+        isCNF = true;
         return true;
 
     }
