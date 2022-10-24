@@ -515,8 +515,13 @@ public class Parser {
 
         System.out.println("Error correction with exchange:");
         Integer[] acceptedWord = callSolveErrorWithExchange();
-        System.out.println("1 symbol was exchanged.");
-        printResultOfErrorCorrection(acceptedWord);
+        if(acceptedWord[0] != null){
+            System.out.println("1 symbol was exchanged.");
+            printResultOfErrorCorrection(acceptedWord);
+        }
+        else{
+            System.out.println("No exchange option for 1 symbol found.");  
+        }
         
         
         // printResultOfErrorCorrection(acceptedWordAfterExchange);
@@ -602,16 +607,33 @@ public class Parser {
         int i = -1;
         int j = -1;
 
+        int[] betterIndeces = new int[2];
+
+        System.out.println("amount of errors: " + amountOfErrors);
+
         for(int index = 0; index < CYK.length; index++){
             for(int entries = 0; entries < CYK[amountOfErrors][index].length; entries++){
                 if(CYK[amountOfErrors][index][entries] != null && CYK[amountOfErrors][index][entries] == 0){
-                    i = amountOfErrors;
-                    j = index;
+                    // System.out.println("case 1");
+                    betterIndeces = findBestIndeces(i, j, amountOfErrors, index);
+                    i = betterIndeces[0];
+                    j = betterIndeces[1];
+                    // i = amountOfErrors;
+                    // j = index;
+                    // System.out.println("i: " + i + "j: " + j);
                 }
-                if(CYK[index][amountOfErrors][entries] != null && CYK[amountOfErrors][index][entries] == 0){
-                    i = index;
-                    j = amountOfErrors;
-                }
+                // if(index < CYK.length && amountOfErrors < CYK[0].length){ // HELP
+                    // if(CYK[index][amountOfErrors][entries] != null && CYK[amountOfErrors][index][entries] == 0){
+                    if(CYK[index][CYK.length - 1 - amountOfErrors][entries] != null && CYK[index][CYK.length - 1 - amountOfErrors][entries] == 0){
+                        // System.out.println("case 2");
+                        betterIndeces = findBestIndeces(i, j, index, CYK.length - 1 - amountOfErrors);
+                        i = betterIndeces[0];
+                        j = betterIndeces[1];
+                        // i = index;
+                        // j = CYK.length - 1 - amountOfErrors;
+                        // System.out.println("i: " + i + "j: " + j);
+                    }
+                // }
             }
         }
 
@@ -659,6 +681,45 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
+    // find most up right 0 
+
+    // ____________________________________________________________________________________________________
+
+    public int[] findBestIndeces(int i_a, int j_a, int i_b, int j_b) {
+
+        int[] betterIndeces = new int[2];
+
+        // i should be as small as possible and j as big as possible
+        // (to get the field on the top right)
+
+        int indicator_i = i_a-i_b;
+        // int indicator_j = j_a-j_b;
+
+        int indicator_j = j_b - j_a;
+
+        if((indicator_i + indicator_j) == 0){
+            // both are equal far away
+            betterIndeces[0] = i_a;
+            betterIndeces[1] = j_a;
+        }
+        if((indicator_i + indicator_j) > 0){
+            // b is closer
+            betterIndeces[0] = i_b;
+            betterIndeces[1] = j_b;
+        }
+        else{
+            // a is closer
+            betterIndeces[0] = i_a;
+            betterIndeces[1] = j_a;
+        }
+
+        return betterIndeces;
+        
+    }
+
+
+    // ____________________________________________________________________________________________________
+
     // print result of error correction
 
     // ____________________________________________________________________________________________________
@@ -675,7 +736,9 @@ public class Parser {
                 char[] wordAsTSymbols = new char[acceptedWord.length];
 
                 for(int i = 0; i < wordAsTSymbols.length; i++){
-                    wordAsTSymbols[i] = grammar.intToSymbol(acceptedWord[i]);
+                    if(acceptedWord[i] != null){
+                        wordAsTSymbols[i] = grammar.intToSymbol(acceptedWord[i]);
+                    }
                 }
 
                 grammar.printCharArray(wordAsTSymbols);
