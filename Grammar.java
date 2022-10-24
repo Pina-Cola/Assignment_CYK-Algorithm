@@ -557,13 +557,19 @@ public class Grammar {
 
         for(int i = 0; i < smallerMatrix.length; i++){
             for(int j = 0; j < smallerMatrix[i].length; j++){
-                if(matrix[i][j] != null){
-                    smallerMatrix[i][j][0] = matrix[i][j][0];
-                    smallerMatrix[i][j][1] = matrix[i][j][1];
-                }
-                else{
-                    smallerMatrix[i][j][0] = null;
-                    smallerMatrix[i][j][1] = null;
+                if(i < matrix.length && j < matrix[i].length){
+                    if(matrix[i][j] != null && matrix[i][j][0] != null){
+                        smallerMatrix[i][j][0] = matrix[i][j][0];
+                    }
+                    else{
+                        smallerMatrix[i][j][0] = null;
+                    }
+                    if(matrix[i][j] != null && matrix[i][j].length > 1 && matrix[i][j][1] != null){
+                        smallerMatrix[i][j][1] = matrix[i][j][1];
+                    }
+                    else{
+                        smallerMatrix[i][j][1] = null;
+                    }
                 }
             }
         }
