@@ -71,20 +71,15 @@ public class Parser {
         System.out.println("Integer-Matrix all rules:");
         grammar.printIntMatrix(ruleset_int);
         System.out.println("");
-        /* System.out.println("Matrix T rules:");
-        grammar.printIntMatrix(rulesetT_int);
-        System.out.println("");
-        System.out.println("Matrix NT rules:");
-        grammar.printIntMatrix(rulesetNT_int);
-        System.out.println(""); */
 
         TerminalSymbols = getTsymbols();
         System.out.println("Inputword as Integers:");
         inputAsInt = grammar.inputStringToInt(inputWord);
         grammar.printIntegerArray(inputAsInt);
+        notInAlphabet();
         System.out.println("");
         System.out.println("_____________________________________________");
-        // this.inputWord = inputWord.toCharArray();
+
 
         // BottomUp function call
         DP = new Integer[inputAsInt.length][inputAsInt.length][inputAsInt.length];
@@ -224,9 +219,7 @@ public class Parser {
         grammar.printIntMatrix(DP);
         errorCounter = errorCounter(DP);
 
-        // System.arraycopy(DP, 0, DP_ofOriginalInput, 0, DP.length);
         DP_ofOriginalInput = copyArray(DP);
-        // DP_ofOriginalInput = DP;
 
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
@@ -397,9 +390,7 @@ public class Parser {
     public Integer[][][] CYKtableRemoveSymbol(Integer[][][] CYK, int index) {
 
         grammar.beautifyIntegerMatrix(CYK);
-        // System.out.println("CYK table format: " + CYK.length);
-
-        // replace symbol and resulting entries with -1
+        
         for(int i = 0; i < CYK.length; i++){
             for(int j = 0; j < CYK.length; j++){
                 if( i <= index && j >= index){
@@ -407,7 +398,6 @@ public class Parser {
                 }
             }
         }
-        // grammar.printIntMatrix(CYK);
         return CYK; 
     }
 
@@ -464,7 +454,6 @@ public class Parser {
         }
 
         CYKtableCleanUp(DP);
-        // grammar.printIntMatrix(DP);
 
         List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
         if (finalField.contains(0)) {
@@ -523,10 +512,6 @@ public class Parser {
             System.out.println("No exchange option for 1 symbol found.");  
         }
         
-        
-        // printResultOfErrorCorrection(acceptedWordAfterExchange);
-
-
         System.out.println(" " );
         System.out.println(" " );
         errorCounter = errorCounter(DP);
@@ -534,9 +519,7 @@ public class Parser {
 
         System.out.println("Error correction with deletion" );
         Integer[] acceptedWordAfterDeletion = solveErrorWithDeletion(DP, errorCounter);
-        printResultOfErrorCorrection(acceptedWordAfterDeletion);
-        // grammar.printIntMatrix(DP);
-        
+        printResultOfErrorCorrection(acceptedWordAfterDeletion);       
     }
 
 
@@ -614,26 +597,15 @@ public class Parser {
         for(int index = 0; index < CYK.length; index++){
             for(int entries = 0; entries < CYK[amountOfErrors][index].length; entries++){
                 if(CYK[amountOfErrors][index][entries] != null && CYK[amountOfErrors][index][entries] == 0){
-                    // System.out.println("case 1");
                     betterIndeces = findBestIndeces(i, j, amountOfErrors, index);
                     i = betterIndeces[0];
                     j = betterIndeces[1];
-                    // i = amountOfErrors;
-                    // j = index;
-                    // System.out.println("i: " + i + "j: " + j);
                 }
-                // if(index < CYK.length && amountOfErrors < CYK[0].length){ // HELP
-                    // if(CYK[index][amountOfErrors][entries] != null && CYK[amountOfErrors][index][entries] == 0){
                     if(CYK[index][CYK.length - 1 - amountOfErrors][entries] != null && CYK[index][CYK.length - 1 - amountOfErrors][entries] == 0){
-                        // System.out.println("case 2");
                         betterIndeces = findBestIndeces(i, j, index, CYK.length - 1 - amountOfErrors);
                         i = betterIndeces[0];
                         j = betterIndeces[1];
-                        // i = index;
-                        // j = CYK.length - 1 - amountOfErrors;
-                        // System.out.println("i: " + i + "j: " + j);
                     }
-                // }
             }
         }
 
@@ -649,10 +621,7 @@ public class Parser {
 
         Integer[] acceptedWord = new Integer[to - from + 1];
 
-        // System.out.println("i: " + i + "  j: " + j + " to: " + to + " from: " + from);
-
         if(from==to){
-            // grammar.printIntegerArray(inputAsInt);
             for(int k = 0; k < inputAsInt.length; k++){
                 if(inputAsInt[k] != null && inputAsInt[k] == 0){
                 acceptedWord[k] = inputAsInt[k];
@@ -663,16 +632,11 @@ public class Parser {
             return acceptedWord;
         }
 
-
-
         for(int k = 0; k <= to - from; k++){
             if(inputAsInt[k + from] != null){
             acceptedWord[k] = inputAsInt[k + from];
             }
         }
-
-        // grammar.printIntegerArray(acceptedWord);
-
 
         return acceptedWord;
 
@@ -693,8 +657,6 @@ public class Parser {
         // (to get the field on the top right)
 
         int indicator_i = i_a-i_b;
-        // int indicator_j = j_a-j_b;
-
         int indicator_j = j_b - j_a;
 
         if((indicator_i + indicator_j) == 0){
@@ -731,7 +693,6 @@ public class Parser {
         }
         else{
                 System.out.println("Accepted word: ");
-                // grammar.printIntegerArray(acceptedWord);
 
                 char[] wordAsTSymbols = new char[acceptedWord.length];
 
@@ -782,28 +743,16 @@ public class Parser {
     // ____________________________________________________________________________________________________
 
     public boolean solveErrorWithExchange(Integer[][][] local_DP, int index, int symbol) {
-
-        // Integer[][][] local_DP_changed = local_DP;
-
             
-                // System.out.println("Call for index " + index + " and symbol " + TerminalSymbols[symbol]);
                 if (contained(ruleset_int, TerminalSymbols[symbol])) {
                     int temp = containedAt(ruleset_int, TerminalSymbols[symbol]);
-                    // System.out.println("Temp: " + temp);
-                    // local_DP_changed = local_DP;
                     if(parseBU_newSymbol(local_DP, temp) == true){
                         inputAsInt[index] = TerminalSymbols[symbol];
                         return true;
                     }
                 }
     
-
         return false;
-
-
-        // CYKtableRemoveSymbol(DP, index);
-        // parseBU_newSymbol(DP, newSymbol);
-
     }
 
 
@@ -819,11 +768,7 @@ public class Parser {
 
         for(int index = 0; index < inputAsInt.length; index++){
             for(int symbol = 0; symbol < TerminalSymbols.length; symbol++){
-                // System.out.println("____________");
-                // System.out.println("Original DP: ");
-                // grammar.printIntMatrix(DP_ofOriginalInput);
                 Integer[][][] local_DP = copyArray(DP_ofOriginalInput);
-                // System.out.println("____________");
                 DP = CYKtableRemoveSymbol(local_DP, index);
                 boolean newWordFound = solveErrorWithExchange(local_DP, index, symbol);
 
@@ -840,10 +785,26 @@ public class Parser {
                 }
             }
         }
-
         return acceptedWord;
-        
+    }
 
+    // ____________________________________________________________________________________________________
+
+    // checks if input word contains elements that are not from the alphabet
+
+    // ____________________________________________________________________________________________________
+
+    public void notInAlphabet() {
+            
+        for(int i = 0; i < inputAsInt.length; i++){
+            if(inputAsInt[i] != null && inputAsInt[i] == -1){
+                System.out.println(" ");
+                System.out.println("____________________________________________________________________");
+                System.out.println("Input word contains element that is not part of the alphabet!");
+                System.out.println("____________________________________________________________________");
+                System.exit(0);
+            }
+        }
     }
 
 
