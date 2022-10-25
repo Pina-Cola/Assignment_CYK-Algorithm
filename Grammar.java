@@ -90,13 +90,45 @@ public class Grammar {
 
 
     public boolean is_T_rule(int symbol){
+
         if(rulesetT_numbers[symbol][0][0] != null){
-            return true;
+            // return true;
+            if(symbol >= rulesetNT_numbers.length){
+                return true;
+            }
+            if(symbol < rulesetNT_numbers.length && rulesetNT_numbers[symbol][0][0] == null)
+            {
+                return true;
+            }
+            else{
+                return false;
+            }
         }
         else{
             return false;
         }
     }
+
+
+    //____________________________________________________________________________________________________
+
+    // body of rule contains NT and T symbol (T and NT rule)
+
+    //____________________________________________________________________________________________________
+
+
+    /* public boolean has_T_and_NT_body(int symbol){
+
+        if(rulesetT_numbers[symbol][0][0] != null && symbol < rulesetNT_numbers.length
+        && rulesetNT_numbers[symbol][0][0] != null){
+            return true;
+        }
+        else{
+            return false;
+        }
+    } */
+
+
 
 
     //____________________________________________________________________________________________________
@@ -942,6 +974,15 @@ public class Grammar {
             }
 
             if(rule.length() == 2){
+                /* char head = rule.charAt(0);
+                char tSymbol = rule.charAt(1);
+                String newNT = "";
+
+                if(isAlreadyContained(head, newNTsymbols)){
+                    usedNTsymbol = findNewNTsymbol(usedNTsymbol);
+                    newNT = "" + usedNTsymbol.charAt(usedNTsymbol.length()-1);
+                } */
+
                 CNFrules[index] = rule;
                 index = index+1;
                 usedNTsymbol = usedNTsymbol + rule;

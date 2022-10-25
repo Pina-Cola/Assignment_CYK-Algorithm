@@ -89,7 +89,8 @@ public class Parser {
         long startBU = System.currentTimeMillis();
         System.out.println("");
         counterBU = 0;
-        System.out.println("BottomUp: " + parseBU(this.inputAsInt) + "   Amount of calls: " + counterBU + "    Amount of errors: " + errorCounter);
+        boolean BottomUp = parseBU(this.inputAsInt);
+        System.out.println("BottomUp: " + BottomUp  + "   Amount of calls: " + counterBU + "    Amount of errors: " + errorCounter);
         long finishBU = System.currentTimeMillis();
         timeElapsedBU = finishBU - startBU;
         System.out.println("BottomUp runtime: " + timeElapsedBU + "ms");
@@ -99,7 +100,8 @@ public class Parser {
         table = new Boolean[ruleset_int.length][inputWord.length() + 1][inputWord.length() + 1];
         System.out.println("");
         counterTD = 0;
-        System.out.println("TopDown: " + parseTD() + "   Amount of calls: " + counterTD);
+        Boolean TopDown = parseTD();
+        System.out.println("TopDown: " + TopDown + "   Amount of calls: " + counterTD);
         long finishTD = System.currentTimeMillis();
         timeElapsedTD = finishTD - startTD;
         System.out.println("TopDown runtime: " + timeElapsedTD + "ms");
@@ -108,7 +110,8 @@ public class Parser {
         long startNaive = System.currentTimeMillis();
         System.out.println("");
         counterN = 0;
-        System.out.println("Naive: " + parseNaive() + "   Amount of calls: " + counterN);
+        Boolean parseNaive = parseNaive();
+        System.out.println("Naive: " + parseNaive  + "   Amount of calls: " + counterN);
         long finishNaive = System.currentTimeMillis();
         timeElapsedNaive = finishNaive - startNaive;
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
@@ -119,7 +122,8 @@ public class Parser {
             tableLinear = new Boolean[ruleset_int.length][inputWord.length() + 1][inputWord.length() + 1];
             System.out.println("");
             counterLinearTD = 0;
-            System.out.println("LinearTopDown: " + parseLinearTD() + "   Amount of calls: " + counterLinearTD);
+            boolean LTopDown = parseLinearTD();
+            System.out.println("LinearTopDown: " + TopDown  + "   Amount of calls: " + counterLinearTD);
             long finishLinearTD = System.currentTimeMillis();
             timeElapsedLinearTD = finishLinearTD - startLinearTD;
             System.out.println("LinearTopDown runtime: " + timeElapsedLinearTD + "ms");
@@ -348,7 +352,7 @@ public class Parser {
                         int first = ruleset_int[indexNT][bodyIndex][0];
                         int second = ruleset_int[indexNT][bodyIndex][1];
                         table[indexNT][i][j] = (parseTD(first, i, k) && parseTD(second, k, j));
-                        if (table[indexNT][i][j] == true) {
+                        if (table[indexNT][i][j] != null && table[indexNT][i][j] == true) {
                             return true;
                         }
                     }
@@ -409,22 +413,44 @@ public class Parser {
                         int first = ruleset_int[indexNT][bodyIndex][0];
                         int second = ruleset_int[indexNT][bodyIndex][1];
                         if(grammar.is_T_rule(second)){
-                            tableLinear[indexNT][i][j] = (parseLinearTD(first, i, k));
+                            tableLinear[indexNT][i][j] = (parseLinearTD(first, i, k) && (headOfTRule(inputAsInt[i], second)));
                         }
-                        else if(grammar.is_T_rule(first)){
-                            tableLinear[indexNT][i][j] = (parseLinearTD(second, k, j));
+                        
+                        if(grammar.is_T_rule(first)){
+                            tableLinear[indexNT][i][j] = (parseLinearTD(second, k, j)  && (headOfTRule(inputAsInt[k], first)));
                         } 
-                        if (tableLinear[indexNT][i][j] == true) {
+
+                        if (tableLinear[indexNT][i][j] != null && tableLinear[indexNT][i][j] == true) {
                             return true;
                         }
                     }
                 }
             }
         }
+
         return false;
     }
 
+    // ____________________________________________________________________________________________________
 
+    // checks if both input symbols have a rule together 
+
+    // ____________________________________________________________________________________________________
+
+    public boolean headOfTRule(int t_symbol, int nt_symbol) {
+
+        if(nt_symbol < rulesetT_int.length){
+            for(int i = 0; i < rulesetT_int[nt_symbol].length; i++){
+                for(int entry = 0; entry < rulesetT_int[nt_symbol][i].length; entry++){
+                    if(rulesetT_int[nt_symbol][i][entry] != null && rulesetT_int[nt_symbol][i][entry] == t_symbol){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+        
+    }
 
 
 
@@ -620,24 +646,20 @@ public class Parser {
         System.out.println(" " );
 
 
-        System.out.println("Error correction with exchange:");
         Integer[] acceptedWord = callSolveErrorWithExchange();
         if(acceptedWord[0] != null && (Arrays.equals(acceptedWord, inputAsInt))){
+            System.out.println("Error correction with exchange:");
             System.out.println("1 symbol was exchanged.");
             printResultOfErrorCorrection(acceptedWord);
         }
         else{
-            System.out.println("No exchange option for 1 symbol found/necessary");  
+            errorCounter = errorCounter(DP);
+            System.out.println("Error counter for deletion: " + errorCounter);
+            System.out.println("Error correction with deletion" );
+            Integer[] acceptedWordAfterDeletion = solveErrorWithDeletion(DP, errorCounter);
+            printResultOfErrorCorrection(acceptedWordAfterDeletion);   
         }
-        
-        System.out.println(" " );
-        System.out.println(" " );
-        errorCounter = errorCounter(DP);
-        System.out.println("Error counter for deletion: " + errorCounter);
-
-        System.out.println("Error correction with deletion" );
-        Integer[] acceptedWordAfterDeletion = solveErrorWithDeletion(DP, errorCounter);
-        printResultOfErrorCorrection(acceptedWordAfterDeletion);       
+            
     }
 
 
@@ -804,19 +826,19 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
-    public void printResultOfErrorCorrection(Integer[] acceptedWord) {
+    public void printResultOfErrorCorrection(Integer[] accepted_word) {
 
-        if(acceptedWord[0] != null && acceptedWord[0] == -1){
+        if(accepted_word[0] != null && accepted_word[0] == -1){
             System.out.println("No error correction found");
         }
         else{
                 System.out.println("Accepted word: ");
 
-                char[] wordAsTSymbols = new char[acceptedWord.length];
+                char[] wordAsTSymbols = new char[accepted_word.length];
 
                 for(int i = 0; i < wordAsTSymbols.length; i++){
-                    if(acceptedWord[i] != null){
-                        wordAsTSymbols[i] = grammar.intToSymbol(acceptedWord[i]);
+                    if(accepted_word[i] != null){
+                        wordAsTSymbols[i] = grammar.intToSymbol(accepted_word[i]);
                     }
                 }
 
