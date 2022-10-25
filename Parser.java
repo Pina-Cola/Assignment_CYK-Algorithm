@@ -408,11 +408,11 @@ public class Parser {
                     for (int k = i + 1; k < j; k++) {
                         int first = ruleset_int[indexNT][bodyIndex][0];
                         int second = ruleset_int[indexNT][bodyIndex][1];
-                        if(grammar.is_T_rule(first)){
-                            tableLinear[indexNT][i][j] = (parseTD(first, i, k));
+                        if(grammar.is_T_rule(second)){
+                            tableLinear[indexNT][i][j] = (parseLinearTD(first, i, k));
                         }
-                        else if(grammar.is_T_rule(second)){
-                            tableLinear[indexNT][i][j] = (parseTD(second, k, j));
+                        else if(grammar.is_T_rule(first)){
+                            tableLinear[indexNT][i][j] = (parseLinearTD(second, k, j));
                         } 
                         if (tableLinear[indexNT][i][j] == true) {
                             return true;

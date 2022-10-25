@@ -90,7 +90,7 @@ public class Grammar {
 
 
     public boolean is_T_rule(int symbol){
-        if(rulesetT_numbers[symbol] != null){
+        if(rulesetT_numbers[symbol][0][0] != null){
             return true;
         }
         else{
@@ -861,7 +861,7 @@ public class Grammar {
 
     //____________________________________________________________________________________________________
 
-    // tests if grammar is in CNF
+    // changes grammar into CNF
 
     //____________________________________________________________________________________________________
 
@@ -949,6 +949,7 @@ public class Grammar {
         } 
 
         CNFrules = beautify1DStringArray(CNFrules);
+
         for(int i = 0; i < CNFrules.length; i++){
             System.out.println(CNFrules[i]);
         }
