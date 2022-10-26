@@ -110,24 +110,6 @@ public class Grammar {
     }
 
 
-    //____________________________________________________________________________________________________
-
-    // body of rule contains NT and T symbol (T and NT rule)
-
-    //____________________________________________________________________________________________________
-
-
-    /* public boolean has_T_and_NT_body(int symbol){
-
-        if(rulesetT_numbers[symbol][0][0] != null && symbol < rulesetNT_numbers.length
-        && rulesetNT_numbers[symbol][0][0] != null){
-            return true;
-        }
-        else{
-            return false;
-        }
-    } */
-
 
 
 
@@ -139,20 +121,14 @@ public class Grammar {
 
 
     public String[][][] getRulesetNT_numbers(){
-        /* System.out.println("Ruleset NT number: ");
-        print3DStringMatrix(rulesetNT_numbers); */
         return rulesetNT_numbers;
     }
 
     public String[][][] getRulesetT_numbers(){
-        /* System.out.println("Ruleset T number: ");
-        print3DStringMatrix(rulesetT_numbers); */
         return rulesetT_numbers;
     }
 
     public String[][][] getRuleset_numbers(){
-        /* System.out.println("Ruleset number: ");
-        print3DStringMatrix(ruleset_numbers); */
         return ruleset_numbers;
     }
 
@@ -734,10 +710,8 @@ public class Grammar {
         }
        
         int startInt = checkNTAmount(NTerminalToInteger);
-        // System.out.println("StartInt: " + startInt);
-        String intString = "0123456789";
 
-        // Int_NT_map(Int_ArrayList);
+        String intString = "0123456789";
 
         for(int i = 0; i < R.length; i++){
             for(int j = 0; j < R[i].length; j++){
@@ -990,10 +964,6 @@ public class Grammar {
         } 
 
         CNFrules = beautify1DStringArray(CNFrules);
-
-        for(int i = 0; i < CNFrules.length; i++){
-            System.out.println(CNFrules[i]);
-        }
 
         return CNFrules;
 

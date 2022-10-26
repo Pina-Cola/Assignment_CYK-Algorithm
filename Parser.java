@@ -647,7 +647,7 @@ public class Parser {
 
 
         Integer[] acceptedWord = callSolveErrorWithExchange();
-        if(acceptedWord[0] != null && (Arrays.equals(acceptedWord, inputAsInt))){
+        if(acceptedWord[0] != null && !(Arrays.equals(acceptedWord, inputAsInt))){
             System.out.println("Error correction with exchange:");
             System.out.println("1 symbol was exchanged.");
             printResultOfErrorCorrection(acceptedWord);
