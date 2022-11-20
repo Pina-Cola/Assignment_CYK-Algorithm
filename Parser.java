@@ -105,6 +105,8 @@ public class Parser {
         long finishTD = System.currentTimeMillis();
         timeElapsedTD = finishTD - startTD;
         System.out.println("TopDown runtime: " + timeElapsedTD + "ms");
+        grammar.print3DBooleanMatrix(table);
+        
 
         // Naive function call
         long startNaive = System.currentTimeMillis();
@@ -123,10 +125,11 @@ public class Parser {
             System.out.println("");
             counterLinearTD = 0;
             boolean LTopDown = parseLinearTD();
-            System.out.println("LinearTopDown: " + TopDown  + "   Amount of calls: " + counterLinearTD);
+            System.out.println("LinearTopDown: " + LTopDown  + "   Amount of calls: " + counterLinearTD);
             long finishLinearTD = System.currentTimeMillis();
             timeElapsedLinearTD = finishLinearTD - startLinearTD;
             System.out.println("LinearTopDown runtime: " + timeElapsedLinearTD + "ms");
+            grammar.print3DBooleanMatrix(tableLinear);
         }
 
         // Error correction

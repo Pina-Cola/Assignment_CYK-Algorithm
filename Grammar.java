@@ -659,6 +659,31 @@ public class Grammar {
         printStringMatrix(stringMatrix);
     }
 
+
+    public void print3DBooleanMatrix(Boolean[][][] printMatrix){
+        String[][] stringMatrix = new String[printMatrix.length][printMatrix[0].length];
+        for(int i = 0; i < printMatrix.length; i++){
+            for(int j = 0; j < printMatrix[i].length; j++){
+                String temp = "   ";
+                for(int k = 0; k < printMatrix[i][j].length; k++){
+                    if(printMatrix[i][j][k] != null){
+                        if(printMatrix[i][j][k] == true){
+                            temp = " 1 ";
+                        }
+                        if(printMatrix[i][j][k] == false){
+                            temp = " 0 ";
+                        }
+                    }
+                }
+                stringMatrix[i][j] = temp;
+            }
+        }
+
+        printStringMatrix(stringMatrix);
+    }
+
+
+
     public static void printTable(String[][] table) {
         int maxColumns = 0;
         for (int i = 0; i < table.length; i++) {
