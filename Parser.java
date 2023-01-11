@@ -397,7 +397,7 @@ public class Parser {
     public boolean parseLinearTD(int indexNT, int i, int j) {
 
         counterLinearTD += 1;
-        int rulesetLength = ruleset_int[0].length;
+        int rulesetLength = rulesetLinear[0].length;
 
         if (tableLinear[indexNT][i][j] != null) {
             return tableLinear[indexNT][i][j];
@@ -406,25 +406,26 @@ public class Parser {
         if (i == (j - 1)) {
             for (int l = 0; l < rulesetLength; l++) {
                 int symbol = inputAsInt[i];
-                if ( ruleset_int[indexNT][l][0] != null && ruleset_int[indexNT][l][0] == symbol ) {
+                if ( rulesetLinear[indexNT][l][0] != null && rulesetLinear[indexNT][l][0] == symbol ) {
                     return true;
                 }
-                if ( ruleset_int[indexNT][l][1] != null && ruleset_int[indexNT][l][1] == symbol ) {
+                if ( rulesetLinear[indexNT][l][1] != null && rulesetLinear[indexNT][l][1] == symbol ) {
                     return true;
                 }
             }
             return false;
         } else {
-            for (int bodyIndex = 0; bodyIndex < ruleset_int[indexNT].length; bodyIndex++) {
-                if (ruleset_int[indexNT][bodyIndex][0] != null && ruleset_int[indexNT][bodyIndex][1] != null) {
+            for (int bodyIndex = 0; bodyIndex < rulesetLinear[indexNT].length; bodyIndex++) {
+                if (rulesetLinear[indexNT][bodyIndex][0] != null && rulesetLinear[indexNT][bodyIndex][1] != null) {
                     for (int k = i + 1; k < j; k++) {
-                        int first = ruleset_int[indexNT][bodyIndex][0];
-                        int second = ruleset_int[indexNT][bodyIndex][1];
-                        if(grammar.is_T_rule(second)){
+                        Integer first = rulesetLinear[indexNT][bodyIndex][0];
+                        Integer second = rulesetLinear[indexNT][bodyIndex][1];
+                        // System.out.println(second);
+                        if(second != null && is_T_rule(second)){
                             tableLinear[indexNT][i][j] = (parseLinearTD(first, i, k) && (headOfTRule(inputAsInt[i], second)));
                         }
                         
-                        if(grammar.is_T_rule(first)){
+                        if(first != null && is_T_rule(first)){
                             tableLinear[indexNT][i][j] = (parseLinearTD(second, k, j)  && (headOfTRule(inputAsInt[k], first)));
                         } 
 
@@ -438,6 +439,37 @@ public class Parser {
 
         return false;
     }
+
+
+
+
+    //____________________________________________________________________________________________________
+
+    // checks if the nonterminal leads to a terminal symbol
+
+    //____________________________________________________________________________________________________
+
+
+    public boolean is_T_rule(Integer symbol){
+
+        Character ruleSymbol = Int_ArrayList.get(symbol);
+
+        if(Character.isUpperCase(ruleSymbol)){
+            // System.out.println(ruleSymbol + "  " + false);
+            return false;
+        }
+        else{
+            // System.out.println(ruleSymbol + "  " + true);
+            return true;
+        }
+
+    }
+
+
+
+
+
+
 
     // ____________________________________________________________________________________________________
 

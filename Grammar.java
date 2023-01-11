@@ -89,7 +89,7 @@ public class Grammar {
     //____________________________________________________________________________________________________
 
 
-    public boolean is_T_rule(int symbol){
+    /* public boolean is_T_rule(int symbol){
 
         if(rulesetT_numbers[symbol][0][0] != null){
             // return true;
@@ -107,7 +107,9 @@ public class Grammar {
         else{
             return false;
         }
-    }
+    } */
+
+
 
 
 
