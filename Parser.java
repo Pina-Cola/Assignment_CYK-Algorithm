@@ -17,6 +17,7 @@ public class Parser {
     public Integer[][][] ruleset_int; // all rules
     public Integer[][][] rulesetNT_int; // NT rules
     public Integer[][][] rulesetT_int; // T rules
+    public Integer[][][] rulesetLinear; // Linear ruleset
 
     public Integer[] inputAsInt;
     public ArrayList<Character> Int_ArrayList = new ArrayList<Character>();
@@ -40,9 +41,12 @@ public class Parser {
     Integer[][][] DP;
     Integer[][][] DP_ofOriginalInput;
 
+    String[] initialInputString;
+
     public Parser(String[] inputString, String inputWord) {
 
         boolean isCNF = grammar.isCNF(inputString);
+        initialInputString = inputString;
 
         System.out.println("");
         System.out.println("Grammar in CNF? " + isCNF);
@@ -120,6 +124,7 @@ public class Parser {
 
         // LinearTopDown function call
         if(grammar.isCNF != true){
+            rulesetLinear = grammar.produceLinearGrammarMatrix(initialInputString);
             long startLinearTD = System.currentTimeMillis();
             tableLinear = new Boolean[ruleset_int.length][inputWord.length() + 1][inputWord.length() + 1];
             System.out.println("");

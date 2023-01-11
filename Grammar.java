@@ -588,7 +588,7 @@ public class Grammar {
 
     //____________________________________________________________________________________________________
 
-    // prints 2D matrix in terminal
+    // prints matrix in terminal
 
     //____________________________________________________________________________________________________
 
@@ -617,6 +617,11 @@ public class Grammar {
     
     public void printStringMatrix(String[][] rules){
         for (String[] row : rules)
+            System.out.println(Arrays.toString(row));
+    }
+
+    public void printIntMatrix(Integer[][] rules){
+        for (Integer[] row : rules)
             System.out.println(Arrays.toString(row));
     }
 
@@ -991,6 +996,54 @@ public class Grammar {
         CNFrules = beautify1DStringArray(CNFrules);
 
         return CNFrules;
+
+    }
+
+    //____________________________________________________________________________________________________
+
+    // changes grammar into CNF
+
+    //____________________________________________________________________________________________________
+
+
+
+    public Integer[][][] produceLinearGrammarMatrix(String[] inputRules){
+
+        Integer[][][] linearGrammarMatrix = new Integer[inputRules.length][inputRules.length][2];
+
+        Integer[][] inputRulesAsInteger = new Integer[inputRules.length][3];
+        
+        for(int i= 0; i < inputRules.length; i++){
+            inputRulesAsInteger[i] = inputStringToInt(inputRules[i]);
+        }
+
+       printIntMatrix(inputRulesAsInteger); 
+
+       for(int currentRule = 0; currentRule < inputRulesAsInteger.length; currentRule++){
+
+            Integer headOfRule = inputRulesAsInteger[currentRule][0];
+
+            for(int indexInMatrix = 0; indexInMatrix < inputRules.length; indexInMatrix++){
+                if(linearGrammarMatrix[headOfRule][indexInMatrix][0] == null){
+                    if(inputRulesAsInteger[currentRule][1] != null){
+                        linearGrammarMatrix[headOfRule][indexInMatrix][0] = inputRulesAsInteger[currentRule][1];
+                    }
+                    if(inputRulesAsInteger[currentRule][2] != null){
+                        linearGrammarMatrix[headOfRule][indexInMatrix][1] = inputRulesAsInteger[currentRule][2];
+                    }
+                    break;
+                }
+            }
+       }
+
+       printIntMatrix(linearGrammarMatrix);
+
+        // Integer[][][] linearGrammarMatrix = new Integer[inputRules.length][inputRules.length][2];
+
+        // linearGrammarMatrix = changeIntoIntMatrix(linearGrammarStringMatrix);
+
+        return linearGrammarMatrix;
+
 
     }
 
