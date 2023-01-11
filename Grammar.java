@@ -1009,26 +1009,28 @@ public class Grammar {
 
     public Integer[][][] produceLinearGrammarMatrix(String[] inputRules){
 
-        Integer[][][] linearGrammarMatrix = new Integer[inputRules.length][inputRules.length][2];
+        int length = rulesetNT.length;
 
-        Integer[][] inputRulesAsInteger = new Integer[inputRules.length][3];
+        Integer[][][] linearGrammarMatrix = new Integer[length][length][3];
+
+        Integer[][] inputRulesAsInteger = new Integer[length][3];
         
         for(int i= 0; i < inputRules.length; i++){
             inputRulesAsInteger[i] = inputStringToInt(inputRules[i]);
         }
 
-       printIntMatrix(inputRulesAsInteger); 
+       // printIntMatrix(inputRulesAsInteger); 
 
        for(int currentRule = 0; currentRule < inputRulesAsInteger.length; currentRule++){
 
             Integer headOfRule = inputRulesAsInteger[currentRule][0];
 
-            for(int indexInMatrix = 0; indexInMatrix < inputRules.length; indexInMatrix++){
+            for(int indexInMatrix = 0; indexInMatrix < inputRulesAsInteger.length; indexInMatrix++){
                 if(linearGrammarMatrix[headOfRule][indexInMatrix][0] == null){
-                    if(inputRulesAsInteger[currentRule][1] != null){
+                    if(inputRulesAsInteger[currentRule].length >= 2 && inputRulesAsInteger[currentRule][1] != null){
                         linearGrammarMatrix[headOfRule][indexInMatrix][0] = inputRulesAsInteger[currentRule][1];
                     }
-                    if(inputRulesAsInteger[currentRule][2] != null){
+                    if(inputRulesAsInteger[currentRule].length >= 3 && inputRulesAsInteger[currentRule][2] != null){
                         linearGrammarMatrix[headOfRule][indexInMatrix][1] = inputRulesAsInteger[currentRule][2];
                     }
                     break;
