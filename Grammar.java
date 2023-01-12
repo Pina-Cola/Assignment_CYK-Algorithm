@@ -10,6 +10,7 @@ public class Grammar {
     // java Main "SSS" "SLA" "SLR" "ASR" "L(" "R)" "(())"
     // java Main "SAc" "Sb" "AaS" "AaB" "BbS" "abc"
     // java Main "SAL" "Aa" "Bb" "Cc" "Dd" "Ee" "Ff" "Gg" "Hh" "Ii" "Jj" "Kk" "Ll" "Mm" "al"
+    // java Main "SAa" "Aa" "aa"
 
     public char[] NTerminalToInteger;
     public ArrayList<Character> Int_ArrayList = new ArrayList<Character>();

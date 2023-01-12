@@ -407,9 +407,11 @@ public class Parser {
             for (int l = 0; l < rulesetLength; l++) {
                 int symbol = inputAsInt[i];
                 if ( rulesetLinear[indexNT][l][0] != null && rulesetLinear[indexNT][l][0] == symbol) {
+                    System.out.println("1 " + symbol);
                     return true;
                 }
                 if ( rulesetLinear[indexNT][l][1] != null && rulesetLinear[indexNT][l][1] == symbol) {
+                    System.out.println("2 " + symbol);
                     return true;
                 }
             }
@@ -420,12 +422,23 @@ public class Parser {
                     for (int k = i + 1; k < j; k++) {
                         Integer first = rulesetLinear[indexNT][bodyIndex][0];
                         Integer second = rulesetLinear[indexNT][bodyIndex][1];
+
+                        /* if(is_T_rule(first) && (inputAsInt[i] == first) && parseLinearTD(second, k, j)){
+                            tableLinear[indexNT][i][j-1] = true;
+                            return true;
+                        }
+                        else if((inputAsInt[k] == second) && parseLinearTD(first, i, k)){
+                            tableLinear[indexNT][i][j-1] = true;
+                            return true;
+                        } */
+
+                        
                         if(second != null && is_T_rule(second)){
                             tableLinear[indexNT][i][j] = ((inputAsInt[k] == second) && parseLinearTD(first, i, k));
                         }
                         
                         if(first != null && is_T_rule(first)){
-                            tableLinear[indexNT][i][j] = ((inputAsInt[i] == first)&& parseLinearTD(second, k, j));
+                            tableLinear[indexNT][i][j] = ((inputAsInt[i] == first) && parseLinearTD(second, k, j));
                         } 
                     }
                 }
