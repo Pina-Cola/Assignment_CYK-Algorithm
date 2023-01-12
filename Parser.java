@@ -396,24 +396,29 @@ public class Parser {
 
     public boolean parseLinearTD(int indexNT, int i, int j) {
 
+        // grammar.printIntegerArray(inputAsInt);
+        // System.out.println("   ");
+
         counterLinearTD += 1;
         int rulesetLength = rulesetLinear[0].length;
 
         if (tableLinear[indexNT][i][j] != null) {
             return tableLinear[indexNT][i][j]; 
         }
-
+        else 
         if (i == (j - 1)) {
             for (int l = 0; l < rulesetLength; l++) {
                 int symbol = inputAsInt[i];
                 if ( rulesetLinear[indexNT][l][0] != null && rulesetLinear[indexNT][l][0] == symbol) {
-                    System.out.println("1 " + symbol);
-                    System.out.println(tableLinear[indexNT][i][j-1]);
+                    // System.out.println("1 " + symbol);
+                    // System.out.println(tableLinear[indexNT][i][j]);
+                    tableLinear[indexNT][i][j] = true;
                     return true;
                 }
                 if ( rulesetLinear[indexNT][l][1] != null && rulesetLinear[indexNT][l][1] == symbol) {
-                    System.out.println("2 " + symbol);
-                    System.out.println(tableLinear[indexNT][i][j-1]);
+                    // System.out.println("2 " + symbol);
+                    // System.out.println(tableLinear[indexNT][i][j]);
+                    tableLinear[indexNT][i][j] = true;
                     return true;
                 }
             }
@@ -424,6 +429,8 @@ public class Parser {
                     for (int k = i + 1; k < j; k++) {
                         Integer first = rulesetLinear[indexNT][bodyIndex][0];
                         Integer second = rulesetLinear[indexNT][bodyIndex][1];
+                        //System.out.println(first + " und " + second);
+
 
                         /* if(is_T_rule(first) && (inputAsInt[i] == first) && parseLinearTD(second, k, j)){
                             tableLinear[indexNT][i][j-1] = true;
@@ -436,10 +443,12 @@ public class Parser {
 
                         
                         if(second != null && is_T_rule(second)){
-                            tableLinear[indexNT][i][j] = ((inputAsInt[k] == second) && parseLinearTD(first, i, k));
+                            // System.out.println(first + " und T-rule" + second);
+                            tableLinear[indexNT][i][j] = (parseLinearTD(first, i, k) && (inputAsInt[k] == second));
                         }
                         
                         if(first != null && is_T_rule(first)){
+                            // System.out.println("T-rule " + first + " und " + second);
                             tableLinear[indexNT][i][j] = ((inputAsInt[i] == first) && parseLinearTD(second, k, j));
                         } 
                     }
