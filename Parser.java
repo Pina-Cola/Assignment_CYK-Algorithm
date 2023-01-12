@@ -408,10 +408,12 @@ public class Parser {
                 int symbol = inputAsInt[i];
                 if ( rulesetLinear[indexNT][l][0] != null && rulesetLinear[indexNT][l][0] == symbol) {
                     System.out.println("1 " + symbol);
+                    System.out.println(tableLinear[indexNT][i][j-1]);
                     return true;
                 }
                 if ( rulesetLinear[indexNT][l][1] != null && rulesetLinear[indexNT][l][1] == symbol) {
                     System.out.println("2 " + symbol);
+                    System.out.println(tableLinear[indexNT][i][j-1]);
                     return true;
                 }
             }
