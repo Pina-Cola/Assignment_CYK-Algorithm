@@ -1012,7 +1012,7 @@ public class Grammar {
 
     public Integer[][][] produceLinearGrammarMatrix(String[] inputRules){
 
-        int length = rulesetNT.length;
+        int length = ruleset.length;
 
         Integer[][][] linearGrammarMatrix = new Integer[length][length][3];
 
@@ -1022,10 +1022,9 @@ public class Grammar {
             inputRulesAsInteger[i] = inputStringToInt(inputRules[i]);
         }
 
-       // printIntMatrix(inputRulesAsInteger); 
-
        for(int currentRule = 0; currentRule < inputRulesAsInteger.length; currentRule++){
 
+            if(inputRulesAsInteger[currentRule][0] != null){
             Integer headOfRule = inputRulesAsInteger[currentRule][0];
 
             for(int indexInMatrix = 0; indexInMatrix < inputRulesAsInteger.length; indexInMatrix++){
@@ -1039,13 +1038,10 @@ public class Grammar {
                     break;
                 }
             }
+        }
        }
 
        printIntMatrix(linearGrammarMatrix);
-
-        // Integer[][][] linearGrammarMatrix = new Integer[inputRules.length][inputRules.length][2];
-
-        // linearGrammarMatrix = changeIntoIntMatrix(linearGrammarStringMatrix);
 
         return linearGrammarMatrix;
 
