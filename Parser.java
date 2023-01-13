@@ -396,31 +396,21 @@ public class Parser {
 
     public boolean parseLinearTD(int indexNT, int i, int j) {
 
-        // grammar.printIntegerArray(inputAsInt);
-        // System.out.println("   ");
-
         counterLinearTD += 1;
         int rulesetLength = rulesetLinear[0].length;
 
         if (tableLinear[indexNT][i][j] != null) {
-            // System.out.println("returns table input" + tableLinear[indexNT][i][j]);
+
             return tableLinear[indexNT][i][j]; 
         }
         else 
         if (i == (j - 1)) {
-            // System.out.println("here");
             for (int l = 0; l < rulesetLength; l++) {
                 int symbol = inputAsInt[i];
                 if ( rulesetLinear[indexNT][l][0] != null && rulesetLinear[indexNT][l][0] == symbol) {
-                    // System.out.println("1 " + symbol);
-                    // System.out.println(tableLinear[indexNT][i][j]);
-                    // tableLinear[indexNT][i][j] = true;
                     return true;
                 }
                 if ( rulesetLinear[indexNT][l][1] != null && rulesetLinear[indexNT][l][1] == symbol) {
-                    // System.out.println("2 " + symbol);
-                    // System.out.println(tableLinear[indexNT][i][j]);
-                    // tableLinear[indexNT][i][j] = true;
                     return true;
                 }
             }
@@ -432,47 +422,37 @@ public class Parser {
                         Integer first = rulesetLinear[indexNT][bodyIndex][0];
                         Integer second = rulesetLinear[indexNT][bodyIndex][1];
 
-
-                        //System.out.println(first + " und " + second);
-
-
-                        /* if(is_T_rule(first) && (inputAsInt[i] == first) && parseLinearTD(second, k, j)){
-                            // tableLinear[indexNT][i][j] = true;
-                            return true;
-                        }
-                        else if((inputAsInt[k] == second) && parseLinearTD(first, i, k)){
-                            // tableLinear[indexNT][i][j] = true;
-                            return true;
+                        /* if(is_T_rule(second)){
+                            if(inputAsInt[k] == second && parseLinearTD(first, i, k)){
+                                tableLinear[indexNT][i][j-1] = true;
+                                return true;
+                            } 
+                        } 
+                        else {
+                            if(inputAsInt[i] == first && parseLinearTD(second, k, j)){
+                                tableLinear[indexNT][i][j-1] = true;
+                                return true;
+                            }
                         } */
 
-                        
+
                         if(is_T_rule(second)){
-                            // System.out.println(first + " und T-rule" + second);
-                            tableLinear[indexNT][i][j] = (inputAsInt[k] == second && parseLinearTD(first, i, k));
-                        }
-                        
+                            tableLinear[indexNT][i][j] = (inputAsInt[k] == second && parseLinearTD(first, i, k-1));
+                        } 
                         if(is_T_rule(first)){
-                            // System.out.println("T-rule " + first + " und " + second);
                             tableLinear[indexNT][i][j] = (inputAsInt[i] == first && parseLinearTD(second, k, j));
-                            // return tableLinear[indexNT][i][j];
                         }
                     }
                 }
-                if (tableLinear[indexNT][i][j] != null && tableLinear[indexNT][i][j] == true) {
-                    // System.out.println("true j");
-                    // return true;
-                    return true;
-                }
             }
-        }
-        /* for(int r = 0; r <= j; r++){
-            if (tableLinear[indexNT][i][r] != null && tableLinear[indexNT][i][r] == true) {
-                System.out.println("true j");
+            if (tableLinear[indexNT][i][j] != null && tableLinear[indexNT][i][j] == true) {
                 return true;
             }
-        } */
-        // tableLinear[indexNT][i][j] = false;
-        return false;
+
+            tableLinear[indexNT][i][j] = false;
+            return false;
+        }
+
     }
 
 

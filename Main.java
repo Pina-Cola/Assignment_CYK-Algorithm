@@ -1,4 +1,4 @@
-import javax.xml.stream.FactoryConfigurationError;
+// import javax.xml.stream.FactoryConfigurationError;
 
 /*
  *  Input example:  "SSS" "SLA" "SLR" "ASR" "L(" "R)" "(())"
