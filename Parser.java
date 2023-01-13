@@ -403,22 +403,24 @@ public class Parser {
         int rulesetLength = rulesetLinear[0].length;
 
         if (tableLinear[indexNT][i][j] != null) {
+            // System.out.println("returns table input" + tableLinear[indexNT][i][j]);
             return tableLinear[indexNT][i][j]; 
         }
         else 
         if (i == (j - 1)) {
+            // System.out.println("here");
             for (int l = 0; l < rulesetLength; l++) {
                 int symbol = inputAsInt[i];
                 if ( rulesetLinear[indexNT][l][0] != null && rulesetLinear[indexNT][l][0] == symbol) {
                     // System.out.println("1 " + symbol);
                     // System.out.println(tableLinear[indexNT][i][j]);
-                    tableLinear[indexNT][i][j] = true;
+                    // tableLinear[indexNT][i][j] = true;
                     return true;
                 }
                 if ( rulesetLinear[indexNT][l][1] != null && rulesetLinear[indexNT][l][1] == symbol) {
                     // System.out.println("2 " + symbol);
                     // System.out.println(tableLinear[indexNT][i][j]);
-                    tableLinear[indexNT][i][j] = true;
+                    // tableLinear[indexNT][i][j] = true;
                     return true;
                 }
             }
@@ -429,36 +431,47 @@ public class Parser {
                     for (int k = i + 1; k < j; k++) {
                         Integer first = rulesetLinear[indexNT][bodyIndex][0];
                         Integer second = rulesetLinear[indexNT][bodyIndex][1];
+
+
                         //System.out.println(first + " und " + second);
 
 
                         /* if(is_T_rule(first) && (inputAsInt[i] == first) && parseLinearTD(second, k, j)){
-                            tableLinear[indexNT][i][j-1] = true;
+                            // tableLinear[indexNT][i][j] = true;
                             return true;
                         }
                         else if((inputAsInt[k] == second) && parseLinearTD(first, i, k)){
-                            tableLinear[indexNT][i][j-1] = true;
+                            // tableLinear[indexNT][i][j] = true;
                             return true;
                         } */
 
                         
-                        if(second != null && is_T_rule(second)){
+                        if(is_T_rule(second)){
                             // System.out.println(first + " und T-rule" + second);
-                            tableLinear[indexNT][i][j] = (parseLinearTD(first, i, k) && (inputAsInt[k] == second));
+                            tableLinear[indexNT][i][j] = (inputAsInt[k] == second && parseLinearTD(first, i, k));
                         }
                         
-                        if(first != null && is_T_rule(first)){
+                        if(is_T_rule(first)){
                             // System.out.println("T-rule " + first + " und " + second);
-                            tableLinear[indexNT][i][j] = ((inputAsInt[i] == first) && parseLinearTD(second, k, j));
-                        } 
+                            tableLinear[indexNT][i][j] = (inputAsInt[i] == first && parseLinearTD(second, k, j));
+                            // return tableLinear[indexNT][i][j];
+                        }
                     }
                 }
                 if (tableLinear[indexNT][i][j] != null && tableLinear[indexNT][i][j] == true) {
+                    // System.out.println("true j");
+                    // return true;
                     return true;
                 }
             }
         }
-        tableLinear[indexNT][i][j] = false;
+        /* for(int r = 0; r <= j; r++){
+            if (tableLinear[indexNT][i][r] != null && tableLinear[indexNT][i][r] == true) {
+                System.out.println("true j");
+                return true;
+            }
+        } */
+        // tableLinear[indexNT][i][j] = false;
         return false;
     }
 
@@ -477,11 +490,11 @@ public class Parser {
         Character ruleSymbol = Int_ArrayList.get(symbol);
 
         if(Character.isUpperCase(ruleSymbol)){
-            // System.out.println(ruleSymbol + "  " + false);
+            // System.out.println(ruleSymbol + " is no T-rule");
             return false;
         }
         else{
-            // System.out.println(ruleSymbol + "  " + true);
+            // System.out.println(ruleSymbol + " is T-rule ");
             return true;
         }
 
