@@ -51,7 +51,7 @@ public class Parser {
         System.out.println("");
         System.out.println("Grammar in CNF? " + isCNF);
 
-        if(!isCNF){
+        if (!isCNF) {
             inputString = grammar.changeIntoCNF(inputString);
         }
 
@@ -87,14 +87,14 @@ public class Parser {
         System.out.println("");
         System.out.println("_____________________________________________");
 
-
         // BottomUp function call
         DP = new Integer[inputAsInt.length][inputAsInt.length][inputAsInt.length];
         long startBU = System.currentTimeMillis();
         System.out.println("");
         counterBU = 0;
         boolean BottomUp = parseBU(this.inputAsInt);
-        System.out.println("BottomUp: " + BottomUp  + "   Amount of calls: " + counterBU + "    Amount of errors: " + errorCounter);
+        System.out.println(
+                "BottomUp: " + BottomUp + "   Amount of calls: " + counterBU + "    Amount of errors: " + errorCounter);
         long finishBU = System.currentTimeMillis();
         timeElapsedBU = finishBU - startBU;
         System.out.println("BottomUp runtime: " + timeElapsedBU + "ms");
@@ -110,27 +110,26 @@ public class Parser {
         timeElapsedTD = finishTD - startTD;
         System.out.println("TopDown runtime: " + timeElapsedTD + "ms");
         grammar.print3DBooleanMatrix(table);
-        
 
         // Naive function call
         long startNaive = System.currentTimeMillis();
         System.out.println("");
         counterN = 0;
         Boolean parseNaive = parseNaive();
-        System.out.println("Naive: " + parseNaive  + "   Amount of calls: " + counterN);
+        System.out.println("Naive: " + parseNaive + "   Amount of calls: " + counterN);
         long finishNaive = System.currentTimeMillis();
         timeElapsedNaive = finishNaive - startNaive;
         System.out.println("Naive runtime: " + timeElapsedNaive + "ms");
 
         // LinearTopDown function call
-        if(grammar.isCNF != true){
+        if (grammar.isCNF != true) {
             rulesetLinear = grammar.produceLinearGrammarMatrix(initialInputString);
             long startLinearTD = System.currentTimeMillis();
             tableLinear = new Boolean[ruleset_int.length][inputWord.length() + 1][inputWord.length() + 1];
             System.out.println("");
             counterLinearTD = 0;
             boolean LTopDown = parseLinearTD();
-            System.out.println("LinearTopDown: " + LTopDown  + "   Amount of calls: " + counterLinearTD);
+            System.out.println("LinearTopDown: " + LTopDown + "   Amount of calls: " + counterLinearTD);
             long finishLinearTD = System.currentTimeMillis();
             timeElapsedLinearTD = finishLinearTD - startLinearTD;
             System.out.println("LinearTopDown runtime: " + timeElapsedLinearTD + "ms");
@@ -198,17 +197,16 @@ public class Parser {
     public boolean parseBU(Integer[] word) {
 
         int wordLength = word.length;
-        
 
         for (int i = 0; i < wordLength; i++) {
             if (contained(ruleset_int, word[i])) {
                 Integer[] tempArr = containedAtMultipleIndeces(ruleset_int, word[i]);
                 int index = 0;
-                for(int j = 0; j < wordLength; j++){
-                    if(tempArr[index] == null){
+                for (int j = 0; j < wordLength; j++) {
+                    if (tempArr[index] == null) {
                         break;
                     }
-                    if(DP[i][i][j] == null){
+                    if (DP[i][i][j] == null) {
                         DP[i][i][j] = tempArr[index];
                         index += 1;
                         // break;
@@ -234,8 +232,8 @@ public class Parser {
                                 List<Integer> intListFirst = new ArrayList<>(Arrays.asList(DP[i][k]));
                                 List<Integer> intListSecond = new ArrayList<>(Arrays.asList(DP[k + 1][j]));
                                 if (intListFirst.contains(first) && intListSecond.contains(second)) {
-                                    for(int c = 0; c < wordLength; c++){
-                                        if(DP[i][j][c] == null){
+                                    for (int c = 0; c < wordLength; c++) {
+                                        if (DP[i][j][c] == null) {
                                             DP[i][j][c] = head;
                                             break;
                                         }
@@ -253,14 +251,13 @@ public class Parser {
 
         DP_ofOriginalInput = copyArray(DP);
 
-        List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
+        List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength - 1]));
         if (finalField.contains(0)) {
             return true;
         }
 
         return false;
     }
-
 
     // ____________________________________________________________________________________________________
 
@@ -270,19 +267,18 @@ public class Parser {
 
     public int errorCounter(Integer[][][] DP) {
 
-        for(int i = 0; i < DP.length; i++){
-            for(int j = DP[i].length -1 ; j >= 0; j--){
-                for(int k = 0; k < DP[i][j].length; k++){
-                    if(DP[i][j][k] != null && DP[i][j][k] == 0){
+        for (int i = 0; i < DP.length; i++) {
+            for (int j = DP[i].length - 1; j >= 0; j--) {
+                for (int k = 0; k < DP[i][j].length; k++) {
+                    if (DP[i][j][k] != null && DP[i][j][k] == 0) {
                         int invertJ = DP[i].length - 1 - j;
                         return Math.max(i, invertJ);
                     }
                 }
             }
         }
-        return DP.length-1;
+        return DP.length - 1;
     }
-
 
     // ____________________________________________________________________________________________________
 
@@ -294,13 +290,12 @@ public class Parser {
 
         Integer[][][] newArray = new Integer[array.length][array[0].length][array[0][0].length];
 
-        for(int i = 0; i < array.length; i++){
-            for(int j = array[i].length -1 ; j >= 0; j--){
-                for(int k = 0; k < array[i][j].length; k++){
-                    if(DP[i][j][k] != null) {
+        for (int i = 0; i < array.length; i++) {
+            for (int j = array[i].length - 1; j >= 0; j--) {
+                for (int k = 0; k < array[i][j].length; k++) {
+                    if (DP[i][j][k] != null) {
                         newArray[i][j][k] = array[i][j][k];
-                    }
-                    else{
+                    } else {
                         newArray[i][j][k] = null;
                     }
                 }
@@ -345,10 +340,10 @@ public class Parser {
         if (i == (j - 1)) {
             for (int l = 0; l < rulesetLength; l++) {
                 int symbol = inputAsInt[i];
-                if ( ruleset_int[indexNT][l][0] != null && ruleset_int[indexNT][l][0] == symbol ) {
+                if (ruleset_int[indexNT][l][0] != null && ruleset_int[indexNT][l][0] == symbol) {
                     return true;
                 }
-                if ( ruleset_int[indexNT][l][1] != null && ruleset_int[indexNT][l][1] == symbol ) {
+                if (ruleset_int[indexNT][l][1] != null && ruleset_int[indexNT][l][1] == symbol) {
                     return true;
                 }
             }
@@ -385,7 +380,7 @@ public class Parser {
                     tableLinear[i][j][k] = null;
                 }
         }
-        return parseLinearTD(0, 0, inputAsInt.length);
+        return parseLinearTD(0, 0, inputAsInt.length - 1);
     }
 
     // ____________________________________________________________________________________________________
@@ -394,24 +389,136 @@ public class Parser {
 
     // ____________________________________________________________________________________________________
 
+    /*
+     * public boolean parseLinearTD(int indexNT, int i, int j) {
+     * 
+     * counterLinearTD += 1;
+     * int rulesetLength = rulesetLinear[0].length;
+     * 
+     * if (tableLinear[indexNT][i][j] != null) {
+     * return tableLinear[indexNT][i][j];
+     * }
+     * else
+     * if (i == (j - 1)) {
+     * for (int l = 0; l < rulesetLength; l++) {
+     * int symbol = inputAsInt[i];
+     * if ( rulesetLinear[indexNT][l][0] != null && rulesetLinear[indexNT][l][0] ==
+     * symbol) {
+     * return true;
+     * }
+     * if ( rulesetLinear[indexNT][l][1] != null && rulesetLinear[indexNT][l][1] ==
+     * symbol) {
+     * return true;
+     * }
+     * }
+     * return false;
+     * } else {
+     * for (int bodyIndex = 0; bodyIndex < rulesetLinear[indexNT].length;
+     * bodyIndex++) {
+     * if (rulesetLinear[indexNT][bodyIndex][0] != null &&
+     * rulesetLinear[indexNT][bodyIndex][1] != null) {
+     * for (int k = i + 1; k < j; k++) {
+     * Integer first = rulesetLinear[indexNT][bodyIndex][0];
+     * Integer second = rulesetLinear[indexNT][bodyIndex][1];
+     * 
+     * if(is_T_rule(second)){
+     * tableLinear[indexNT][i][j] = (parseLinearTD(first, i, k) && inputAsInt[k] ==
+     * second);
+     * }
+     * if(is_T_rule(first)){
+     * tableLinear[indexNT][i][j] = (parseLinearTD(second, k, j) && inputAsInt[i] ==
+     * first);
+     * }
+     * }
+     * }
+     * }
+     * 
+     * if (tableLinear[indexNT][i][j] != null && tableLinear[indexNT][i][j] == true)
+     * {
+     * return true;
+     * }
+     * 
+     * // tableLinear[indexNT][i][j] = false;
+     * return false;
+     * }
+     * 
+     * }
+     */
+
+    /*
+     * public boolean parseLinearTD(int indexNT, int i, int j) {
+     * if (tableLinear[indexNT][i][j] != null) {
+     * return tableLinear[indexNT][i][j];
+     * }
+     * else
+     * if (i == j) {
+     * for (int l = 0; l < rulesetLinear[indexNT].length; l++) {
+     * if (rulesetLinear[indexNT][l][0] != null) {
+     * if(is_T_rule(rulesetLinear[indexNT][l][0])){
+     * if(inputAsInt[i] == rulesetLinear[indexNT][l][0]) {
+     * tableLinear[indexNT][i][j] = true;
+     * return true;
+     * }
+     * }else {
+     * if(parseLinearTD(rulesetLinear[indexNT][l][0], i, i)) {
+     * tableLinear[indexNT][i][j] = true;
+     * return true;
+     * }
+     * }
+     * }
+     * }
+     * return false;
+     * } else {
+     * for (int bodyIndex = 0; bodyIndex < rulesetLinear[indexNT].length;
+     * bodyIndex++) {
+     * if (rulesetLinear[indexNT][bodyIndex][0] != null &&
+     * rulesetLinear[indexNT][bodyIndex][1] != null) {
+     * Integer first = rulesetLinear[indexNT][bodyIndex][0];
+     * Integer second = rulesetLinear[indexNT][bodyIndex][1];
+     * if(is_T_rule(first) && !is_T_rule(second)){
+     * if(inputAsInt[i] == first && parseLinearTD(second, i+1, j)) {
+     * tableLinear[indexNT][i][j] = true;
+     * return true;
+     * }
+     * }
+     * if(!is_T_rule(first) && is_T_rule(second)){
+     * if(parseLinearTD(first, i, j-1) && inputAsInt[j] == second) {
+     * tableLinear[indexNT][i][j] = true;
+     * return true;
+     * }
+     * }
+     * }
+     * }
+     * 
+     * if (tableLinear[indexNT][i][j] != null && tableLinear[indexNT][i][j] == true)
+     * {
+     * return true;
+     * }
+     * return false;
+     * }
+     * }
+     */
+
     public boolean parseLinearTD(int indexNT, int i, int j) {
+
+        // System.out.println("indexNT: " + indexNT + " i: " + i + " j: " + j);
 
         counterLinearTD += 1;
         int rulesetLength = rulesetLinear[0].length;
 
         if (tableLinear[indexNT][i][j] != null) {
-
-            return tableLinear[indexNT][i][j]; 
-        }
-        else 
-        if (i == (j - 1)) {
+            return tableLinear[indexNT][i][j];
+        } else if (i == (j - 1)) {
             for (int l = 0; l < rulesetLength; l++) {
                 int symbol = inputAsInt[i];
-                if ( rulesetLinear[indexNT][l][0] != null && rulesetLinear[indexNT][l][0] == symbol) {
+                if (rulesetLinear[indexNT][l][0] != null && rulesetLinear[indexNT][l][0] == symbol) {
+                    tableLinear[indexNT][i][j] = true;
                     return true;
-                }
-                if ( rulesetLinear[indexNT][l][1] != null && rulesetLinear[indexNT][l][1] == symbol) {
-                    return true;
+                } else {
+                    if (rulesetLinear[indexNT][l][0] != null && !is_T_rule(rulesetLinear[indexNT][l][0]) && parseLinearTD(rulesetLinear[indexNT][l][0], i, i)) {
+                        tableLinear[indexNT][i][j] = true;
+                        return true;
+                    }
                 }
             }
             return false;
@@ -422,92 +529,84 @@ public class Parser {
                         Integer first = rulesetLinear[indexNT][bodyIndex][0];
                         Integer second = rulesetLinear[indexNT][bodyIndex][1];
 
-                        /* if(is_T_rule(second)){
-                            if(inputAsInt[k] == second && parseLinearTD(first, i, k)){
-                                tableLinear[indexNT][i][j-1] = true;
-                                return true;
-                            } 
-                        } 
-                        else {
-                            if(inputAsInt[i] == first && parseLinearTD(second, k, j)){
-                                tableLinear[indexNT][i][j-1] = true;
+                        if (is_T_rule(first) && !is_T_rule(second)) {
+
+                            if (inputAsInt[i] == first && parseLinearTD(second, k, j)) {
+                                // System.out.println("first (T): " + first + " second (NT): " + second);
+                                tableLinear[indexNT][i][j] = true;
                                 return true;
                             }
-                        } */
-
-
-                        if(is_T_rule(second)){
-                            tableLinear[indexNT][i][j] = (inputAsInt[k] == second && parseLinearTD(first, i, k-1));
-                        } 
-                        if(is_T_rule(first)){
-                            tableLinear[indexNT][i][j] = (inputAsInt[i] == first && parseLinearTD(second, k, j));
+                        }
+                        if (!is_T_rule(first) && is_T_rule(second)) {
+                            if (parseLinearTD(first, i, j - 1) && inputAsInt[j] == second) {
+                                // System.out.println("first (NT): " + first + " second (T): " + second);
+                                tableLinear[indexNT][i][j] = true;
+                                return true;
+                            }
                         }
                     }
                 }
             }
+
             if (tableLinear[indexNT][i][j] != null && tableLinear[indexNT][i][j] == true) {
                 return true;
             }
 
-            tableLinear[indexNT][i][j] = false;
+            // tableLinear[indexNT][i][j] = false;
             return false;
         }
 
     }
 
+    /* if(is_T_rule(second)){
+        * tableLinear[indexNT][i][j] = (parseLinearTD(first, i, k) && inputAsInt[k] ==
+        * second);
+        * }
+        * if(is_T_rule(first)){
+        * tableLinear[indexNT][i][j] = (parseLinearTD(second, k, j) && inputAsInt[i] ==
+        * first);
+        * } */
 
-
-
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
     // checks if the nonterminal leads to a terminal symbol
 
-    //____________________________________________________________________________________________________
+    // ____________________________________________________________________________________________________
 
-
-    public boolean is_T_rule(Integer symbol){
+    public boolean is_T_rule(Integer symbol) {
 
         Character ruleSymbol = Int_ArrayList.get(symbol);
 
-        if(Character.isUpperCase(ruleSymbol)){
+        if (Character.isUpperCase(ruleSymbol)) {
             // System.out.println(ruleSymbol + " is no T-rule");
             return false;
-        }
-        else{
+        } else {
             // System.out.println(ruleSymbol + " is T-rule ");
             return true;
         }
 
     }
 
-
-
-
-
-
-
     // ____________________________________________________________________________________________________
 
-    // checks if both input symbols have a rule together 
+    // checks if both input symbols have a rule together
 
     // ____________________________________________________________________________________________________
 
     public boolean headOfTRule(int t_symbol, int nt_symbol) {
 
-        if(nt_symbol < rulesetT_int.length){
-            for(int i = 0; i < rulesetT_int[nt_symbol].length; i++){
-                for(int entry = 0; entry < rulesetT_int[nt_symbol][i].length; entry++){
-                    if(rulesetT_int[nt_symbol][i][entry] != null && rulesetT_int[nt_symbol][i][entry] == t_symbol){
+        if (nt_symbol < rulesetT_int.length) {
+            for (int i = 0; i < rulesetT_int[nt_symbol].length; i++) {
+                for (int entry = 0; entry < rulesetT_int[nt_symbol][i].length; entry++) {
+                    if (rulesetT_int[nt_symbol][i][entry] != null && rulesetT_int[nt_symbol][i][entry] == t_symbol) {
                         return true;
                     }
                 }
             }
         }
         return false;
-        
+
     }
-
-
 
     // ____________________________________________________________________________________________________
 
@@ -551,7 +650,6 @@ public class Parser {
         return -100;
     }
 
-
     // ____________________________________________________________________________________________________
 
     // returns index (which stand for NT) if symbol in ruleset
@@ -571,7 +669,7 @@ public class Parser {
                 }
                 if (rules[i][j][1] != null && rules[i][j][1] == symbol) {
                     indeces[c] = i;
-                    c+=1;
+                    c += 1;
                 }
             }
         }
@@ -579,27 +677,26 @@ public class Parser {
         return indeces;
     }
 
-
     // ____________________________________________________________________________________________________
 
-    // deletes entry from CYK for deletion (symbol on "int index" and resulting entries are deleted)
+    // deletes entry from CYK for deletion (symbol on "int index" and resulting
+    // entries are deleted)
 
     // ____________________________________________________________________________________________________
 
     public Integer[][][] CYKtableRemoveSymbol(Integer[][][] CYK, int index) {
 
         grammar.beautifyIntegerMatrix(CYK);
-        
-        for(int i = 0; i < CYK.length; i++){
-            for(int j = 0; j < CYK.length; j++){
-                if( i <= index && j >= index){
-                        CYK[i][j][0] = -1;
+
+        for (int i = 0; i < CYK.length; i++) {
+            for (int j = 0; j < CYK.length; j++) {
+                if (i <= index && j >= index) {
+                    CYK[i][j][0] = -1;
                 }
             }
         }
-        return CYK; 
+        return CYK;
     }
-
 
     // ____________________________________________________________________________________________________
 
@@ -610,7 +707,7 @@ public class Parser {
     public boolean parseBU_newSymbol(Integer[][][] DP, int newSymbol) {
 
         int wordLength = DP.length;
-        
+
         for (int i = 0; i < wordLength; i++) {
             if (DP[i][i][0] != null && DP[i][i][0] == -1) {
                 DP[i][i][0] = newSymbol;
@@ -619,28 +716,28 @@ public class Parser {
         for (int l = 1; l < wordLength; l++) {
             for (int i = 0; i < wordLength - l; i++) {
                 int j = i + l;
-                if(DP[i][j][0] != null && DP[i][j][0] == -1)
-                {
-                for (int k = 0; k < j; k++) {
+                if (DP[i][j][0] != null && DP[i][j][0] == -1) {
+                    for (int k = 0; k < j; k++) {
 
-                    // for each rule:
-                    for (int head = 0; head < ruleset_int.length; head++) {
-                        for (int body = 0; body < ruleset_int[head].length; body++) {
-                            counterBU += 1;
-                            if (ruleset_int[head][body][0] != null && ruleset_int[head][body][1] != null) {
-                                int first = ruleset_int[head][body][0];
-                                int second = ruleset_int[head][body][1];
-                                List<Integer> intListFirst = new ArrayList<>(Arrays.asList(DP[i][k]));
-                                List<Integer> intListSecond = new ArrayList<>(Arrays.asList(DP[k + 1][j]));
-                                if (intListFirst.contains(first) && intListSecond.contains(second)) {
-                                    for(int c = 0; c < DP[i][j].length; c++){
-                                        if(DP[i][j][c] != null && DP[i][j][c] == head){
-                                            System.out.println(head);
-                                            break;
-                                        }
-                                        if(DP[i][j][c] == null){
-                                            DP[i][j][c] = head;
-                                            break;
+                        // for each rule:
+                        for (int head = 0; head < ruleset_int.length; head++) {
+                            for (int body = 0; body < ruleset_int[head].length; body++) {
+                                counterBU += 1;
+                                if (ruleset_int[head][body][0] != null && ruleset_int[head][body][1] != null) {
+                                    int first = ruleset_int[head][body][0];
+                                    int second = ruleset_int[head][body][1];
+                                    List<Integer> intListFirst = new ArrayList<>(Arrays.asList(DP[i][k]));
+                                    List<Integer> intListSecond = new ArrayList<>(Arrays.asList(DP[k + 1][j]));
+                                    if (intListFirst.contains(first) && intListSecond.contains(second)) {
+                                        for (int c = 0; c < DP[i][j].length; c++) {
+                                            if (DP[i][j][c] != null && DP[i][j][c] == head) {
+                                                System.out.println(head);
+                                                break;
+                                            }
+                                            if (DP[i][j][c] == null) {
+                                                DP[i][j][c] = head;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -648,20 +745,18 @@ public class Parser {
                         }
                     }
                 }
-                }
             }
         }
 
         CYKtableCleanUp(DP);
 
-        List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength-1]));
+        List<Integer> finalField = new ArrayList<>(Arrays.asList(DP[0][wordLength - 1]));
         if (finalField.contains(0)) {
             return true;
         }
-        
+
         return false;
     }
-
 
     // ____________________________________________________________________________________________________
 
@@ -671,13 +766,13 @@ public class Parser {
 
     public Integer[][][] CYKtableCleanUp(Integer[][][] CYK) {
 
-        for(int i = 0; i < CYK.length; i++){
-            for(int j = 0; j < CYK.length; j++){
-                if(CYK[i][j][0] != null && CYK[i][j][0] == -1){
+        for (int i = 0; i < CYK.length; i++) {
+            for (int j = 0; j < CYK.length; j++) {
+                if (CYK[i][j][0] != null && CYK[i][j][0] == -1) {
                     CYK[i][j][0] = null;
-                    for(int k = 1; k < CYK[i][j].length; k++){
-                        if(CYK[i][j][k] != null){
-                            CYK[i][j][k-1] = CYK[i][j][k];
+                    for (int k = 1; k < CYK[i][j].length; k++) {
+                        if (CYK[i][j][k] != null) {
+                            CYK[i][j][k - 1] = CYK[i][j][k];
                             CYK[i][j][k] = null;
                         }
                     }
@@ -686,7 +781,6 @@ public class Parser {
         }
         return CYK;
     }
-
 
     // ____________________________________________________________________________________________________
 
@@ -698,25 +792,22 @@ public class Parser {
 
         System.out.println("_____________________________________________");
         System.out.println("Error correction");
-        System.out.println(" " );
-
+        System.out.println(" ");
 
         Integer[] acceptedWord = callSolveErrorWithExchange();
-        if(acceptedWord[0] != null && !(Arrays.equals(acceptedWord, inputAsInt))){
+        if (acceptedWord[0] != null && !(Arrays.equals(acceptedWord, inputAsInt))) {
             System.out.println("Error correction with exchange:");
             System.out.println("1 symbol was exchanged.");
             printResultOfErrorCorrection(acceptedWord);
-        }
-        else{
+        } else {
             errorCounter = errorCounter(DP);
             System.out.println("Error counter for deletion: " + errorCounter);
-            System.out.println("Error correction with deletion" );
+            System.out.println("Error correction with deletion");
             Integer[] acceptedWordAfterDeletion = solveErrorWithDeletion(DP, errorCounter);
-            printResultOfErrorCorrection(acceptedWordAfterDeletion);   
+            printResultOfErrorCorrection(acceptedWordAfterDeletion);
         }
-            
-    }
 
+    }
 
     // ____________________________________________________________________________________________________
 
@@ -727,42 +818,41 @@ public class Parser {
     public Integer[][][] CYKtableDeletion(Integer[][][] DP) {
 
         int indexDeletedRow = 0;
-        int newSize = DP.length -1;
+        int newSize = DP.length - 1;
 
         Integer[][][] smallerDP = new Integer[newSize][newSize][newSize];
 
-        for(int i = 0; i < DP.length; i++){
-            if(DP[i][i][0] != null && DP[i][i][0] == -1){
+        for (int i = 0; i < DP.length; i++) {
+            if (DP[i][i][0] != null && DP[i][i][0] == -1) {
                 indexDeletedRow = i;
                 break;
             }
         }
-        for(int i = 0; i < DP.length; i++){
-            for(int j = 0; j < DP[i].length; j++){
-                if((i != indexDeletedRow && j != indexDeletedRow)){
+        for (int i = 0; i < DP.length; i++) {
+            for (int j = 0; j < DP[i].length; j++) {
+                if ((i != indexDeletedRow && j != indexDeletedRow)) {
                     int index_i = i;
                     int index_j = j;
-                    if(i < indexDeletedRow && j < indexDeletedRow){
+                    if (i < indexDeletedRow && j < indexDeletedRow) {
                         index_i = i;
                         index_j = j;
                     }
-                    if(i < indexDeletedRow && j > indexDeletedRow){
+                    if (i < indexDeletedRow && j > indexDeletedRow) {
                         index_i = i;
-                        index_j = j-1;
+                        index_j = j - 1;
                     }
-                    if(i > indexDeletedRow && j < indexDeletedRow){
-                        index_i = i-1;
+                    if (i > indexDeletedRow && j < indexDeletedRow) {
+                        index_i = i - 1;
                         index_j = j;
                     }
-                    if(i > indexDeletedRow && j > indexDeletedRow){
-                        index_i = i-1;
-                        index_j = j-1;
+                    if (i > indexDeletedRow && j > indexDeletedRow) {
+                        index_i = i - 1;
+                        index_j = j - 1;
                     }
-                    for(int k = 0; k < newSize; k++){
-                        if(DP[i][j][k] != null){
+                    for (int k = 0; k < newSize; k++) {
+                        if (DP[i][j][k] != null) {
                             smallerDP[index_i][index_j][k] = DP[i][j][k];
-                        }
-                        else{
+                        } else {
                             break;
                         }
                     }
@@ -770,9 +860,8 @@ public class Parser {
             }
         }
         grammar.printIntMatrix(smallerDP);
-        return smallerDP;       
+        return smallerDP;
     }
-
 
     // ____________________________________________________________________________________________________
 
@@ -789,47 +878,47 @@ public class Parser {
 
         System.out.println("amount of errors: " + amountOfErrors);
 
-        for(int index = 0; index < CYK.length; index++){
-            for(int entries = 0; entries < CYK[amountOfErrors][index].length; entries++){
-                if(CYK[amountOfErrors][index][entries] != null && CYK[amountOfErrors][index][entries] == 0){
+        for (int index = 0; index < CYK.length; index++) {
+            for (int entries = 0; entries < CYK[amountOfErrors][index].length; entries++) {
+                if (CYK[amountOfErrors][index][entries] != null && CYK[amountOfErrors][index][entries] == 0) {
                     betterIndeces = findBestIndeces(i, j, amountOfErrors, index);
                     i = betterIndeces[0];
                     j = betterIndeces[1];
                 }
-                    if(CYK[index][CYK.length - 1 - amountOfErrors][entries] != null && CYK[index][CYK.length - 1 - amountOfErrors][entries] == 0){
-                        betterIndeces = findBestIndeces(i, j, index, CYK.length - 1 - amountOfErrors);
-                        i = betterIndeces[0];
-                        j = betterIndeces[1];
-                    }
+                if (CYK[index][CYK.length - 1 - amountOfErrors][entries] != null
+                        && CYK[index][CYK.length - 1 - amountOfErrors][entries] == 0) {
+                    betterIndeces = findBestIndeces(i, j, index, CYK.length - 1 - amountOfErrors);
+                    i = betterIndeces[0];
+                    j = betterIndeces[1];
+                }
             }
         }
 
-        if(i == -1){
+        if (i == -1) {
             Integer[] noAcceptedWord = new Integer[1];
             noAcceptedWord[0] = -1;
             return noAcceptedWord;
         }
-
 
         int from = Math.min(i, j);
         int to = Math.max(i, j);
 
         Integer[] acceptedWord = new Integer[to - from + 1];
 
-        if(from==to){
-            for(int k = 0; k < inputAsInt.length; k++){
-                if(inputAsInt[k] != null && inputAsInt[k] == 0){
-                acceptedWord[k] = inputAsInt[k];
-                break;
+        if (from == to) {
+            for (int k = 0; k < inputAsInt.length; k++) {
+                if (inputAsInt[k] != null && inputAsInt[k] == 0) {
+                    acceptedWord[k] = inputAsInt[k];
+                    break;
                 }
             }
             grammar.printIntegerArray(acceptedWord);
             return acceptedWord;
         }
 
-        for(int k = 0; k <= to - from; k++){
-            if(inputAsInt[k + from] != null){
-            acceptedWord[k] = inputAsInt[k + from];
+        for (int k = 0; k <= to - from; k++) {
+            if (inputAsInt[k + from] != null) {
+                acceptedWord[k] = inputAsInt[k + from];
             }
         }
 
@@ -837,10 +926,9 @@ public class Parser {
 
     }
 
-
     // ____________________________________________________________________________________________________
 
-    // find most up right 0 
+    // find most up right 0
 
     // ____________________________________________________________________________________________________
 
@@ -851,29 +939,27 @@ public class Parser {
         // i should be as small as possible and j as big as possible
         // (to get the field on the top right)
 
-        int indicator_i = i_a-i_b;
+        int indicator_i = i_a - i_b;
         int indicator_j = j_b - j_a;
 
-        if((indicator_i + indicator_j) == 0){
+        if ((indicator_i + indicator_j) == 0) {
             // both are equal far away
             betterIndeces[0] = i_a;
             betterIndeces[1] = j_a;
         }
-        if((indicator_i + indicator_j) > 0){
+        if ((indicator_i + indicator_j) > 0) {
             // b is closer
             betterIndeces[0] = i_b;
             betterIndeces[1] = j_b;
-        }
-        else{
+        } else {
             // a is closer
             betterIndeces[0] = i_a;
             betterIndeces[1] = j_a;
         }
 
         return betterIndeces;
-        
-    }
 
+    }
 
     // ____________________________________________________________________________________________________
 
@@ -883,26 +969,23 @@ public class Parser {
 
     public void printResultOfErrorCorrection(Integer[] accepted_word) {
 
-        if(accepted_word[0] != null && accepted_word[0] == -1){
+        if (accepted_word[0] != null && accepted_word[0] == -1) {
             System.out.println("No error correction found");
-        }
-        else{
-                System.out.println("Accepted word: ");
+        } else {
+            System.out.println("Accepted word: ");
 
-                char[] wordAsTSymbols = new char[accepted_word.length];
+            char[] wordAsTSymbols = new char[accepted_word.length];
 
-                for(int i = 0; i < wordAsTSymbols.length; i++){
-                    if(accepted_word[i] != null){
-                        wordAsTSymbols[i] = grammar.intToSymbol(accepted_word[i]);
-                    }
+            for (int i = 0; i < wordAsTSymbols.length; i++) {
+                if (accepted_word[i] != null) {
+                    wordAsTSymbols[i] = grammar.intToSymbol(accepted_word[i]);
                 }
+            }
 
-                grammar.printCharArray(wordAsTSymbols);
+            grammar.printCharArray(wordAsTSymbols);
         }
-        
-        
-    }
 
+    }
 
     // ____________________________________________________________________________________________________
 
@@ -916,10 +999,10 @@ public class Parser {
         Integer[] tSymbols = new Integer[length];
         int index = 0;
 
-        for(int i = 0; i < rulesetT_int.length; i++){
-            for(int j = 0; j < rulesetT_int[i].length; j++){
-                for(int entries = 0; entries < rulesetT_int[i][j].length; entries++){
-                    if(rulesetT_int[i][j][entries] != null){
+        for (int i = 0; i < rulesetT_int.length; i++) {
+            for (int j = 0; j < rulesetT_int[i].length; j++) {
+                for (int entries = 0; entries < rulesetT_int[i][j].length; entries++) {
+                    if (rulesetT_int[i][j][entries] != null) {
                         tSymbols[index] = rulesetT_int[i][j][entries];
                         index += 1;
                     }
@@ -927,9 +1010,8 @@ public class Parser {
             }
         }
         tSymbols = grammar.cleanIntArray(tSymbols);
-        return tSymbols;  
+        return tSymbols;
     }
-
 
     // ____________________________________________________________________________________________________
 
@@ -938,18 +1020,17 @@ public class Parser {
     // ____________________________________________________________________________________________________
 
     public boolean solveErrorWithExchange(Integer[][][] local_DP, int index, int symbol) {
-            
-                if (contained(ruleset_int, TerminalSymbols[symbol])) {
-                    int temp = containedAt(ruleset_int, TerminalSymbols[symbol]);
-                    if(parseBU_newSymbol(local_DP, temp) == true){
-                        inputAsInt[index] = TerminalSymbols[symbol];
-                        return true;
-                    }
-                }
-    
+
+        if (contained(ruleset_int, TerminalSymbols[symbol])) {
+            int temp = containedAt(ruleset_int, TerminalSymbols[symbol]);
+            if (parseBU_newSymbol(local_DP, temp) == true) {
+                inputAsInt[index] = TerminalSymbols[symbol];
+                return true;
+            }
+        }
+
         return false;
     }
-
 
     // ____________________________________________________________________________________________________
 
@@ -961,18 +1042,17 @@ public class Parser {
 
         Integer[] acceptedWord = new Integer[inputAsInt.length];
 
-        for(int index = 0; index < inputAsInt.length; index++){
-            for(int symbol = 0; symbol < TerminalSymbols.length; symbol++){
+        for (int index = 0; index < inputAsInt.length; index++) {
+            for (int symbol = 0; symbol < TerminalSymbols.length; symbol++) {
                 Integer[][][] local_DP = copyArray(DP_ofOriginalInput);
                 DP = CYKtableRemoveSymbol(local_DP, index);
                 boolean newWordFound = solveErrorWithExchange(local_DP, index, symbol);
 
-                if(newWordFound == true){
-                    for(int i = 0; i < inputAsInt.length; i++){
-                        if(i == index){
+                if (newWordFound == true) {
+                    for (int i = 0; i < inputAsInt.length; i++) {
+                        if (i == index) {
                             acceptedWord[i] = TerminalSymbols[symbol];
-                        }
-                        else{
+                        } else {
                             acceptedWord[i] = inputAsInt[i];
                         }
                     }
@@ -990,9 +1070,9 @@ public class Parser {
     // ____________________________________________________________________________________________________
 
     public void notInAlphabet() {
-            
-        for(int i = 0; i < inputAsInt.length; i++){
-            if(inputAsInt[i] != null && inputAsInt[i] == -1){
+
+        for (int i = 0; i < inputAsInt.length; i++) {
+            if (inputAsInt[i] != null && inputAsInt[i] == -1) {
                 System.out.println(" ");
                 System.out.println("____________________________________________________________________");
                 System.out.println("Input word contains element that is not part of the alphabet!");
@@ -1001,6 +1081,5 @@ public class Parser {
             }
         }
     }
-
 
 }
