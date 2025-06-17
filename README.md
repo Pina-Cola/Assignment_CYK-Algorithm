@@ -34,7 +34,7 @@ This example checks if the input string `(())` is accepted by the specified gram
 The full report regarding this implementation is available here:
 
 **Efficient Algorithms Report (PDF)**
-[Runtime Analysis of the Java Implementation of the CYK Algorithm](https://github.com/Pina-Cola/Assignment_EfficientAlgorithms_Report)
+[[Runtime Analysis of the Java Implementation of the CYK Algorithm](https://github.com/Pina-Cola/Assignment_EfficientAlgorithms_Report)](https://github.com/Pina-Cola/EfficientAlgorithms_Report)
 
 ---
 
